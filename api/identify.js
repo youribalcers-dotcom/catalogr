@@ -24,43 +24,43 @@ export default async function handler(req) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
+        max_tokens: 700,
         messages: [{
           role: 'user',
           content: [
             { type: 'image', source: { type: 'base64', media_type: mediaType, data: image } },
             {
               type: 'text',
-              text: `You are a book identification expert and second-hand book dealer. Identify this book from the image.
+              text: `You are an expert antiquarian bookseller. Identify this book precisely.
 
 Return ONLY valid JSON, no markdown:
 {
   "title": "exact title",
   "author": "full author name",
   "publisher": "publisher name",
-  "year": "4-digit year",
+  "year": "4-digit year of THIS edition",
   "isbn": "ISBN-13 if visible, else empty string",
   "language": "en or fr or nl",
   "pages": "page count or empty string",
   "description": "one sentence",
-  "marketEstimate": <integer EUR, see rules below>,
+  "editionNote": "CRITICAL: specify if this is original first edition, reprint, reissue, facsimile, or which numbered edition. E.g. 'Original first edition 1964', 'Folio Society reissue 2003', '3rd reprint'. Leave empty if unknown.",
+  "marketLow": <integer EUR low estimate for THIS specific edition>,
+  "marketHigh": <integer EUR high estimate for THIS specific edition>,
   "identified": true
 }
 
-STRICT PRICING RULES — be conservative, not optimistic:
-- Mass market paperback (Folio, Poche, Penguin, etc): 3-12
-- Standard used paperback: 5-15
-- Standard used hardcover: 8-25
-- Academic or specialized book: 15-40
-- Out of print but not rare: 20-60
-- Genuinely rare, hard to find: 60-150
-- Exceptional first edition or signed: 150-400
-- Only go above 400 for truly extraordinary items
+PRICING RULES — be precise and conservative for THIS edition:
+- A reprint/reissue of a classic (Folio, Gallimard, Penguin): low=5, high=15
+- Standard used paperback: low=5, high=20
+- Standard used hardcover: low=10, high=30
+- Specialized or out-of-print: low=20, high=60
+- Genuine first edition of important work: low=50, high=200
+- Rare first edition, signed, or unique: low=100, high=500+
 
-Most books are in the 5-25 range. Do NOT inflate because an author is famous.
-A Folio Celine is worth 8-12. A Penguin classic is worth 5-10.
+The difference between an original Bruno Munari Xerografia (1964, ~2000€) and its reissue (2013, ~50€) is enormous.
+Always try to determine which edition this is from the cover, spine, and any visible text.
 
-If you cannot identify the book: {"identified": false}`
+If you cannot identify: {"identified": false}`
             }
           ]
         }]

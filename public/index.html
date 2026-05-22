@@ -24,8 +24,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .screen{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .screen.active{display:flex;}
 
-/* SCAN — camera takes all available height */
-.scan-body{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+/* SCAN */
+.scan-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 .cam-wrap{position:relative;background:#111;flex:1;min-height:0;overflow:hidden;cursor:pointer;}
 .cam-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
 .cam-idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg3);}
@@ -44,12 +44,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-cam{background:rgba(255,255,255,.95);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:13px 16px;border-radius:10px;border:none;cursor:pointer;flex:1;}
 .btn-cam:active{transform:scale(.96);}
 .btn-cam-sm{flex:0;padding:13px 14px;}
-
-/* Controls below camera — hidden when camera active */
 .scan-controls{padding:14px 16px;display:flex;flex-direction:column;gap:10px;background:var(--bg);border-top:1.5px solid var(--border);flex-shrink:0;}
 .err-box{background:#fff0ee;border:1.5px solid #f5c6c2;border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--red);font-weight:500;display:none;line-height:1.5;}
 .err-box.show{display:block;}
-
 .btn{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:14px 20px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
 .btn:active{transform:scale(.97);}
 .btn-primary{background:var(--text);color:#fff;}
@@ -88,70 +85,68 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .fiche-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
 .fiche-photo-ph{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-bottom:1.5px solid var(--border);}
 .fiche-photo-ph span{font-size:36px;}
-.fiche-photo-ph p{font-size:13px;color:var(--muted);font-family:'Syne',sans-serif;}
-.fiche-photo-badge{position:absolute;top:10px;left:10px;background:rgba(124,58,237,.9);color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;font-family:'Syne Mono',monospace;}
+.fiche-photo-ph p{font-size:13px;color:var(--muted);}
 .fiche-photo-retake{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;}
 .fiche-info{padding:16px;background:var(--bg2);border-bottom:1.5px solid var(--border);}
 .fiche-title{font-size:18px;font-weight:700;line-height:1.3;}
 .fiche-author{font-size:13px;color:var(--green);margin-top:5px;font-weight:600;}
 .fiche-meta{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.7;font-family:'Syne Mono',monospace;}
-.ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#f3f0ff;color:var(--purple);border:1px solid #ddd6fe;margin-top:6px;font-family:'Syne Mono',monospace;}
+.fiche-edition-note{font-size:12px;color:var(--purple);margin-top:6px;font-weight:600;font-family:'Syne Mono',monospace;}
 .stock-banner{margin:12px 16px 0;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;display:none;align-items:center;gap:8px;}
-.stock-banner.in-lib{background:#e8f5e9;border:1.5px solid #a5d6a7;color:var(--green);display:flex;}
 .stock-banner.in-stock{background:#fff8e1;border:1.5px solid #ffe082;color:var(--yellow);display:flex;}
 .fiche-body{padding:16px;display:flex;flex-direction:column;gap:18px;}
 .field-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 
-/* PRICE — single cell, no redundant target */
-.price-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.price-market-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);}
-.price-market-lbl{font-size:11px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;}
-.price-market-val{font-size:22px;font-weight:700;font-family:'Syne Mono',monospace;color:var(--text);}
-.price-market-val.loading{font-size:13px;color:var(--muted);animation:pulse 1s infinite;}
-.price-market-val.good{color:var(--green);}
+/* MARKET RESEARCH */
+.market-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.market-range{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);}
+.market-range-vals{display:flex;align-items:baseline;gap:8px;}
+.market-low{font-size:13px;color:var(--muted2);font-family:'Syne Mono',monospace;}
+.market-arrow{font-size:13px;color:var(--muted);}
+.market-high{font-size:22px;font-weight:700;color:var(--green);font-family:'Syne Mono',monospace;}
+.market-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;}
+.market-loading{padding:14px 16px;font-size:13px;color:var(--muted);font-family:'Syne Mono',monospace;animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.decision-row{padding:12px 14px;display:flex;align-items:center;gap:10px;}
-.decision-icon{font-size:22px;}
-.decision-text{font-size:14px;font-weight:700;}
+.decision-row{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.decision-icon{font-size:20px;}
+.decision-text{font-size:13px;font-weight:700;}
 .decision-sub{font-size:11px;color:var(--muted2);margin-top:2px;font-family:'Syne Mono',monospace;}
 .decision-row.buy{background:#e8f5e9;}
 .decision-row.pass{background:#fff0ee;}
-.coeff-row{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.coeff-row{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .coeff-lbl{font-size:12px;color:var(--muted2);flex:1;}
 .coeff-btns{display:flex;gap:4px;}
 .coeff-btn{font-family:'Syne Mono',monospace;font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--muted2);cursor:pointer;transition:all .15s;}
 .coeff-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
 
+/* SOURCE LINKS */
+.source-links{padding:10px 14px;display:flex;gap:6px;flex-wrap:wrap;}
+.source-link{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;background:var(--bg3);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s;}
+.source-link:hover{color:var(--text);border-color:var(--text);}
+
+/* PURCHASE PRICE */
 .price-input-wrap{position:relative;}
 .price-input-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:18px;font-weight:700;}
 .price-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:22px;font-weight:700;padding:12px 14px 12px 34px;outline:none;transition:border-color .2s;}
 .price-input:focus{border-color:var(--text);}
-.price-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.chip{font-family:'Syne Mono',monospace;font-size:12px;padding:6px 12px;border-radius:20px;background:var(--bg2);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;transition:all .15s;}
-.chip:hover{color:var(--text);border-color:var(--text);}
 
+/* GRADE */
 .grade-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
 .grade-btn{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:10px 2px;border-radius:7px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--muted2);cursor:pointer;text-align:center;transition:all .15s;}
 .grade-btn.sel{background:var(--text);color:#fff;border-color:var(--text);}
 .grade-desc{font-size:12px;color:var(--muted2);min-height:30px;line-height:1.5;font-family:'Syne Mono',monospace;margin-top:6px;}
 
-.field-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:12px 14px;outline:none;transition:border-color .2s;}
-.field-input:focus{border-color:var(--text);}
-.field-input::placeholder{color:var(--muted);}
-.field-select{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:12px 14px;outline:none;appearance:none;}
 .notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:60px;}
 .notes-ta::placeholder{color:var(--muted);}
+
 .fiche-acts{padding:14px 16px;display:flex;gap:8px;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
 
 /* LIBRARY */
 #library-screen{overflow-y:auto;background:var(--bg);}
 .lib-body{padding:16px;display:flex;flex-direction:column;gap:12px;}
-.lib-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg3);border-radius:var(--radius);padding:4px;border:1.5px solid var(--border);}
-.lib-tab{font-size:13px;font-weight:700;padding:9px;border-radius:7px;text-align:center;cursor:pointer;color:var(--muted2);transition:all .15s;}
-.lib-tab.active{background:var(--text);color:#fff;}
 .lib-search{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:11px 14px;outline:none;width:100%;}
 .lib-list{display:flex;flex-direction:column;gap:6px;}
-.lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;}
+.lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;}
 .lib-thumb{width:44px;height:60px;object-fit:cover;border-radius:4px;background:var(--bg3);flex-shrink:0;}
 .lib-thumb-ph{width:44px;height:60px;border-radius:4px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);}
 .lib-info{flex:1;min-width:0;}
@@ -177,13 +172,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .api-status.unset{background:#fff0ee;color:var(--red);}
 
 /* NAV */
-.nav{display:grid;grid-template-columns:repeat(3,1fr);border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
+.nav{display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
 .nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 8px;cursor:pointer;color:var(--muted);border:none;background:none;}
 .nav-btn.active{color:var(--text);}
 .nav-icon{font-size:20px;line-height:1;}
 .nav-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
 
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:22px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:200;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:22px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #file-input{display:none;}
 </style>
@@ -247,58 +242,40 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="fiche-info" id="fiche-info"></div>
     <div class="fiche-body">
 
+      <!-- MARKET RESEARCH -->
       <div>
-        <div class="field-lbl">Market estimate & decision</div>
-        <div class="price-box">
-          <div class="price-market-row">
-            <div class="price-market-lbl">MARKET EST.</div>
-            <div class="price-market-val loading" id="market-price">…</div>
-          </div>
+        <div class="field-lbl">Market research</div>
+        <div class="market-box">
+          <div id="market-content"><div class="market-loading">Estimating market value…</div></div>
           <div class="decision-row" id="decision-row">
             <div class="decision-icon" id="d-icon">⏳</div>
-            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Loading estimate…</div></div>
+            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Waiting for estimate…</div></div>
           </div>
           <div class="coeff-row">
             <div class="coeff-lbl">Min. coefficient ×</div>
             <div class="coeff-btns" id="coeff-btns"></div>
           </div>
+          <div class="source-links" id="source-links"></div>
         </div>
       </div>
 
+      <!-- PURCHASE PRICE -->
       <div>
         <div class="field-lbl">Purchase price</div>
-        <div class="price-input-wrap"><span>€</span><input type="number" class="price-input" id="price-input" placeholder="0" min="0" oninput="onPriceChange()"></div>
-        <div class="price-chips">
-          <span class="chip" onclick="setPrice(5)">€5</span>
-          <span class="chip" onclick="setPrice(10)">€10</span>
-          <span class="chip" onclick="setPrice(20)">€20</span>
-          <span class="chip" onclick="setPrice(40)">€40</span>
-          <span class="chip" onclick="setPrice(80)">€80</span>
-          <span class="chip" onclick="setPrice(150)">€150</span>
+        <div class="price-input-wrap">
+          <span>€</span>
+          <input type="number" class="price-input" id="price-input" placeholder="0" min="0" oninput="onPriceChange()">
         </div>
       </div>
 
+      <!-- GRADE -->
       <div>
         <div class="field-lbl">Condition</div>
         <div class="grade-grid" id="grade-grid"></div>
         <div class="grade-desc" id="grade-desc">Select condition</div>
       </div>
 
-      <div>
-        <div class="field-lbl">Language</div>
-        <select class="field-select" id="field-lang">
-          <option value="">Select…</option>
-          <option value="EN">English</option>
-          <option value="FR">Français</option>
-          <option value="NL">Nederlands</option>
-        </select>
-      </div>
-
-      <div>
-        <div class="field-lbl">Source</div>
-        <input class="field-input" id="field-source" type="text" placeholder="e.g. Detroit — John K. King">
-      </div>
-
+      <!-- NOTES -->
       <div>
         <div class="field-lbl">Notes</div>
         <textarea class="notes-ta" id="notes-ta" placeholder="Ex-libris, annotations, binding, provenance…"></textarea>
@@ -308,27 +285,25 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="fiche-acts">
       <button class="btn btn-ghost" style="flex:1" onclick="goTo('scan-screen')">← Back</button>
       <button class="btn btn-primary" style="flex:2" onclick="saveToStock()">+ Stock</button>
-      <button class="btn btn-ghost" style="flex:1.5;font-size:12px" onclick="saveToLibrary()">📚 Library</button>
     </div>
   </div>
 
-  <!-- LIBRARY -->
+  <!-- LIBRARY / STOCK -->
   <div id="library-screen" class="screen">
     <div class="lib-body">
-      <div class="lib-tabs">
-        <div class="lib-tab active" id="tab-stock" onclick="switchTab('stock')">Stock</div>
-        <div class="lib-tab" id="tab-library" onclick="switchTab('library')">My Library</div>
-      </div>
       <input class="lib-search" id="lib-search" type="search" placeholder="Search title or author…" oninput="renderLibrary()">
       <div class="lib-list" id="lib-list"></div>
     </div>
   </div>
 
-  <!-- NAV -->
+  <!-- NAV — 2 buttons only -->
   <div class="nav">
-    <button class="nav-btn active" id="nav-scan" onclick="navTo('scan-screen','nav-scan')"><div class="nav-icon">◉</div><div class="nav-lbl">Scan</div></button>
-    <button class="nav-btn" id="nav-lib" onclick="navTo('library-screen','nav-lib')"><div class="nav-icon">▤</div><div class="nav-lbl">Library</div></button>
-    <button class="nav-btn" id="nav-stats" onclick="showStats()"><div class="nav-icon">◈</div><div class="nav-lbl">Stats</div></button>
+    <button class="nav-btn active" id="nav-scan" onclick="navTo('scan-screen','nav-scan')">
+      <div class="nav-icon">◉</div><div class="nav-lbl">Scan</div>
+    </button>
+    <button class="nav-btn" id="nav-lib" onclick="navTo('library-screen','nav-lib')">
+      <div class="nav-icon">▤</div><div class="nav-lbl">Stock</div>
+    </button>
   </div>
 
   <!-- SETTINGS -->
@@ -337,7 +312,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="settings-body">
       <div class="settings-group">
         <div class="settings-row" style="flex-direction:column;align-items:flex-start">
-          <div><div class="settings-lbl">Anthropic API Key</div><div class="settings-sub">Required for AI photo identification</div></div>
+          <div><div class="settings-lbl">Anthropic API Key</div><div class="settings-sub">Required for AI identification</div></div>
           <input class="api-key-input" id="api-key-input" type="password" placeholder="sk-ant-api03-…" oninput="saveApiKey()">
           <div class="api-status unset" id="api-status">Not configured</div>
         </div>
@@ -350,10 +325,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
       <div class="settings-group">
         <div class="settings-row"><div class="settings-lbl">Stock items</div><div class="settings-val" id="s-stock">0</div></div>
-        <div class="settings-row"><div class="settings-lbl">Library items</div><div class="settings-val" id="s-lib">0</div></div>
         <div class="settings-row"><div class="settings-lbl">Total purchase value</div><div class="settings-val" id="s-val">€0</div></div>
       </div>
-      <button class="btn btn-ghost" onclick="exportCSV()">↓ Export CSV (Shopify)</button>
       <button class="btn btn-ghost" style="color:var(--red);border-color:#f5c6c2" onclick="clearAll()">Clear all data</button>
     </div>
   </div>
@@ -363,7 +336,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <script>
 let currentBook=null,selectedGrade=null,videoStream=null,scanning=false;
 let settings={coeff:2};
-let marketPrice=null,currentTab='stock';
+let marketLow=null,marketHigh=null;
 let capturedPhotoBase64=null;
 
 const GRADES=[
@@ -375,7 +348,7 @@ const GRADES=[
   {code:'M',   desc:'Mint. Perfect, unread condition.'},
 ];
 
-function getDB(){try{return JSON.parse(localStorage.getItem('catalogr_db')||'{"stock":[],"library":[]}')}catch(e){return{stock:[],library:[]}}}
+function getDB(){try{return JSON.parse(localStorage.getItem('catalogr_db')||'{"stock":[]}')}catch(e){return{stock:[]}}}
 function saveDB(db){localStorage.setItem('catalogr_db',JSON.stringify(db));updateCount()}
 function loadSettings(){try{const s=JSON.parse(localStorage.getItem('catalogr_s')||'{}');settings={coeff:s.coeff||2};}catch(e){}}
 function setCoeff(v){settings.coeff=v;localStorage.setItem('catalogr_s',JSON.stringify(settings));renderCoeffBtns();recalcDecision();}
@@ -387,10 +360,9 @@ function updateApiStatus(){
   else{el.className='api-status unset';el.textContent='Not configured';}
 }
 function updateCount(){
-  const db=getDB(),t=db.stock.length+db.library.length;
+  const db=getDB(),t=db.stock.length;
   document.getElementById('hdr-count').textContent=t+' item'+(t!==1?'s':'');
-  document.getElementById('s-stock').textContent=db.stock.length;
-  document.getElementById('s-lib').textContent=db.library.length;
+  document.getElementById('s-stock').textContent=t;
   document.getElementById('s-val').textContent='€'+db.stock.reduce((a,b)=>a+(parseFloat(b.price)||0),0).toFixed(0);
 }
 
@@ -404,7 +376,7 @@ async function startCamera(){
     document.getElementById('cam-bar').classList.add('show');
     document.getElementById('scan-controls').style.display='none';
     startBarcodeScan();
-  }catch(e){showErr('Camera access denied. Use "Identify from photo library" button.');}
+  }catch(e){showErr('Camera access denied. Use "Identify from photo library".');}
 }
 async function startBarcodeScan(){
   if(!('BarcodeDetector' in window))return;
@@ -441,7 +413,6 @@ function capturePhoto(e){
   stopCamera();
   identifyWithAI(dataUrl.split(',')[1],'image/jpeg');
 }
-
 function handlePhotoUpload(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -480,16 +451,13 @@ async function identifyWithAI(base64,mediaType){
     const text=data.content.map(c=>c.text||'').join('');
     const clean=text.replace(/```json|```/g,'').trim();
     let parsed;
-    try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Parse error. Try a clearer photo.');return;}
+    try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Could not parse response. Try a clearer photo.');return;}
     if(!parsed.identified){goTo('scan-screen');showErr('Could not identify the book. Try a clearer photo of the cover.');return;}
     parsed.aiIdentified=true;
     parsed.editionCount=1;
     parsed.bookPhoto=capturedPhotoBase64;
     buildFiche(parsed);
-  }catch(e){
-    goTo('scan-screen');
-    showErr('Identification failed: '+e.message);
-  }
+  }catch(e){goTo('scan-screen');showErr('Identification failed: '+e.message);}
 }
 
 function lookupManual(){
@@ -518,44 +486,120 @@ function formatOLBook(b,isbn){return{title:b.title||'Unknown',author:(b.authors|
 function formatOLSearch(doc){return{title:doc.title||'Unknown',author:doc.author_name?doc.author_name[0]:'',publisher:doc.publisher?doc.publisher[0]:'',year:doc.first_publish_year||'',isbn:doc.isbn?doc.isbn[0]:'',cover:doc.cover_i?'https://covers.openlibrary.org/b/id/'+doc.cover_i+'-M.jpg':null,pages:doc.number_of_pages_median||'',editionCount:doc.edition_count||1};}
 function formatOLRaw(b,isbn){return{title:b.title||'Unknown',author:'',publisher:(b.publishers&&b.publishers[0])||'',year:(b.publish_date||'').match(/\d{4}/)?b.publish_date.match(/\d{4}/)[0]:'',isbn,cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null,pages:b.number_of_pages||'',editionCount:1};}
 
-async function fetchMarketPrice(book){
-  document.getElementById('market-price').className='price-market-val loading';
-  document.getElementById('market-price').textContent='…';
+function buildSearchLinks(book){
+  const q=encodeURIComponent([book.title,book.author].filter(Boolean).join(' '));
+  const isbn=book.isbn||'';
+  const links=[
+    {label:'eBay sold',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`},
+    {label:'eBay.fr',url:`https://www.ebay.fr/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`},
+    {label:'Eurobuch',url:isbn?`https://www.eurobuch.com/search/isbn/${isbn}`:`https://www.eurobuch.com/buch/suchen.html?q=${q}`},
+    {label:'ZVAB',url:`https://www.zvab.com/servlet/SearchResults?tn=${encodeURIComponent(book.title||'')}&an=${encodeURIComponent(book.author||'')}`},
+    {label:'Bookfinder',url:`https://www.bookfinder.com/search/?author=${encodeURIComponent(book.author||'')}&title=${encodeURIComponent(book.title||'')}&st=xl&ac=qr`},
+  ];
+  const wrap=document.getElementById('source-links');
+  wrap.innerHTML='<div style="font-size:10px;color:var(--muted);font-family:\'Syne Mono\',monospace;letter-spacing:.06em;text-transform:uppercase;width:100%;margin-bottom:4px">Check prices →</div>'+
+    links.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+}
+
+function buildFiche(book){
+  currentBook=book;selectedGrade=null;marketLow=null;marketHigh=null;
+  const db=getDB();
+  const inStock=book.isbn&&db.stock.find(i=>i.isbn===book.isbn);
+  const banner=document.getElementById('stock-banner');
+  banner.className='stock-banner';
+  if(inStock){banner.className='stock-banner in-stock';banner.textContent='⚡ Already in stock · €'+(inStock.price||'?');}
+
+  // Photo
+  const photoArea=document.getElementById('fiche-photo-area');
+  const photoSrc=book.bookPhoto||book.cover||null;
+  if(photoSrc){
+    photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button></div>`;
+  }else{
+    photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo — tap camera to add</p></div>`;
+  }
+
+  // Info
+  const edNote=book.editionNote?`<div class="fiche-edition-note">⚑ ${book.editionNote}</div>`:'';
+  document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${edNote}`;
+
+  // Grades
+  const grid=document.getElementById('grade-grid');grid.innerHTML='';
+  GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
+
+  document.getElementById('price-input').value='';
+  document.getElementById('notes-ta').value='';
+  document.getElementById('grade-desc').textContent='Select condition';
+  document.getElementById('market-content').innerHTML='<div class="market-loading">Estimating market value…</div>';
   document.getElementById('decision-row').className='decision-row';
-  setDecision('⏳','Enter your purchase price','Loading market estimate…');
-  marketPrice=null;
-  if(book.marketEstimate&&parseInt(book.marketEstimate)>0){
-    marketPrice=parseInt(book.marketEstimate);
-    document.getElementById('market-price').className='price-market-val';
-    document.getElementById('market-price').textContent='€'+marketPrice;
-    recalcDecision();
+  setDecision('⏳','Enter purchase price below','Estimate loading…');
+
+  buildSearchLinks(book);
+  goTo('fiche-screen');
+  fetchMarketEstimate(book);
+}
+
+async function fetchMarketEstimate(book){
+  // Use Claude's estimate from AI identification if available
+  if(book.marketLow&&book.marketHigh){
+    marketLow=parseInt(book.marketLow);
+    marketHigh=parseInt(book.marketHigh);
+    renderMarketRange();
     return;
   }
-  // Fallback heuristic — conservative
-  await new Promise(r=>setTimeout(r,500));
+  // Fallback — conservative heuristic
+  await new Promise(r=>setTimeout(r,400));
   const year=parseInt(book.year)||2000,age=new Date().getFullYear()-year,ed=book.editionCount||1;
-  let base=10;
-  if(age>40)base=35;else if(age>25)base=20;else if(age>15)base=14;else base=10;
-  if(ed<=2)base=Math.round(base*1.6);else if(ed<=5)base=Math.round(base*1.2);
-  marketPrice=base;
-  document.getElementById('market-price').className='price-market-val';
-  document.getElementById('market-price').textContent='€'+marketPrice;
+  let low=5,high=15;
+  if(age>40){low=20;high=60;}
+  else if(age>25){low=12;high=35;}
+  else if(age>15){low=8;high=22;}
+  else{low=5;high=15;}
+  if(ed<=2){low=Math.round(low*1.5);high=Math.round(high*2);}
+  marketLow=low;marketHigh=high;
+  renderMarketRange();
+}
+
+function renderMarketRange(){
+  document.getElementById('market-content').innerHTML=`
+    <div class="market-range">
+      <div class="market-lbl">ESTIMATE</div>
+      <div class="market-range-vals">
+        <span class="market-low">€${marketLow}</span>
+        <span class="market-arrow">→</span>
+        <span class="market-high">€${marketHigh}</span>
+      </div>
+    </div>`;
   recalcDecision();
 }
 
 function recalcDecision(){
   const buy=parseFloat(document.getElementById('price-input').value)||0;
-  if(!buy||!marketPrice){
-    if(marketPrice&&!buy)setDecision('💰','Enter your purchase price','Market est. €'+marketPrice);
+  if(!buy||!marketHigh){
+    if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);
     return;
   }
-  const c=marketPrice/buy,n=settings.coeff;
+  const c=marketHigh/buy,n=settings.coeff;
   const dr=document.getElementById('decision-row');
-  if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' return','Target ×'+n+' · Margin €'+(marketPrice-buy).toFixed(0));}
-  else{dr.className='decision-row pass';setDecision('✗','PASS — only ×'+c.toFixed(1),'Need ×'+n+' · Short €'+(buy*n-marketPrice).toFixed(0));}
+  if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' on high est.','Target ×'+n+' · Best case €'+(marketHigh-buy).toFixed(0)+' margin');}
+  else{dr.className='decision-row pass';setDecision('✗','PASS — only ×'+c.toFixed(1)+' on high est.','Need ×'+n+' to justify purchase');}
 }
 function setDecision(icon,text,sub){document.getElementById('d-icon').textContent=icon;document.getElementById('d-text').textContent=text;document.getElementById('d-sub').textContent=sub;}
 function onPriceChange(){recalcDecision();}
+
+function retakePhoto(){capturedPhotoBase64=null;goTo('scan-screen');}
+function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;}
+
+function saveToStock(){
+  if(!currentBook)return;
+  if(!selectedGrade){toast('Select a condition first');return;}
+  const price=document.getElementById('price-input').value;
+  if(!price){toast('Enter a purchase price');return;}
+  const db=getDB();
+  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
+  saveDB(db);toast('✓ Added to stock');
+  capturedPhotoBase64=null;
+  setTimeout(()=>goTo('scan-screen'),1200);
+}
 
 function showEditions(docs){
   const list=document.getElementById('ed-list');list.innerHTML='';
@@ -567,106 +611,29 @@ function showEditions(docs){
   goTo('editions-screen');
 }
 
-function buildFiche(book){
-  currentBook=book;selectedGrade=null;
-  const db=getDB();
-  const inStock=book.isbn&&db.stock.find(i=>i.isbn===book.isbn);
-  const inLib=book.isbn&&db.library.find(i=>i.isbn===book.isbn);
-  const banner=document.getElementById('stock-banner');
-  banner.className='stock-banner';
-  if(inStock){banner.className='stock-banner in-stock';banner.textContent='⚡ Already in stock · €'+(inStock.price||'?');}
-  else if(inLib){banner.className='stock-banner in-lib';banner.textContent='📚 Already in your library';}
-
-  // Photo — use captured photo (real book) or cover from DB
-  const photoArea=document.getElementById('fiche-photo-area');
-  const photoSrc=book.bookPhoto||null;
-  const fallbackCover=book.cover||null;
-  if(photoSrc){
-    photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button>${book.aiIdentified?'<div class="fiche-photo-badge">✦ AI identified</div>':''}</div>`;
-  }else if(fallbackCover){
-    photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${fallbackCover}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Add photo</button></div>`;
-  }else{
-    photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo — tap camera to add one</p></div>`;
-  }
-
-  document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${book.aiIdentified?'<div class="ai-badge">✦ Identified by Claude</div>':''}`;
-
-  const grid=document.getElementById('grade-grid');grid.innerHTML='';
-  GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
-
-  // Pre-fill language if AI detected it
-  if(book.language){
-    const lang=book.language.toUpperCase();
-    const sel=document.getElementById('field-lang');
-    if(['EN','FR','NL'].includes(lang))sel.value=lang;
-    else sel.value='';
-  }else{
-    document.getElementById('field-lang').value='';
-  }
-
-  document.getElementById('price-input').value='';
-  document.getElementById('notes-ta').value='';
-  document.getElementById('field-source').value='';
-  document.getElementById('grade-desc').textContent='Select condition';
-  goTo('fiche-screen');
-  fetchMarketPrice(book);
-}
-
-function retakePhoto(){capturedPhotoBase64=null;goTo('scan-screen');}
-function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;}
-function setPrice(p){document.getElementById('price-input').value=p;onPriceChange();}
-
-function saveToStock(){
-  if(!currentBook)return;
-  if(!selectedGrade){toast('Select a condition first');return;}
-  const price=document.getElementById('price-input').value;
-  if(!price){toast('Enter a purchase price');return;}
-  const db=getDB();
-  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketPrice,language:document.getElementById('field-lang').value,source:document.getElementById('field-source').value,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
-  saveDB(db);toast('✓ Added to stock');
-  capturedPhotoBase64=null;
-  setTimeout(()=>goTo('scan-screen'),1200);
-}
-function saveToLibrary(){
-  if(!currentBook)return;
-  const db=getDB();
-  db.library.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade?selectedGrade.code:null,language:document.getElementById('field-lang').value,source:document.getElementById('field-source').value,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
-  saveDB(db);toast('📚 Added to library');
-  capturedPhotoBase64=null;
-  setTimeout(()=>goTo('scan-screen'),1200);
-}
-
-function switchTab(tab){currentTab=tab;document.getElementById('tab-stock').classList.toggle('active',tab==='stock');document.getElementById('tab-library').classList.toggle('active',tab==='library');renderLibrary();}
 function renderLibrary(){
   const db=getDB(),q=(document.getElementById('lib-search').value||'').toLowerCase();
-  const items=(currentTab==='stock'?db.stock:db.library).filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>b.addedAt-a.addedAt);
+  const items=db.stock.filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>b.addedAt-a.addedAt);
   const list=document.getElementById('lib-list');
-  if(!items.length){list.innerHTML=`<div class="lib-empty">No items yet.</div>`;return;}
+  if(!items.length){list.innerHTML=`<div class="lib-empty">No items in stock yet.</div>`;return;}
   list.innerHTML=items.map(i=>{
     const photo=i.bookPhoto||i.cover||null;
-    return`<div class="lib-item"><div>${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:''}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div></div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${[i.author,i.year,i.language,i.source].filter(Boolean).join(' · ')}</div></div>${i.grade?`<div class="lib-grade">${i.grade}</div>`:''} ${currentTab==='stock'&&i.price?`<div class="lib-price">€${i.price}</div>`:''}</div>`;
+    return`<div class="lib-item">
+      ${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}
+      <div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div>
+      <div class="lib-info">
+        <div class="lib-title">${i.title}</div>
+        <div class="lib-meta">${[i.author,i.year].filter(Boolean).join(' · ')}</div>
+      </div>
+      ${i.grade?`<div class="lib-grade">${i.grade}</div>`:''}
+      ${i.price?`<div class="lib-price">€${i.price}</div>`:''}
+    </div>`;
   }).join('');
 }
-
-function exportCSV(){
-  const db=getDB();
-  if(!db.stock.length){toast('No stock to export');return;}
-  const headers=['Title','Author','Publisher','Year','ISBN','Language','Source','Condition','Purchase Price','Market Est.','Notes'];
-  const rows=db.stock.map(i=>[i.title||'',i.author||'',i.publisher||'',i.year||'',i.isbn||'',i.language||'',i.source||'',i.grade||'',i.price||'',i.marketPrice||'',i.notes||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
-  const csv=[headers.join(','),...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='catalogr-stock.csv';a.click();
-  URL.revokeObjectURL(url);
-  toast('Exported '+db.stock.length+' items');
-}
-
-function showStats(){const db=getDB(),val=db.stock.reduce((a,b)=>a+(b.price||0),0);toast('Stock: '+db.stock.length+' · Library: '+db.library.length+' · €'+val.toFixed(0));}
 
 function renderCoeffBtns(){['coeff-btns','coeff-setting-btns'].forEach(id=>{const w=document.getElementById(id);if(!w)return;w.innerHTML=[2,3,4,5].map(v=>`<button class="coeff-btn ${settings.coeff===v?'active':''}" onclick="setCoeff(${v})">×${v}</button>`).join('');});}
 function toggleSettings(){const p=document.getElementById('settings-panel');p.classList.toggle('open');if(p.classList.contains('open')){document.getElementById('api-key-input').value=getApiKey();updateApiStatus();updateCount();renderCoeffBtns();}}
 function clearAll(){if(confirm('Clear all data?')){localStorage.removeItem('catalogr_db');updateCount();renderLibrary();toggleSettings();toast('All data cleared');}}
-
 function navTo(sid,nid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(nid).classList.add('active');if(sid==='library-screen')renderLibrary();}
 function goTo(sid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');}
 function setLoading(msg){document.getElementById('spinner').className='spinner';document.getElementById('loading-label').textContent=msg||'Loading…';goTo('loading-screen');}
