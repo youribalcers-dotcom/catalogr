@@ -6,7 +6,7 @@ export default async function handler(req) {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+        'Access-Control-Allow-Headers': 'Content-Type',
       }
     });
   }
@@ -26,8 +26,8 @@ export default async function handler(req) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 500,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
         messages: [{
           role: 'user',
           content: [
@@ -37,20 +37,23 @@ export default async function handler(req) {
             },
             {
               type: 'text',
-              text: `You are a book identification expert. Look at this image and identify the book.
-Return ONLY a valid JSON object with these exact fields (no markdown, no explanation):
+              text: `You are a book identification and rare book market expert. Look at this image and identify the book.
+
+Return ONLY a valid JSON object, no markdown, no explanation:
 {
   "title": "exact book title",
   "author": "author full name",
   "publisher": "publisher name",
-  "year": "publication year as string",
+  "year": "publication year as 4-digit string",
   "isbn": "ISBN-13 if visible, otherwise empty string",
   "language": "en or fr or nl",
-  "pages": "page count as string if known, otherwise empty",
-  "description": "one sentence description",
+  "pages": "page count as string if known, otherwise empty string",
+  "description": "one sentence about this book",
+  "marketEstimate": "realistic second-hand price in EUR as integer. Common paperbacks 5-15, standard used 10-30, genuinely rare out-of-print 50-200, exceptional first editions 200+. A Folio or Gallimard reprint of a classic is worth 8-15 used. Do not inflate.",
   "identified": true
 }
-If you cannot identify the book at all, return {"identified": false}.`
+
+If you cannot identify the book at all, return: {"identified": false}`
             }
           ]
         }]
@@ -66,7 +69,7 @@ If you cannot identify the book at all, return {"identified": false}.`
       }
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), {
+    return new Response(JSON.stringify({ error: { message: e.message } }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
