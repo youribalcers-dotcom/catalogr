@@ -13,14 +13,12 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;}
 #app{height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden;}
-
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;border-bottom:1.5px solid var(--border);flex-shrink:0;background:var(--bg2);}
 .hdr-logo{font-size:22px;font-weight:800;letter-spacing:-.5px;}
 .hdr-logo span{color:var(--green);}
 .hdr-right{display:flex;align-items:center;gap:8px;}
 .hdr-count{font-family:'Syne Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg3);padding:4px 10px;border-radius:20px;border:1px solid var(--border);}
 .hdr-btn{width:34px;height:34px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--muted2);font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
-
 .screen{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .screen.active{display:flex;}
 
@@ -50,14 +48,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:14px 20px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
 .btn:active{transform:scale(.97);}
 .btn-primary{background:var(--text);color:#fff;}
-.btn-ai{background:var(--purple);color:#fff;}
 .btn-ghost{background:var(--bg2);color:var(--text);border:1.5px solid var(--border2);}
 .isbn-row{display:flex;gap:8px;}
-.isbn-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:14px;padding:12px 14px;outline:none;transition:border-color .2s;}
+.isbn-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:16px;padding:13px 14px;outline:none;transition:border-color .2s;letter-spacing:.05em;}
 .isbn-input:focus{border-color:var(--text);}
-.isbn-input::placeholder{color:var(--muted);}
-.divider-text{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
-.divider-text::before,.divider-text::after{content:'';flex:1;height:1px;background:var(--border);}
+.isbn-input::placeholder{color:var(--muted);font-size:13px;letter-spacing:0;}
 
 /* LOADING */
 #loading-screen{align-items:center;justify-content:center;gap:14px;background:var(--bg);}
@@ -97,7 +92,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .fiche-body{padding:16px;display:flex;flex-direction:column;gap:18px;}
 .field-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 
-/* MARKET RESEARCH */
+/* MARKET */
 .market-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
 .market-range{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);}
 .market-range-vals{display:flex;align-items:baseline;gap:8px;}
@@ -105,7 +100,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .market-arrow{font-size:13px;color:var(--muted);}
 .market-high{font-size:22px;font-weight:700;color:var(--green);font-family:'Syne Mono',monospace;}
 .market-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;}
-.market-loading{padding:14px 16px;font-size:13px;color:var(--muted);font-family:'Syne Mono',monospace;animation:pulse 1s infinite;}
+.market-loading{padding:14px 16px;font-size:13px;color:var(--muted);font-family:'Syne Mono',monospace;animation:pulse 1s infinite;border-bottom:1px solid var(--border);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .decision-row{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
 .decision-icon{font-size:20px;}
@@ -120,11 +115,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .coeff-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
 
 /* SOURCE LINKS */
-.source-links{padding:10px 14px;display:flex;gap:6px;flex-wrap:wrap;}
+.source-section{padding:10px 14px 6px;}
+.source-section-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.source-links{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
 .source-link{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;background:var(--bg3);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s;}
 .source-link:hover{color:var(--text);border-color:var(--text);}
+.source-link.verify{background:#f3f0ff;border-color:#ddd6fe;color:var(--purple);}
 
-/* PURCHASE PRICE */
+/* PRICE */
 .price-input-wrap{position:relative;}
 .price-input-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:18px;font-weight:700;}
 .price-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:22px;font-weight:700;padding:12px 14px 12px 34px;outline:none;transition:border-color .2s;}
@@ -135,10 +133,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .grade-btn{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:10px 2px;border-radius:7px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--muted2);cursor:pointer;text-align:center;transition:all .15s;}
 .grade-btn.sel{background:var(--text);color:#fff;border-color:var(--text);}
 .grade-desc{font-size:12px;color:var(--muted2);min-height:30px;line-height:1.5;font-family:'Syne Mono',monospace;margin-top:6px;}
-
 .notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:60px;}
 .notes-ta::placeholder{color:var(--muted);}
-
 .fiche-acts{padding:14px 16px;display:flex;gap:8px;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
 
 /* LIBRARY */
@@ -177,10 +173,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .nav-btn.active{color:var(--text);}
 .nav-icon{font-size:20px;line-height:1;}
 .nav-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:22px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-#file-input{display:none;}
 </style>
 </head>
 <body>
@@ -203,14 +197,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <div class="cam-idle-label">Tap to activate camera</div>
         </div>
         <div class="cam-active-bar" id="cam-bar">
-          <button class="btn-cam" onclick="capturePhoto(event)">📷 Take photo</button>
+          <button class="btn-cam" onclick="capturePhoto(event)">📷 Take photo & identify</button>
           <button class="btn-cam btn-cam-sm" onclick="stopCamera(event)">✕</button>
         </div>
       </div>
       <div class="scan-controls" id="scan-controls">
         <div class="err-box" id="scan-err"></div>
         <div class="isbn-row">
-          <input class="isbn-input" id="isbn-input" type="text" placeholder="ISBN (e.g. 9781804940341)" maxlength="17" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()">
+          <input class="isbn-input" id="isbn-input" type="text" placeholder="Enter ISBN" maxlength="13" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
           <button class="btn btn-primary" style="width:54px;padding:0;flex-shrink:0" onclick="lookupManual()">→</button>
         </div>
       </div>
@@ -238,25 +232,26 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="stock-banner" id="stock-banner"></div>
     <div class="fiche-info" id="fiche-info"></div>
     <div class="fiche-body">
-
-      <!-- MARKET RESEARCH -->
       <div>
         <div class="field-lbl">Market research</div>
         <div class="market-box">
-          <div id="market-content"><div class="market-loading">Estimating market value…</div></div>
+          <div id="market-content"><div class="market-loading">Estimating…</div></div>
           <div class="decision-row" id="decision-row">
             <div class="decision-icon" id="d-icon">⏳</div>
-            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Waiting for estimate…</div></div>
+            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Loading estimate…</div></div>
           </div>
           <div class="coeff-row">
             <div class="coeff-lbl">Min. coefficient ×</div>
             <div class="coeff-btns" id="coeff-btns"></div>
           </div>
-          <div class="source-links" id="source-links"></div>
+          <div class="source-section">
+            <div class="source-section-lbl">Check prices</div>
+            <div class="source-links" id="price-links"></div>
+            <div class="source-section-lbl">Verify edition</div>
+            <div class="source-links" id="verify-links"></div>
+          </div>
         </div>
       </div>
-
-      <!-- PURCHASE PRICE -->
       <div>
         <div class="field-lbl">Purchase price</div>
         <div class="price-input-wrap">
@@ -264,20 +259,15 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <input type="number" class="price-input" id="price-input" placeholder="0" min="0" oninput="onPriceChange()">
         </div>
       </div>
-
-      <!-- GRADE -->
       <div>
         <div class="field-lbl">Condition</div>
         <div class="grade-grid" id="grade-grid"></div>
         <div class="grade-desc" id="grade-desc">Select condition</div>
       </div>
-
-      <!-- NOTES -->
       <div>
         <div class="field-lbl">Notes</div>
         <textarea class="notes-ta" id="notes-ta" placeholder="Ex-libris, annotations, binding, provenance…"></textarea>
       </div>
-
     </div>
     <div class="fiche-acts">
       <button class="btn btn-ghost" style="flex:1" onclick="goTo('scan-screen')">← Back</button>
@@ -285,7 +275,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
-  <!-- LIBRARY / STOCK -->
+  <!-- STOCK -->
   <div id="library-screen" class="screen">
     <div class="lib-body">
       <input class="lib-search" id="lib-search" type="search" placeholder="Search title or author…" oninput="renderLibrary()">
@@ -293,14 +283,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
-  <!-- NAV — 2 buttons only -->
+  <!-- NAV -->
   <div class="nav">
-    <button class="nav-btn active" id="nav-scan" onclick="navTo('scan-screen','nav-scan')">
-      <div class="nav-icon">◉</div><div class="nav-lbl">Scan</div>
-    </button>
-    <button class="nav-btn" id="nav-lib" onclick="navTo('library-screen','nav-lib')">
-      <div class="nav-icon">▤</div><div class="nav-lbl">Stock</div>
-    </button>
+    <button class="nav-btn active" id="nav-scan" onclick="navTo('scan-screen','nav-scan')"><div class="nav-icon">◉</div><div class="nav-lbl">Scan</div></button>
+    <button class="nav-btn" id="nav-lib" onclick="navTo('library-screen','nav-lib')"><div class="nav-icon">▤</div><div class="nav-lbl">Stock</div></button>
   </div>
 
   <!-- SETTINGS -->
@@ -335,6 +321,7 @@ let currentBook=null,selectedGrade=null,videoStream=null,scanning=false;
 let settings={coeff:2};
 let marketLow=null,marketHigh=null;
 let capturedPhotoBase64=null;
+let pendingISBN=null; // ISBN kept for AI fallback
 
 const GRADES=[
   {code:'G',   desc:'Poor. Heavy wear, complete.'},
@@ -373,7 +360,7 @@ async function startCamera(){
     document.getElementById('cam-bar').classList.add('show');
     document.getElementById('scan-controls').style.display='none';
     startBarcodeScan();
-  }catch(e){showErr('Camera access denied. Use "Identify from photo library".');}
+  }catch(e){showErr('Camera access denied.');}
 }
 async function startBarcodeScan(){
   if(!('BarcodeDetector' in window))return;
@@ -382,10 +369,33 @@ async function startBarcodeScan(){
   const v=document.getElementById('video');
   const loop=async()=>{
     if(!scanning||!videoStream)return;
-    try{const codes=await det.detect(v);if(codes.length){scanning=false;stopCamera();fetchBook(codes[0].rawValue);return;}}catch(e){}
+    try{
+      const codes=await det.detect(v);
+      if(codes.length){
+        scanning=false;
+        const isbn=codes[0].rawValue;
+        // Capture frame simultaneously for AI fallback
+        captureFrameSilent(v);
+        stopCamera();
+        fetchBook(isbn);
+        return;
+      }
+    }catch(e){}
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
+}
+function captureFrameSilent(v){
+  // Silently capture current frame for potential AI fallback
+  try{
+    const canvas=document.createElement('canvas');
+    const MAX=800;
+    const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);
+    canvas.width=Math.round(v.videoWidth*ratio);
+    canvas.height=Math.round(v.videoHeight*ratio);
+    canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);
+    capturedPhotoBase64=canvas.toDataURL('image/jpeg',0.75);
+  }catch(e){}
 }
 function stopCamera(e){
   if(e)e.stopPropagation();
@@ -410,32 +420,63 @@ function capturePhoto(e){
   stopCamera();
   identifyWithAI(dataUrl.split(',')[1],'image/jpeg');
 }
-function handlePhotoUpload(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=(ev)=>{
-    const img=new Image();
-    img.onload=()=>{
-      const canvas=document.createElement('canvas');
-      const MAX=800;
-      const ratio=Math.min(MAX/img.width,MAX/img.height,1);
-      canvas.width=Math.round(img.width*ratio);
-      canvas.height=Math.round(img.height*ratio);
-      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
-      const compressed=canvas.toDataURL('image/jpeg',0.75);
-      capturedPhotoBase64=compressed;
-      identifyWithAI(compressed.split(',')[1],'image/jpeg');
-    };
-    img.src=ev.target.result;
-  };
-  reader.readAsDataURL(file);
-  e.target.value='';
+
+// ISBN LOOKUP — with automatic AI fallback
+function lookupManual(){
+  const val=document.getElementById('isbn-input').value.replace(/[^0-9]/g,'');
+  if(val.length<10){showErr('ISBN must be 10 or 13 digits');return;}
+  pendingISBN=val;
+  capturedPhotoBase64=null;
+  fetchBook(val);
 }
 
-async function identifyWithAI(base64,mediaType){
+async function fetchBook(isbn){
+  setLoading('Searching ISBN '+isbn+'…');hideErr();
+  try{
+    // Try Open Library Books API
+    const r1=await fetch('https://openlibrary.org/api/books?bibkeys=ISBN:'+isbn+'&format=json&jscmd=data');
+    const d1=await r1.json();
+    const key='ISBN:'+isbn;
+    if(d1[key]){buildFiche(formatOLBook(d1[key],isbn));return;}
+
+    // Try Open Library search
+    const r2=await fetch('https://openlibrary.org/search.json?isbn='+isbn+'&limit=8');
+    const d2=await r2.json();
+    if(d2.docs&&d2.docs.length){
+      const books=d2.docs.map(formatOLSearch);
+      books.length===1?buildFiche(books[0]):showEditions(books);
+      return;
+    }
+
+    // Try Open Library ISBN direct
+    const r3=await fetch('https://openlibrary.org/isbn/'+isbn+'.json');
+    if(r3.ok){const d3=await r3.json();buildFiche(formatOLRaw(d3,isbn));return;}
+
+    // NOT FOUND — fallback to AI if we have a photo, otherwise prompt user
+    if(capturedPhotoBase64){
+      setLoadingAI('ISBN not found in database — asking Claude…');
+      const base64=capturedPhotoBase64.split(',')[1];
+      await identifyWithAI(base64,'image/jpeg',true);
+    }else{
+      goTo('scan-screen');
+      showErr('ISBN '+isbn+' not found. Point camera at the cover and tap "Take photo & identify".');
+    }
+  }catch(e){goTo('scan-screen');showErr('Connection error.');}
+}
+
+function formatOLBook(b,isbn){return{title:b.title||'Unknown',author:(b.authors||[]).map(a=>a.name).join(', '),publisher:(b.publishers&&b.publishers[0])?b.publishers[0].name:'',year:b.publish_date?(b.publish_date.match(/\d{4}/)||[''])[0]:'',isbn,cover:b.cover?(b.cover.large||b.cover.medium||b.cover.small):null,pages:b.number_of_pages||'',editionCount:1};}
+function formatOLSearch(doc){return{title:doc.title||'Unknown',author:doc.author_name?doc.author_name[0]:'',publisher:doc.publisher?doc.publisher[0]:'',year:doc.first_publish_year||'',isbn:doc.isbn?doc.isbn[0]:'',cover:doc.cover_i?'https://covers.openlibrary.org/b/id/'+doc.cover_i+'-M.jpg':null,pages:doc.number_of_pages_median||'',editionCount:doc.edition_count||1};}
+function formatOLRaw(b,isbn){return{title:b.title||'Unknown',author:'',publisher:(b.publishers&&b.publishers[0])||'',year:(b.publish_date||'').match(/\d{4}/)?b.publish_date.match(/\d{4}/)[0]:'',isbn,cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null,pages:b.number_of_pages||'',editionCount:1};}
+
+// AI IDENTIFICATION
+async function identifyWithAI(base64,mediaType,fromFallback=false){
   const apiKey=getApiKey();
-  if(!apiKey){showErr('API key not configured. Go to Settings ⚙.');return;}
-  setLoadingAI('Claude is identifying the book…');
+  if(!apiKey){
+    goTo('scan-screen');
+    showErr('API key not configured. Go to Settings ⚙.');
+    return;
+  }
+  if(!fromFallback)setLoadingAI('Claude is identifying the book…');
   try{
     const response=await fetch('/api/identify',{
       method:'POST',
@@ -450,6 +491,8 @@ async function identifyWithAI(base64,mediaType){
     let parsed;
     try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Could not parse response. Try a clearer photo.');return;}
     if(!parsed.identified){goTo('scan-screen');showErr('Could not identify the book. Try a clearer photo of the cover.');return;}
+    // If we had a pending ISBN, attach it
+    if(pendingISBN&&!parsed.isbn)parsed.isbn=pendingISBN;
     parsed.aiIdentified=true;
     parsed.editionCount=1;
     parsed.bookPhoto=capturedPhotoBase64;
@@ -457,78 +500,56 @@ async function identifyWithAI(base64,mediaType){
   }catch(e){goTo('scan-screen');showErr('Identification failed: '+e.message);}
 }
 
-function lookupManual(){
-  const val=document.getElementById('isbn-input').value.replace(/[-\s]/g,'');
-  if(val.length<10){showErr('Invalid ISBN — 10 or 13 digits');return;}
-  capturedPhotoBase64=null;
-  fetchBook(val);
-}
-async function fetchBook(isbn){
-  setLoading('Searching ISBN '+isbn+'…');hideErr();
-  try{
-    const r1=await fetch('https://openlibrary.org/api/books?bibkeys=ISBN:'+isbn+'&format=json&jscmd=data');
-    const d1=await r1.json();
-    const key='ISBN:'+isbn;
-    if(d1[key]){buildFiche(formatOLBook(d1[key],isbn));return;}
-    const r2=await fetch('https://openlibrary.org/search.json?isbn='+isbn+'&limit=8');
-    const d2=await r2.json();
-    if(d2.docs&&d2.docs.length){const books=d2.docs.map(formatOLSearch);books.length===1?buildFiche(books[0]):showEditions(books);return;}
-    const r3=await fetch('https://openlibrary.org/isbn/'+isbn+'.json');
-    if(r3.ok){const d3=await r3.json();buildFiche(formatOLRaw(d3,isbn));return;}
-    goTo('scan-screen');
-    showErr('ISBN not found. Use "Identify from photo" for recent books.');
-  }catch(e){goTo('scan-screen');showErr('Connection error.');}
-}
-function formatOLBook(b,isbn){return{title:b.title||'Unknown',author:(b.authors||[]).map(a=>a.name).join(', '),publisher:(b.publishers&&b.publishers[0])?b.publishers[0].name:'',year:b.publish_date?(b.publish_date.match(/\d{4}/)||[''])[0]:'',isbn,cover:b.cover?(b.cover.large||b.cover.medium||b.cover.small):null,pages:b.number_of_pages||'',editionCount:1};}
-function formatOLSearch(doc){return{title:doc.title||'Unknown',author:doc.author_name?doc.author_name[0]:'',publisher:doc.publisher?doc.publisher[0]:'',year:doc.first_publish_year||'',isbn:doc.isbn?doc.isbn[0]:'',cover:doc.cover_i?'https://covers.openlibrary.org/b/id/'+doc.cover_i+'-M.jpg':null,pages:doc.number_of_pages_median||'',editionCount:doc.edition_count||1};}
-function formatOLRaw(b,isbn){return{title:b.title||'Unknown',author:'',publisher:(b.publishers&&b.publishers[0])||'',year:(b.publish_date||'').match(/\d{4}/)?b.publish_date.match(/\d{4}/)[0]:'',isbn,cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null,pages:b.number_of_pages||'',editionCount:1};}
-
 function buildSearchLinks(book){
   const q=encodeURIComponent([book.title,book.author].filter(Boolean).join(' '));
   const isbn=book.isbn||'';
-  const links=[
-    {label:'eBay sold',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`},
-    {label:'eBay.fr',url:`https://www.ebay.fr/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`},
+  const priceLinks=[
+    {label:'eBay US sold',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&_sacat=267`},
+    {label:'eBay DE sold',url:`https://www.ebay.de/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&_sacat=267`},
+    {label:'eBay US live',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&_sacat=267`},
+    {label:'Catawiki',url:`https://www.catawiki.com/en/s#q=${q}&c=books`},
+    {label:'Invaluable',url:`https://www.invaluable.com/search/#query=${q}&cat=books`},
+    {label:'Barnebys',url:`https://www.barnebys.com/search/lots?query=${q}`},
     {label:'Eurobuch',url:isbn?`https://www.eurobuch.com/search/isbn/${isbn}`:`https://www.eurobuch.com/buch/suchen.html?q=${q}`},
     {label:'ZVAB',url:`https://www.zvab.com/servlet/SearchResults?tn=${encodeURIComponent(book.title||'')}&an=${encodeURIComponent(book.author||'')}`},
     {label:'Bookfinder',url:`https://www.bookfinder.com/search/?author=${encodeURIComponent(book.author||'')}&title=${encodeURIComponent(book.title||'')}&st=xl&ac=qr`},
   ];
-  const wrap=document.getElementById('source-links');
-  wrap.innerHTML='<div style="font-size:10px;color:var(--muted);font-family:\'Syne Mono\',monospace;letter-spacing:.06em;text-transform:uppercase;width:100%;margin-bottom:4px">Check prices →</div>'+
-    links.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+  const verifyLinks=[
+    {label:'WorldCat',url:isbn?`https://www.worldcat.org/isbn/${isbn}`:`https://www.worldcat.org/search?q=${q}`},
+  ];
+  document.getElementById('price-links').innerHTML=priceLinks.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+  document.getElementById('verify-links').innerHTML=verifyLinks.map(l=>`<a class="source-link verify" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
 }
 
 function buildFiche(book){
   currentBook=book;selectedGrade=null;marketLow=null;marketHigh=null;
+  pendingISBN=null;
   const db=getDB();
   const inStock=book.isbn&&db.stock.find(i=>i.isbn===book.isbn);
   const banner=document.getElementById('stock-banner');
   banner.className='stock-banner';
   if(inStock){banner.className='stock-banner in-stock';banner.textContent='⚡ Already in stock · €'+(inStock.price||'?');}
 
-  // Photo
-  const photoArea=document.getElementById('fiche-photo-area');
   const photoSrc=book.bookPhoto||book.cover||null;
+  const photoArea=document.getElementById('fiche-photo-area');
   if(photoSrc){
     photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button></div>`;
   }else{
     photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo — tap camera to add</p></div>`;
   }
 
-  // Info
   const edNote=book.editionNote?`<div class="fiche-edition-note">⚑ ${book.editionNote}</div>`:'';
   document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${edNote}`;
 
-  // Grades
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
 
   document.getElementById('price-input').value='';
   document.getElementById('notes-ta').value='';
   document.getElementById('grade-desc').textContent='Select condition';
-  document.getElementById('market-content').innerHTML='<div class="market-loading">Estimating market value…</div>';
+  document.getElementById('market-content').innerHTML='<div class="market-loading">Estimating…</div>';
   document.getElementById('decision-row').className='decision-row';
-  setDecision('⏳','Enter purchase price below','Estimate loading…');
+  setDecision('⏳','Enter purchase price below','Loading estimate…');
 
   buildSearchLinks(book);
   goTo('fiche-screen');
@@ -536,53 +557,34 @@ function buildFiche(book){
 }
 
 async function fetchMarketEstimate(book){
-  // Use Claude's estimate from AI identification if available
   if(book.marketLow&&book.marketHigh){
     marketLow=parseInt(book.marketLow);
     marketHigh=parseInt(book.marketHigh);
     renderMarketRange();
     return;
   }
-  // Fallback — conservative heuristic
   await new Promise(r=>setTimeout(r,400));
   const year=parseInt(book.year)||2000,age=new Date().getFullYear()-year,ed=book.editionCount||1;
   let low=5,high=15;
-  if(age>40){low=20;high=60;}
-  else if(age>25){low=12;high=35;}
-  else if(age>15){low=8;high=22;}
-  else{low=5;high=15;}
+  if(age>40){low=20;high=60;}else if(age>25){low=12;high=35;}else if(age>15){low=8;high=22;}
   if(ed<=2){low=Math.round(low*1.5);high=Math.round(high*2);}
   marketLow=low;marketHigh=high;
   renderMarketRange();
 }
-
 function renderMarketRange(){
-  document.getElementById('market-content').innerHTML=`
-    <div class="market-range">
-      <div class="market-lbl">ESTIMATE</div>
-      <div class="market-range-vals">
-        <span class="market-low">€${marketLow}</span>
-        <span class="market-arrow">→</span>
-        <span class="market-high">€${marketHigh}</span>
-      </div>
-    </div>`;
+  document.getElementById('market-content').innerHTML=`<div class="market-range"><div class="market-lbl">ESTIMATE</div><div class="market-range-vals"><span class="market-low">€${marketLow}</span><span class="market-arrow">→</span><span class="market-high">€${marketHigh}</span></div></div>`;
   recalcDecision();
 }
-
 function recalcDecision(){
   const buy=parseFloat(document.getElementById('price-input').value)||0;
-  if(!buy||!marketHigh){
-    if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);
-    return;
-  }
+  if(!buy||!marketHigh){if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);return;}
   const c=marketHigh/buy,n=settings.coeff;
   const dr=document.getElementById('decision-row');
   if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' on high est.','Target ×'+n+' · Best case €'+(marketHigh-buy).toFixed(0)+' margin');}
-  else{dr.className='decision-row pass';setDecision('✗','PASS — only ×'+c.toFixed(1)+' on high est.','Need ×'+n+' to justify purchase');}
+  else{dr.className='decision-row pass';setDecision('✗','PASS — only ×'+c.toFixed(1)+' on high est.','Need ×'+n+' to justify');}
 }
 function setDecision(icon,text,sub){document.getElementById('d-icon').textContent=icon;document.getElementById('d-text').textContent=text;document.getElementById('d-sub').textContent=sub;}
 function onPriceChange(){recalcDecision();}
-
 function retakePhoto(){capturedPhotoBase64=null;goTo('scan-screen');}
 function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;}
 
@@ -600,11 +602,7 @@ function saveToStock(){
 
 function showEditions(docs){
   const list=document.getElementById('ed-list');list.innerHTML='';
-  docs.forEach(doc=>{
-    const card=document.createElement('div');card.className='ed-card';
-    card.innerHTML=`${doc.cover?`<img class="ed-thumb" src="${doc.cover}" onerror="this.style.display='none'">`:``}<div class="ed-thumb-ph" ${doc.cover?'style="display:none"':''}>♪</div><div class="ed-info"><div class="ed-title">${doc.title}</div><div class="ed-meta">${doc.author?doc.author+'<br>':''}${doc.publisher?doc.publisher+' · ':''}${doc.year||''}</div></div>`;
-    card.onclick=()=>buildFiche(doc);list.appendChild(card);
-  });
+  docs.forEach(doc=>{const card=document.createElement('div');card.className='ed-card';card.innerHTML=`${doc.cover?`<img class="ed-thumb" src="${doc.cover}" onerror="this.style.display='none'">`:``}<div class="ed-thumb-ph" ${doc.cover?'style="display:none"':''}>♪</div><div class="ed-info"><div class="ed-title">${doc.title}</div><div class="ed-meta">${doc.author?doc.author+'<br>':''}${doc.publisher?doc.publisher+' · ':''}${doc.year||''}</div></div>`;card.onclick=()=>buildFiche(doc);list.appendChild(card);});
   goTo('editions-screen');
 }
 
@@ -613,19 +611,7 @@ function renderLibrary(){
   const items=db.stock.filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>b.addedAt-a.addedAt);
   const list=document.getElementById('lib-list');
   if(!items.length){list.innerHTML=`<div class="lib-empty">No items in stock yet.</div>`;return;}
-  list.innerHTML=items.map(i=>{
-    const photo=i.bookPhoto||i.cover||null;
-    return`<div class="lib-item">
-      ${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}
-      <div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div>
-      <div class="lib-info">
-        <div class="lib-title">${i.title}</div>
-        <div class="lib-meta">${[i.author,i.year].filter(Boolean).join(' · ')}</div>
-      </div>
-      ${i.grade?`<div class="lib-grade">${i.grade}</div>`:''}
-      ${i.price?`<div class="lib-price">€${i.price}</div>`:''}
-    </div>`;
-  }).join('');
+  list.innerHTML=items.map(i=>{const photo=i.bookPhoto||i.cover||null;return`<div class="lib-item">${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${[i.author,i.year].filter(Boolean).join(' · ')}</div></div>${i.grade?`<div class="lib-grade">${i.grade}</div>`:''} ${i.price?`<div class="lib-price">€${i.price}</div>`:''}</div>`;}).join('');
 }
 
 function renderCoeffBtns(){['coeff-btns','coeff-setting-btns'].forEach(id=>{const w=document.getElementById(id);if(!w)return;w.innerHTML=[2,3,4,5].map(v=>`<button class="coeff-btn ${settings.coeff===v?'active':''}" onclick="setCoeff(${v})">×${v}</button>`).join('');});}
