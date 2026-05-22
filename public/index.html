@@ -233,12 +233,25 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="fiche-info" id="fiche-info"></div>
     <div class="fiche-body">
       <div>
+        <div class="field-lbl">Condition</div>
+        <div class="grade-grid" id="grade-grid"></div>
+        <div class="grade-desc" id="grade-desc">Select condition</div>
+      </div>
+      <div>
+        <div class="field-lbl">Purchase price</div>
+        <div class="price-input-wrap">
+          <span>€</span>
+          <input type="number" class="price-input" id="price-input" placeholder="0" min="0" inputmode="decimal" oninput="onPriceChange()">
+        </div>
+        <button class="btn btn-ghost" style="margin-top:8px;padding:10px;font-size:13px" onclick="document.getElementById('price-input').blur()">✓ Done</button>
+      </div>
+      <div>
         <div class="field-lbl">Market research</div>
         <div class="market-box">
           <div id="market-content"><div class="market-loading">Estimating…</div></div>
           <div class="decision-row" id="decision-row">
             <div class="decision-icon" id="d-icon">⏳</div>
-            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Loading estimate…</div></div>
+            <div><div class="decision-text" id="d-text">Select condition &amp; enter price</div><div class="decision-sub" id="d-sub">Loading estimate…</div></div>
           </div>
           <div class="coeff-row">
             <div class="coeff-lbl">Min. coefficient ×</div>
@@ -251,18 +264,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
             <div class="source-links" id="verify-links"></div>
           </div>
         </div>
-      </div>
-      <div>
-        <div class="field-lbl">Purchase price</div>
-        <div class="price-input-wrap">
-          <span>€</span>
-          <input type="number" class="price-input" id="price-input" placeholder="0" min="0" oninput="onPriceChange()">
-        </div>
-      </div>
-      <div>
-        <div class="field-lbl">Condition</div>
-        <div class="grade-grid" id="grade-grid"></div>
-        <div class="grade-desc" id="grade-desc">Select condition</div>
       </div>
       <div>
         <div class="field-lbl">Notes</div>
@@ -577,6 +578,7 @@ function renderMarketRange(){
 }
 function recalcDecision(){
   const buy=parseFloat(document.getElementById('price-input').value)||0;
+  if(!selectedGrade){setDecision('👆','Select condition first','Grade determines the value');return;}
   if(!buy||!marketHigh){if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);return;}
   const c=marketHigh/buy,n=settings.coeff;
   const dr=document.getElementById('decision-row');
