@@ -209,9 +209,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
       <div class="scan-controls" id="scan-controls">
         <div class="err-box" id="scan-err"></div>
-        <button class="btn btn-ai" onclick="document.getElementById('file-input').click()">✦ Identify from photo library</button>
-        <input type="file" id="file-input" accept="image/*" onchange="handlePhotoUpload(event)">
-        <div class="divider-text">or enter ISBN</div>
         <div class="isbn-row">
           <input class="isbn-input" id="isbn-input" type="text" placeholder="ISBN (e.g. 9781804940341)" maxlength="17" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()">
           <button class="btn btn-primary" style="width:54px;padding:0;flex-shrink:0" onclick="lookupManual()">→</button>
