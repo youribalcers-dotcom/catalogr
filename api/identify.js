@@ -10,14 +10,11 @@ export default async function handler(req) {
       }
     });
   }
-
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
-
   try {
     const { image, mediaType, apiKey } = await req.json();
-
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -31,50 +28,52 @@ export default async function handler(req) {
         messages: [{
           role: 'user',
           content: [
-            {
-              type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: image }
-            },
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data: image } },
             {
               type: 'text',
-              text: `You are a book identification and rare book market expert. Look at this image and identify the book.
+              text: `You are a book identification expert and second-hand book dealer. Identify this book from the image.
 
-Return ONLY a valid JSON object, no markdown, no explanation:
+Return ONLY valid JSON, no markdown:
 {
-  "title": "exact book title",
-  "author": "author full name",
+  "title": "exact title",
+  "author": "full author name",
   "publisher": "publisher name",
-  "year": "publication year as 4-digit string",
-  "isbn": "ISBN-13 if visible, otherwise empty string",
+  "year": "4-digit year",
+  "isbn": "ISBN-13 if visible, else empty string",
   "language": "en or fr or nl",
-  "pages": "page count as string if known, otherwise empty string",
-  "description": "one sentence about this book",
-  "marketEstimate": "realistic second-hand price in EUR as integer. Common paperbacks 5-15, standard used 10-30, genuinely rare out-of-print 50-200, exceptional first editions 200+. A Folio or Gallimard reprint of a classic is worth 8-15 used. Do not inflate.",
+  "pages": "page count or empty string",
+  "description": "one sentence",
+  "marketEstimate": <integer EUR, see rules below>,
   "identified": true
 }
 
-If you cannot identify the book at all, return: {"identified": false}`
+STRICT PRICING RULES — be conservative, not optimistic:
+- Mass market paperback (Folio, Poche, Penguin, etc): 3-12
+- Standard used paperback: 5-15
+- Standard used hardcover: 8-25
+- Academic or specialized book: 15-40
+- Out of print but not rare: 20-60
+- Genuinely rare, hard to find: 60-150
+- Exceptional first edition or signed: 150-400
+- Only go above 400 for truly extraordinary items
+
+Most books are in the 5-25 range. Do NOT inflate because an author is famous.
+A Folio Celine is worth 8-12. A Penguin classic is worth 5-10.
+
+If you cannot identify the book: {"identified": false}`
             }
           ]
         }]
       })
     });
-
     const data = await response.json();
-
     return new Response(JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (e) {
     return new Response(JSON.stringify({ error: { message: e.message } }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
 }

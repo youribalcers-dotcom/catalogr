@@ -9,75 +9,90 @@
 <title>Catalogr</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap');
-:root{--bg:#f8f7f4;--bg2:#ffffff;--bg3:#f0efe9;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#888878;--muted2:#555548;--green:#2d6a4f;--red:#c0392b;--yellow:#b8860b;--purple:#7c3aed;--radius:10px;}
+:root{--bg:#f8f7f4;--bg2:#fff;--bg3:#f0efe9;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#888878;--muted2:#555548;--green:#2d6a4f;--red:#c0392b;--yellow:#b8860b;--purple:#7c3aed;--radius:10px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;}
 #app{height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden;}
+
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;border-bottom:1.5px solid var(--border);flex-shrink:0;background:var(--bg2);}
 .hdr-logo{font-size:22px;font-weight:800;letter-spacing:-.5px;}
 .hdr-logo span{color:var(--green);}
 .hdr-right{display:flex;align-items:center;gap:8px;}
 .hdr-count{font-family:'Syne Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg3);padding:4px 10px;border-radius:20px;border:1px solid var(--border);}
 .hdr-btn{width:34px;height:34px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--muted2);font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+
 .screen{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .screen.active{display:flex;}
-.scan-body{flex:1;display:flex;flex-direction:column;overflow-y:auto;padding:16px;gap:12px;background:var(--bg);}
-.cam-wrap{position:relative;background:var(--bg3);border-radius:12px;overflow:hidden;border:1.5px solid var(--border);aspect-ratio:4/3;cursor:pointer;}
+
+/* SCAN — camera takes all available height */
+.scan-body{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.cam-wrap{position:relative;background:#111;flex:1;min-height:0;overflow:hidden;cursor:pointer;}
 .cam-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
-.cam-idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg3);}
+.cam-idle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg3);}
 .cam-idle.hidden{display:none;}
-.scan-frame{width:110px;height:70px;position:relative;}
-.scan-frame::before,.scan-frame::after,.scan-frame .c3,.scan-frame .c4{content:'';position:absolute;width:18px;height:18px;border-color:var(--text);border-style:solid;}
-.scan-frame::before{top:0;left:0;border-width:2px 0 0 2px;}
-.scan-frame::after{top:0;right:0;border-width:2px 2px 0 0;}
-.scan-frame .c3{bottom:0;left:0;border-width:0 0 2px 2px;}
-.scan-frame .c4{bottom:0;right:0;border-width:0 2px 2px 0;}
-.scan-line-anim{position:absolute;left:0;right:0;height:1.5px;background:var(--green);opacity:.8;animation:scanmove 2s ease-in-out infinite;}
+.scan-frame{width:160px;height:100px;position:relative;}
+.scan-frame::before,.scan-frame::after,.scan-frame .c3,.scan-frame .c4{content:'';position:absolute;width:24px;height:24px;border-color:var(--text);border-style:solid;}
+.scan-frame::before{top:0;left:0;border-width:2.5px 0 0 2.5px;}
+.scan-frame::after{top:0;right:0;border-width:2.5px 2.5px 0 0;}
+.scan-frame .c3{bottom:0;left:0;border-width:0 0 2.5px 2.5px;}
+.scan-frame .c4{bottom:0;right:0;border-width:0 2.5px 2.5px 0;}
+.scan-line-anim{position:absolute;left:0;right:0;height:2px;background:var(--green);opacity:.8;animation:scanmove 2s ease-in-out infinite;}
 @keyframes scanmove{0%{top:10%;opacity:0}20%{opacity:.8}80%{opacity:.8}100%{top:90%;opacity:0}}
-.cam-idle-label{font-size:13px;font-weight:600;color:var(--muted2);text-align:center;line-height:1.6;}
-.cam-active-overlay{position:absolute;bottom:0;left:0;right:0;padding:12px;display:flex;gap:8px;background:linear-gradient(transparent,rgba(0,0,0,.45));}
-.cam-active-overlay.hidden{display:none;}
-.btn-cam{background:rgba(255,255,255,.92);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;flex:1;}
-.cam-status{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg2);border-radius:8px;font-family:'Syne Mono',monospace;font-size:12px;color:var(--muted2);border:1px solid var(--border);}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;}
-.status-dot.live{background:var(--green);animation:blink 1.5s infinite;}
-.status-dot.ai{background:var(--purple);animation:blink 1.5s infinite;}
-.status-dot.error{background:var(--red);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.cam-idle-label{font-size:15px;font-weight:600;color:var(--muted2);text-align:center;line-height:1.6;}
+.cam-active-bar{position:absolute;bottom:0;left:0;right:0;padding:16px;display:flex;gap:10px;background:linear-gradient(transparent,rgba(0,0,0,.65));opacity:0;pointer-events:none;transition:opacity .3s;}
+.cam-active-bar.show{opacity:1;pointer-events:all;}
+.btn-cam{background:rgba(255,255,255,.95);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:13px 16px;border-radius:10px;border:none;cursor:pointer;flex:1;}
+.btn-cam:active{transform:scale(.96);}
+.btn-cam-sm{flex:0;padding:13px 14px;}
+
+/* Controls below camera — hidden when camera active */
+.scan-controls{padding:14px 16px;display:flex;flex-direction:column;gap:10px;background:var(--bg);border-top:1.5px solid var(--border);flex-shrink:0;}
+.err-box{background:#fff0ee;border:1.5px solid #f5c6c2;border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--red);font-weight:500;display:none;line-height:1.5;}
+.err-box.show{display:block;}
+
 .btn{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:14px 20px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
 .btn:active{transform:scale(.97);}
 .btn-primary{background:var(--text);color:#fff;}
 .btn-ai{background:var(--purple);color:#fff;}
 .btn-ghost{background:var(--bg2);color:var(--text);border:1.5px solid var(--border2);}
 .isbn-row{display:flex;gap:8px;}
-.isbn-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:14px;padding:13px 14px;outline:none;transition:border-color .2s;}
+.isbn-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:14px;padding:12px 14px;outline:none;transition:border-color .2s;}
 .isbn-input:focus{border-color:var(--text);}
 .isbn-input::placeholder{color:var(--muted);}
-.err-box{background:#fff0ee;border:1.5px solid #f5c6c2;border-radius:var(--radius);padding:12px 14px;font-size:13px;color:var(--red);font-weight:500;display:none;line-height:1.5;}
-.err-box.show{display:block;}
 .divider-text{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
 .divider-text::before,.divider-text::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* LOADING */
 #loading-screen{align-items:center;justify-content:center;gap:14px;background:var(--bg);}
 .spinner{width:36px;height:36px;border:2.5px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin .7s linear infinite;}
 .spinner.ai{border-top-color:var(--purple);}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-label{font-family:'Syne Mono',monospace;font-size:13px;color:var(--muted2);text-align:center;padding:0 30px;line-height:1.6;}
+
+/* EDITIONS */
 #editions-screen{overflow-y:auto;background:var(--bg);}
 .screen-pad{padding:16px;display:flex;flex-direction:column;gap:12px;}
 .screen-hd{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
 .ed-list{display:flex;flex-direction:column;gap:8px;}
-.ed-card{display:flex;gap:14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:border-color .15s;}
+.ed-card{display:flex;gap:14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;}
 .ed-card:active{border-color:var(--text);}
 .ed-thumb{width:46px;height:62px;object-fit:cover;border-radius:4px;background:var(--bg3);flex-shrink:0;}
 .ed-thumb-ph{width:46px;height:62px;border-radius:4px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--muted);}
 .ed-info{flex:1;min-width:0;}
 .ed-title{font-size:14px;font-weight:600;line-height:1.4;}
 .ed-meta{font-size:12px;color:var(--muted2);margin-top:4px;line-height:1.5;}
+
+/* FICHE */
 #fiche-screen{overflow-y:auto;background:var(--bg);}
-.fiche-hero{padding:18px 16px;border-bottom:1.5px solid var(--border);display:flex;gap:16px;background:var(--bg2);flex-shrink:0;}
-.fiche-cover{width:76px;height:104px;object-fit:cover;border-radius:6px;flex-shrink:0;background:var(--bg3);box-shadow:0 2px 8px rgba(0,0,0,.1);}
-.fiche-cover-ph{width:76px;height:104px;border-radius:6px;flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted);border:1.5px solid var(--border);}
-.fiche-title{font-size:17px;font-weight:700;line-height:1.3;}
+.fiche-photo-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:#111;flex-shrink:0;}
+.fiche-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.fiche-photo-ph{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-bottom:1.5px solid var(--border);}
+.fiche-photo-ph span{font-size:36px;}
+.fiche-photo-ph p{font-size:13px;color:var(--muted);font-family:'Syne',sans-serif;}
+.fiche-photo-badge{position:absolute;top:10px;left:10px;background:rgba(124,58,237,.9);color:#fff;font-size:10px;font-weight:700;padding:4px 8px;border-radius:6px;font-family:'Syne Mono',monospace;}
+.fiche-photo-retake{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;font-family:'Syne',sans-serif;font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;}
+.fiche-info{padding:16px;background:var(--bg2);border-bottom:1.5px solid var(--border);}
+.fiche-title{font-size:18px;font-weight:700;line-height:1.3;}
 .fiche-author{font-size:13px;color:var(--green);margin-top:5px;font-weight:600;}
 .fiche-meta{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.7;font-family:'Syne Mono',monospace;}
 .ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#f3f0ff;color:var(--purple);border:1px solid #ddd6fe;margin-top:6px;font-family:'Syne Mono',monospace;}
@@ -86,14 +101,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .stock-banner.in-stock{background:#fff8e1;border:1.5px solid #ffe082;color:var(--yellow);display:flex;}
 .fiche-body{padding:16px;display:flex;flex-direction:column;gap:18px;}
 .field-lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.price-decision{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.price-row-data{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);}
-.price-cell{padding:12px 14px;border-right:1px solid var(--border);}
-.price-cell:last-child{border-right:none;}
-.price-cell-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;margin-bottom:4px;}
-.price-cell-val{font-size:20px;font-weight:700;font-family:'Syne Mono',monospace;}
-.price-cell-val.loading{font-size:13px;color:var(--muted);animation:pulse 1s infinite;}
-.price-cell-val.good{color:var(--green);}
+
+/* PRICE — single cell, no redundant target */
+.price-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.price-market-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);}
+.price-market-lbl{font-size:11px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;}
+.price-market-val{font-size:22px;font-weight:700;font-family:'Syne Mono',monospace;color:var(--text);}
+.price-market-val.loading{font-size:13px;color:var(--muted);animation:pulse 1s infinite;}
+.price-market-val.good{color:var(--green);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .decision-row{padding:12px 14px;display:flex;align-items:center;gap:10px;}
 .decision-icon{font-size:22px;}
@@ -106,6 +121,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .coeff-btns{display:flex;gap:4px;}
 .coeff-btn{font-family:'Syne Mono',monospace;font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--muted2);cursor:pointer;transition:all .15s;}
 .coeff-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+
 .price-input-wrap{position:relative;}
 .price-input-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:18px;font-weight:700;}
 .price-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:22px;font-weight:700;padding:12px 14px 12px 34px;outline:none;transition:border-color .2s;}
@@ -113,19 +129,21 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .price-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .chip{font-family:'Syne Mono',monospace;font-size:12px;padding:6px 12px;border-radius:20px;background:var(--bg2);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;transition:all .15s;}
 .chip:hover{color:var(--text);border-color:var(--text);}
+
 .grade-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
-.grade-btn{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:10px 2px;border-radius:7px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--muted2);cursor:pointer;transition:all .15s;text-align:center;}
+.grade-btn{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:10px 2px;border-radius:7px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--muted2);cursor:pointer;text-align:center;transition:all .15s;}
 .grade-btn.sel{background:var(--text);color:#fff;border-color:var(--text);}
 .grade-desc{font-size:12px;color:var(--muted2);min-height:30px;line-height:1.5;font-family:'Syne Mono',monospace;margin-top:6px;}
-.notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:60px;transition:border-color .2s;}
-.notes-ta:focus{border-color:var(--text);}
+
+.field-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:12px 14px;outline:none;transition:border-color .2s;}
+.field-input:focus{border-color:var(--text);}
+.field-input::placeholder{color:var(--muted);}
+.field-select{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:12px 14px;outline:none;appearance:none;}
+.notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:60px;}
 .notes-ta::placeholder{color:var(--muted);}
-.insta-wrap{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.insta-hdr{padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
-.insta-av{width:26px;height:26px;border-radius:50%;background:var(--text);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;}
-.insta-caption{padding:14px;font-size:12px;color:var(--muted2);line-height:1.7;white-space:pre-wrap;word-break:break-word;font-family:'Syne Mono',monospace;max-height:140px;overflow-y:auto;}
-.copy-btn{width:100%;padding:11px;background:var(--bg3);border:none;border-top:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;cursor:pointer;}
 .fiche-acts{padding:14px 16px;display:flex;gap:8px;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
+
+/* LIBRARY */
 #library-screen{overflow-y:auto;background:var(--bg);}
 .lib-body{padding:16px;display:flex;flex-direction:column;gap:12px;}
 .lib-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg3);border-radius:var(--radius);padding:4px;border:1.5px solid var(--border);}
@@ -133,15 +151,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .lib-tab.active{background:var(--text);color:#fff;}
 .lib-search{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:11px 14px;outline:none;width:100%;}
 .lib-list{display:flex;flex-direction:column;gap:6px;}
-.lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;}
-.lib-thumb{width:36px;height:50px;object-fit:cover;border-radius:4px;background:var(--bg3);flex-shrink:0;}
-.lib-thumb-ph{width:36px;height:50px;border-radius:4px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);}
+.lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;}
+.lib-thumb{width:44px;height:60px;object-fit:cover;border-radius:4px;background:var(--bg3);flex-shrink:0;}
+.lib-thumb-ph{width:44px;height:60px;border-radius:4px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);}
 .lib-info{flex:1;min-width:0;}
 .lib-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lib-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:'Syne Mono',monospace;}
 .lib-grade{font-family:'Syne Mono',monospace;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:var(--bg3);color:var(--muted2);border:1px solid var(--border);flex-shrink:0;}
 .lib-price{font-family:'Syne Mono',monospace;font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;}
 .lib-empty{text-align:center;padding:40px 20px;font-size:14px;color:var(--muted);line-height:1.7;}
+
+/* SETTINGS */
 #settings-panel{position:absolute;inset:0;background:var(--bg);z-index:100;display:none;flex-direction:column;}
 #settings-panel.open{display:flex;}
 .settings-body{padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1;}
@@ -151,16 +171,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .settings-lbl{font-size:14px;font-weight:500;}
 .settings-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .settings-val{font-family:'Syne Mono',monospace;font-size:13px;font-weight:700;color:var(--green);}
-.settings-input{background:var(--bg3);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Syne Mono',monospace;font-size:12px;padding:7px 10px;outline:none;width:160px;text-align:right;}
 .api-key-input{background:var(--bg3);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Syne Mono',monospace;font-size:11px;padding:7px 10px;outline:none;width:100%;margin-top:6px;}
 .api-status{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;margin-top:6px;display:inline-block;}
 .api-status.set{background:#e8f5e9;color:var(--green);}
 .api-status.unset{background:#fff0ee;color:var(--red);}
+
+/* NAV */
 .nav{display:grid;grid-template-columns:repeat(3,1fr);border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
 .nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 8px;cursor:pointer;color:var(--muted);border:none;background:none;}
 .nav-btn.active{color:var(--text);}
 .nav-icon{font-size:20px;line-height:1;}
 .nav-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:22px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:200;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #file-input{display:none;}
@@ -176,39 +198,40 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
+  <!-- SCAN -->
   <div id="scan-screen" class="screen active">
     <div class="scan-body">
       <div class="cam-wrap" id="cam-wrap" onclick="handleCamTap()">
         <video id="video" autoplay playsinline muted></video>
         <div class="cam-idle" id="cam-idle">
           <div class="scan-frame"><div class="c3"></div><div class="c4"></div><div class="scan-line-anim"></div></div>
-          <div class="cam-idle-label">Tap to activate camera<br><span style="font-size:11px;font-weight:400;color:var(--muted)">for barcode scanning</span></div>
+          <div class="cam-idle-label">Tap to activate camera</div>
         </div>
-        <div class="cam-active-overlay hidden" id="cam-overlay">
-          <button class="btn-cam" onclick="captureForAI(event)">📷 Identify with AI</button>
-          <button class="btn-cam" onclick="stopCamera(event)" style="flex:0;padding:10px 12px">✕</button>
+        <div class="cam-active-bar" id="cam-bar">
+          <button class="btn-cam" onclick="capturePhoto(event)">📷 Take photo</button>
+          <button class="btn-cam btn-cam-sm" onclick="stopCamera(event)">✕</button>
         </div>
       </div>
-      <div class="cam-status">
-        <div class="status-dot" id="status-dot"></div>
-        <span id="status-txt">Tap camera to scan · or use AI button below</span>
-      </div>
-      <div class="err-box" id="scan-err"></div>
-      <button class="btn btn-ai" onclick="document.getElementById('file-input').click()">✦ Identify from photo (AI)</button>
-      <input type="file" id="file-input" accept="image/*" capture="environment" onchange="handlePhotoUpload(event)">
-      <div class="divider-text">or enter ISBN manually</div>
-      <div class="isbn-row">
-        <input class="isbn-input" id="isbn-input" type="text" placeholder="ISBN (e.g. 9781804940341)" maxlength="17" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()">
-        <button class="btn btn-primary" style="width:54px;padding:0;flex-shrink:0" onclick="lookupManual()">→</button>
+      <div class="scan-controls" id="scan-controls">
+        <div class="err-box" id="scan-err"></div>
+        <button class="btn btn-ai" onclick="document.getElementById('file-input').click()">✦ Identify from photo library</button>
+        <input type="file" id="file-input" accept="image/*" onchange="handlePhotoUpload(event)">
+        <div class="divider-text">or enter ISBN</div>
+        <div class="isbn-row">
+          <input class="isbn-input" id="isbn-input" type="text" placeholder="ISBN (e.g. 9781804940341)" maxlength="17" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()">
+          <button class="btn btn-primary" style="width:54px;padding:0;flex-shrink:0" onclick="lookupManual()">→</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- LOADING -->
   <div id="loading-screen" class="screen">
     <div class="spinner" id="spinner"></div>
     <div class="loading-label" id="loading-label">Searching…</div>
   </div>
 
+  <!-- EDITIONS -->
   <div id="editions-screen" class="screen">
     <div class="screen-pad">
       <div class="screen-hd">Choose edition</div>
@@ -217,20 +240,23 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
+  <!-- FICHE -->
   <div id="fiche-screen" class="screen">
-    <div class="fiche-hero" id="fiche-hero"></div>
+    <div id="fiche-photo-area"></div>
     <div class="stock-banner" id="stock-banner"></div>
+    <div class="fiche-info" id="fiche-info"></div>
     <div class="fiche-body">
+
       <div>
-        <div class="field-lbl">Market price & decision</div>
-        <div class="price-decision">
-          <div class="price-row-data">
-            <div class="price-cell"><div class="price-cell-lbl">MARKET EST.</div><div class="price-cell-val loading" id="market-price">…</div></div>
-            <div class="price-cell"><div class="price-cell-lbl">YOUR TARGET</div><div class="price-cell-val" id="resale-price">—</div></div>
+        <div class="field-lbl">Market estimate & decision</div>
+        <div class="price-box">
+          <div class="price-market-row">
+            <div class="price-market-lbl">MARKET EST.</div>
+            <div class="price-market-val loading" id="market-price">…</div>
           </div>
           <div class="decision-row" id="decision-row">
             <div class="decision-icon" id="d-icon">⏳</div>
-            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Market estimate loading…</div></div>
+            <div><div class="decision-text" id="d-text">Enter purchase price below</div><div class="decision-sub" id="d-sub">Loading estimate…</div></div>
           </div>
           <div class="coeff-row">
             <div class="coeff-lbl">Min. coefficient ×</div>
@@ -238,30 +264,46 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           </div>
         </div>
       </div>
+
       <div>
         <div class="field-lbl">Purchase price</div>
         <div class="price-input-wrap"><span>€</span><input type="number" class="price-input" id="price-input" placeholder="0" min="0" oninput="onPriceChange()"></div>
         <div class="price-chips">
-          <span class="chip" onclick="setPrice(5)">€5</span><span class="chip" onclick="setPrice(10)">€10</span><span class="chip" onclick="setPrice(20)">€20</span><span class="chip" onclick="setPrice(40)">€40</span><span class="chip" onclick="setPrice(80)">€80</span><span class="chip" onclick="setPrice(150)">€150</span>
+          <span class="chip" onclick="setPrice(5)">€5</span>
+          <span class="chip" onclick="setPrice(10)">€10</span>
+          <span class="chip" onclick="setPrice(20)">€20</span>
+          <span class="chip" onclick="setPrice(40)">€40</span>
+          <span class="chip" onclick="setPrice(80)">€80</span>
+          <span class="chip" onclick="setPrice(150)">€150</span>
         </div>
       </div>
+
       <div>
         <div class="field-lbl">Condition</div>
         <div class="grade-grid" id="grade-grid"></div>
         <div class="grade-desc" id="grade-desc">Select condition</div>
       </div>
+
+      <div>
+        <div class="field-lbl">Language</div>
+        <select class="field-select" id="field-lang">
+          <option value="">Select…</option>
+          <option value="EN">English</option>
+          <option value="FR">Français</option>
+          <option value="NL">Nederlands</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="field-lbl">Source</div>
+        <input class="field-input" id="field-source" type="text" placeholder="e.g. Detroit — John K. King">
+      </div>
+
       <div>
         <div class="field-lbl">Notes</div>
-        <textarea class="notes-ta" id="notes-ta" placeholder="Ex-libris, annotations, binding, provenance…" oninput="updatePost()"></textarea>
+        <textarea class="notes-ta" id="notes-ta" placeholder="Ex-libris, annotations, binding, provenance…"></textarea>
       </div>
-      <div>
-        <div class="field-lbl">Instagram post</div>
-        <div class="insta-wrap">
-          <div class="insta-hdr"><div class="insta-av">♪</div><div id="insta-handle">@bangerbooks</div></div>
-          <div class="insta-caption" id="insta-caption">Fill fields above to generate post.</div>
-          <button class="copy-btn" onclick="copyCaption()">⎘ Copy caption</button>
-        </div>
-      </div>
+
     </div>
     <div class="fiche-acts">
       <button class="btn btn-ghost" style="flex:1" onclick="goTo('scan-screen')">← Back</button>
@@ -270,6 +312,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
+  <!-- LIBRARY -->
   <div id="library-screen" class="screen">
     <div class="lib-body">
       <div class="lib-tabs">
@@ -281,12 +324,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 
+  <!-- NAV -->
   <div class="nav">
     <button class="nav-btn active" id="nav-scan" onclick="navTo('scan-screen','nav-scan')"><div class="nav-icon">◉</div><div class="nav-lbl">Scan</div></button>
     <button class="nav-btn" id="nav-lib" onclick="navTo('library-screen','nav-lib')"><div class="nav-icon">▤</div><div class="nav-lbl">Library</div></button>
     <button class="nav-btn" id="nav-stats" onclick="showStats()"><div class="nav-icon">◈</div><div class="nav-lbl">Stats</div></button>
   </div>
 
+  <!-- SETTINGS -->
   <div id="settings-panel">
     <div class="hdr"><div class="hdr-logo">Settings</div><div class="hdr-btn" onclick="toggleSettings()">✕</div></div>
     <div class="settings-body">
@@ -299,10 +344,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
       <div class="settings-group">
         <div class="settings-row">
-          <div><div class="settings-lbl">Instagram handle</div></div>
-          <input class="settings-input" id="ig-handle" placeholder="@bangerbooks" oninput="saveSettings()">
-        </div>
-        <div class="settings-row">
           <div><div class="settings-lbl">Min. coefficient</div><div class="settings-sub">Buy / Pass threshold</div></div>
           <div class="coeff-btns" id="coeff-setting-btns"></div>
         </div>
@@ -312,15 +353,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <div class="settings-row"><div class="settings-lbl">Library items</div><div class="settings-val" id="s-lib">0</div></div>
         <div class="settings-row"><div class="settings-lbl">Total purchase value</div><div class="settings-val" id="s-val">€0</div></div>
       </div>
+      <button class="btn btn-ghost" onclick="exportCSV()">↓ Export CSV (Shopify)</button>
       <button class="btn btn-ghost" style="color:var(--red);border-color:#f5c6c2" onclick="clearAll()">Clear all data</button>
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
 <script>
 let currentBook=null,selectedGrade=null,videoStream=null,scanning=false;
-let settings={coeff:2,handle:'@bangerbooks'};
+let settings={coeff:2};
 let marketPrice=null,currentTab='stock';
+let capturedPhotoBase64=null;
 
 const GRADES=[
   {code:'G',   desc:'Poor. Heavy wear, complete.'},
@@ -333,12 +377,15 @@ const GRADES=[
 
 function getDB(){try{return JSON.parse(localStorage.getItem('catalogr_db')||'{"stock":[],"library":[]}')}catch(e){return{stock:[],library:[]}}}
 function saveDB(db){localStorage.setItem('catalogr_db',JSON.stringify(db));updateCount()}
-function loadSettings(){try{const s=JSON.parse(localStorage.getItem('catalogr_s')||'{}');settings={coeff:s.coeff||2,handle:s.handle||'@bangerbooks'};}catch(e){}}
-function saveSettings(){settings.handle=document.getElementById('ig-handle').value||'@bangerbooks';localStorage.setItem('catalogr_s',JSON.stringify(settings));document.getElementById('insta-handle').textContent=settings.handle;}
+function loadSettings(){try{const s=JSON.parse(localStorage.getItem('catalogr_s')||'{}');settings={coeff:s.coeff||2};}catch(e){}}
 function setCoeff(v){settings.coeff=v;localStorage.setItem('catalogr_s',JSON.stringify(settings));renderCoeffBtns();recalcDecision();}
 function getApiKey(){return localStorage.getItem('catalogr_apikey')||'';}
 function saveApiKey(){localStorage.setItem('catalogr_apikey',document.getElementById('api-key-input').value.trim());updateApiStatus();}
-function updateApiStatus(){const key=getApiKey();const el=document.getElementById('api-status');if(key&&key.startsWith('sk-ant')){el.className='api-status set';el.textContent='✓ API key configured';}else{el.className='api-status unset';el.textContent='Not configured';}}
+function updateApiStatus(){
+  const key=getApiKey(),el=document.getElementById('api-status');
+  if(key&&key.startsWith('sk-ant')){el.className='api-status set';el.textContent='✓ API key configured';}
+  else{el.className='api-status unset';el.textContent='Not configured';}
+}
 function updateCount(){
   const db=getDB(),t=db.stock.length+db.library.length;
   document.getElementById('hdr-count').textContent=t+' item'+(t!==1?'s':'');
@@ -347,17 +394,17 @@ function updateCount(){
   document.getElementById('s-val').textContent='€'+db.stock.reduce((a,b)=>a+(parseFloat(b.price)||0),0).toFixed(0);
 }
 
-async function handleCamTap(){if(!videoStream){startCamera();}else{captureForAI();}}
+// CAMERA
+async function handleCamTap(){if(!videoStream)startCamera();}
 async function startCamera(){
-  setStatus('Requesting camera…','');
   try{
-    videoStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:960}}});
+    videoStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}});
     document.getElementById('video').srcObject=videoStream;
     document.getElementById('cam-idle').classList.add('hidden');
-    document.getElementById('cam-overlay').classList.remove('hidden');
-    setStatus('Camera live · tap "Identify with AI" or point at barcode','live');
+    document.getElementById('cam-bar').classList.add('show');
+    document.getElementById('scan-controls').style.display='none';
     startBarcodeScan();
-  }catch(e){setStatus('Camera denied — use photo button below','error');showErr('Camera access denied. Use "Identify from photo" button.');}
+  }catch(e){showErr('Camera access denied. Use "Identify from photo library" button.');}
 }
 async function startBarcodeScan(){
   if(!('BarcodeDetector' in window))return;
@@ -376,35 +423,50 @@ function stopCamera(e){
   if(videoStream){videoStream.getTracks().forEach(t=>t.stop());videoStream=null;}
   scanning=false;
   document.getElementById('cam-idle').classList.remove('hidden');
-  document.getElementById('cam-overlay').classList.add('hidden');
-  setStatus('Tap camera to scan · or use AI button below','');
+  document.getElementById('cam-bar').classList.remove('show');
+  document.getElementById('scan-controls').style.display='flex';
 }
-function captureForAI(e){
+function capturePhoto(e){
   if(e)e.stopPropagation();
   if(!videoStream)return;
   const v=document.getElementById('video');
   const canvas=document.createElement('canvas');
-  canvas.width=v.videoWidth;canvas.height=v.videoHeight;
-  canvas.getContext('2d').drawImage(v,0,0);
-  const base64=canvas.toDataURL('image/jpeg',0.85).split(',')[1];
+  const MAX=800;
+  const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);
+  canvas.width=Math.round(v.videoWidth*ratio);
+  canvas.height=Math.round(v.videoHeight*ratio);
+  canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);
+  const dataUrl=canvas.toDataURL('image/jpeg',0.75);
+  capturedPhotoBase64=dataUrl;
   stopCamera();
-  identifyWithAI(base64,'image/jpeg');
+  identifyWithAI(dataUrl.split(',')[1],'image/jpeg');
 }
+
 function handlePhotoUpload(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=(ev)=>{
-    const base64=ev.target.result.split(',')[1];
-    identifyWithAI(base64,file.type||'image/jpeg');
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      const MAX=800;
+      const ratio=Math.min(MAX/img.width,MAX/img.height,1);
+      canvas.width=Math.round(img.width*ratio);
+      canvas.height=Math.round(img.height*ratio);
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const compressed=canvas.toDataURL('image/jpeg',0.75);
+      capturedPhotoBase64=compressed;
+      identifyWithAI(compressed.split(',')[1],'image/jpeg');
+    };
+    img.src=ev.target.result;
   };
   reader.readAsDataURL(file);
   e.target.value='';
 }
 
-// AI via Vercel proxy — no CORS issues
 async function identifyWithAI(base64,mediaType){
   const apiKey=getApiKey();
-  if(!apiKey){showErr('API key not configured. Go to Settings ⚙ and add your Anthropic API key.');return;}
+  if(!apiKey){showErr('API key not configured. Go to Settings ⚙.');return;}
   setLoadingAI('Claude is identifying the book…');
   try{
     const response=await fetch('/api/identify',{
@@ -413,20 +475,16 @@ async function identifyWithAI(base64,mediaType){
       body:JSON.stringify({image:base64,mediaType,apiKey})
     });
     const data=await response.json();
-    if(data.error){goTo('scan-screen');showErr('API error: '+data.error.message);return;}
+    if(data.error){goTo('scan-screen');showErr('API error: '+(data.error.message||JSON.stringify(data.error)));return;}
+    if(!data.content||!data.content.length){goTo('scan-screen');showErr('Empty response. Try again.');return;}
     const text=data.content.map(c=>c.text||'').join('');
     const clean=text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
+    let parsed;
+    try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Parse error. Try a clearer photo.');return;}
     if(!parsed.identified){goTo('scan-screen');showErr('Could not identify the book. Try a clearer photo of the cover.');return;}
-    if(parsed.isbn){
-      try{
-        const r=await fetch('https://openlibrary.org/api/books?bibkeys=ISBN:'+parsed.isbn+'&format=json&jscmd=data');
-        const d=await r.json();
-        const key='ISBN:'+parsed.isbn;
-        if(d[key]&&d[key].cover)parsed.cover=d[key].cover.large||d[key].cover.medium||null;
-      }catch(e){}
-    }
-    parsed.aiIdentified=true;parsed.editionCount=1;
+    parsed.aiIdentified=true;
+    parsed.editionCount=1;
+    parsed.bookPhoto=capturedPhotoBase64;
     buildFiche(parsed);
   }catch(e){
     goTo('scan-screen');
@@ -436,7 +494,8 @@ async function identifyWithAI(base64,mediaType){
 
 function lookupManual(){
   const val=document.getElementById('isbn-input').value.replace(/[-\s]/g,'');
-  if(val.length<10){showErr('Invalid ISBN — need 10 or 13 digits');return;}
+  if(val.length<10){showErr('Invalid ISBN — 10 or 13 digits');return;}
+  capturedPhotoBase64=null;
   fetchBook(val);
 }
 async function fetchBook(isbn){
@@ -452,46 +511,59 @@ async function fetchBook(isbn){
     const r3=await fetch('https://openlibrary.org/isbn/'+isbn+'.json');
     if(r3.ok){const d3=await r3.json();buildFiche(formatOLRaw(d3,isbn));return;}
     goTo('scan-screen');
-    showErr('ISBN '+isbn+' not in database (may be too recent). Use "Identify from photo (AI)" instead.');
-  }catch(e){goTo('scan-screen');showErr('Connection error. Check your internet.');}
+    showErr('ISBN not found. Use "Identify from photo" for recent books.');
+  }catch(e){goTo('scan-screen');showErr('Connection error.');}
 }
 function formatOLBook(b,isbn){return{title:b.title||'Unknown',author:(b.authors||[]).map(a=>a.name).join(', '),publisher:(b.publishers&&b.publishers[0])?b.publishers[0].name:'',year:b.publish_date?(b.publish_date.match(/\d{4}/)||[''])[0]:'',isbn,cover:b.cover?(b.cover.large||b.cover.medium||b.cover.small):null,pages:b.number_of_pages||'',editionCount:1};}
 function formatOLSearch(doc){return{title:doc.title||'Unknown',author:doc.author_name?doc.author_name[0]:'',publisher:doc.publisher?doc.publisher[0]:'',year:doc.first_publish_year||'',isbn:doc.isbn?doc.isbn[0]:'',cover:doc.cover_i?'https://covers.openlibrary.org/b/id/'+doc.cover_i+'-M.jpg':null,pages:doc.number_of_pages_median||'',editionCount:doc.edition_count||1};}
 function formatOLRaw(b,isbn){return{title:b.title||'Unknown',author:'',publisher:(b.publishers&&b.publishers[0])||'',year:(b.publish_date||'').match(/\d{4}/)?b.publish_date.match(/\d{4}/)[0]:'',isbn,cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null,pages:b.number_of_pages||'',editionCount:1};}
 
 async function fetchMarketPrice(book){
-  document.getElementById('market-price').className='price-cell-val loading';
+  document.getElementById('market-price').className='price-market-val loading';
   document.getElementById('market-price').textContent='…';
-  document.getElementById('resale-price').textContent='—';
   document.getElementById('decision-row').className='decision-row';
-  setDecision('⏳','Enter your purchase price','Market estimate loading…');
+  setDecision('⏳','Enter your purchase price','Loading market estimate…');
   marketPrice=null;
-  await new Promise(r=>setTimeout(r,800));
+  if(book.marketEstimate&&parseInt(book.marketEstimate)>0){
+    marketPrice=parseInt(book.marketEstimate);
+    document.getElementById('market-price').className='price-market-val';
+    document.getElementById('market-price').textContent='€'+marketPrice;
+    recalcDecision();
+    return;
+  }
+  // Fallback heuristic — conservative
+  await new Promise(r=>setTimeout(r,500));
   const year=parseInt(book.year)||2000,age=new Date().getFullYear()-year,ed=book.editionCount||1;
-  let base=20;
-  if(age>40)base=95;else if(age>25)base=55;else if(age>15)base=30;else if(age>5)base=22;
-  if(ed<=2)base*=1.9;else if(ed<=5)base*=1.3;
-  base=Math.round(base*(0.75+Math.random()*0.5));
+  let base=10;
+  if(age>40)base=35;else if(age>25)base=20;else if(age>15)base=14;else base=10;
+  if(ed<=2)base=Math.round(base*1.6);else if(ed<=5)base=Math.round(base*1.2);
   marketPrice=base;
-  document.getElementById('market-price').className='price-cell-val';
-  document.getElementById('market-price').textContent='€'+base;
+  document.getElementById('market-price').className='price-market-val';
+  document.getElementById('market-price').textContent='€'+marketPrice;
   recalcDecision();
 }
+
 function recalcDecision(){
   const buy=parseFloat(document.getElementById('price-input').value)||0;
-  if(marketPrice){document.getElementById('resale-price').textContent='€'+marketPrice;document.getElementById('resale-price').className='price-cell-val good';}
-  if(!buy||!marketPrice){if(marketPrice&&!buy)setDecision('💰','Enter your purchase price','Market est. €'+marketPrice);return;}
+  if(!buy||!marketPrice){
+    if(marketPrice&&!buy)setDecision('💰','Enter your purchase price','Market est. €'+marketPrice);
+    return;
+  }
   const c=marketPrice/buy,n=settings.coeff;
   const dr=document.getElementById('decision-row');
   if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' return','Target ×'+n+' · Margin €'+(marketPrice-buy).toFixed(0));}
   else{dr.className='decision-row pass';setDecision('✗','PASS — only ×'+c.toFixed(1),'Need ×'+n+' · Short €'+(buy*n-marketPrice).toFixed(0));}
 }
 function setDecision(icon,text,sub){document.getElementById('d-icon').textContent=icon;document.getElementById('d-text').textContent=text;document.getElementById('d-sub').textContent=sub;}
-function onPriceChange(){recalcDecision();updatePost();}
+function onPriceChange(){recalcDecision();}
 
 function showEditions(docs){
   const list=document.getElementById('ed-list');list.innerHTML='';
-  docs.forEach(doc=>{const card=document.createElement('div');card.className='ed-card';card.innerHTML=`${doc.cover?`<img class="ed-thumb" src="${doc.cover}" onerror="this.style.display='none'">`:``}<div class="ed-thumb-ph" ${doc.cover?'style="display:none"':''}>♪</div><div class="ed-info"><div class="ed-title">${doc.title}</div><div class="ed-meta">${doc.author?doc.author+'<br>':''}${doc.publisher?doc.publisher+' · ':''}${doc.year||''}</div></div>`;card.onclick=()=>buildFiche(doc);list.appendChild(card);});
+  docs.forEach(doc=>{
+    const card=document.createElement('div');card.className='ed-card';
+    card.innerHTML=`${doc.cover?`<img class="ed-thumb" src="${doc.cover}" onerror="this.style.display='none'">`:``}<div class="ed-thumb-ph" ${doc.cover?'style="display:none"':''}>♪</div><div class="ed-info"><div class="ed-title">${doc.title}</div><div class="ed-meta">${doc.author?doc.author+'<br>':''}${doc.publisher?doc.publisher+' · ':''}${doc.year||''}</div></div>`;
+    card.onclick=()=>buildFiche(doc);list.appendChild(card);
+  });
   goTo('editions-screen');
 }
 
@@ -504,55 +576,105 @@ function buildFiche(book){
   banner.className='stock-banner';
   if(inStock){banner.className='stock-banner in-stock';banner.textContent='⚡ Already in stock · €'+(inStock.price||'?');}
   else if(inLib){banner.className='stock-banner in-lib';banner.textContent='📚 Already in your library';}
-  document.getElementById('fiche-hero').innerHTML=`${book.cover?`<img class="fiche-cover" src="${book.cover}" onerror="this.style.display='none'">`:``}<div class="fiche-cover-ph" ${book.cover?'style="display:none"':''}>♪</div><div><div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${book.aiIdentified?`<div class="ai-badge">✦ Identified by Claude</div>`:''}</div>`;
+
+  // Photo — use captured photo (real book) or cover from DB
+  const photoArea=document.getElementById('fiche-photo-area');
+  const photoSrc=book.bookPhoto||null;
+  const fallbackCover=book.cover||null;
+  if(photoSrc){
+    photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button>${book.aiIdentified?'<div class="fiche-photo-badge">✦ AI identified</div>':''}</div>`;
+  }else if(fallbackCover){
+    photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${fallbackCover}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Add photo</button></div>`;
+  }else{
+    photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo — tap camera to add one</p></div>`;
+  }
+
+  document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${book.aiIdentified?'<div class="ai-badge">✦ Identified by Claude</div>':''}`;
+
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
-  document.getElementById('price-input').value='';document.getElementById('notes-ta').value='';document.getElementById('grade-desc').textContent='Select condition';
-  updatePost();goTo('fiche-screen');fetchMarketPrice(book);
+
+  // Pre-fill language if AI detected it
+  if(book.language){
+    const lang=book.language.toUpperCase();
+    const sel=document.getElementById('field-lang');
+    if(['EN','FR','NL'].includes(lang))sel.value=lang;
+    else sel.value='';
+  }else{
+    document.getElementById('field-lang').value='';
+  }
+
+  document.getElementById('price-input').value='';
+  document.getElementById('notes-ta').value='';
+  document.getElementById('field-source').value='';
+  document.getElementById('grade-desc').textContent='Select condition';
+  goTo('fiche-screen');
+  fetchMarketPrice(book);
 }
-function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;updatePost();}
+
+function retakePhoto(){capturedPhotoBase64=null;goTo('scan-screen');}
+function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;}
 function setPrice(p){document.getElementById('price-input').value=p;onPriceChange();}
-function updatePost(){
-  if(!currentBook)return;
-  const price=document.getElementById('price-input').value,notes=document.getElementById('notes-ta').value,g=selectedGrade,b=currentBook;
-  let c=`📖 ${b.title}`;if(b.author)c+=`\n${b.author}`;if(b.publisher||b.year)c+=`\n${[b.publisher,b.year].filter(Boolean).join(' · ')}`;
-  if(g)c+=`\n\nCondition : ${g.code}`;if(price)c+=`\nPrice : €${price}`;if(notes)c+=`\n\n${notes}`;
-  c+=`\n\n🔗 Link in bio\n\n#musicbooks #raremusicbooks #vinylbooks #bookcollector #bruxelles #bangerbooks`;
-  document.getElementById('insta-caption').textContent=c;
-}
-function copyCaption(){navigator.clipboard.writeText(document.getElementById('insta-caption').textContent).then(()=>toast('Caption copied!'));}
+
 function saveToStock(){
-  if(!currentBook)return;if(!selectedGrade){toast('Select a condition first');return;}
-  const price=document.getElementById('price-input').value;if(!price){toast('Enter a purchase price');return;}
-  const db=getDB();db.stock.push({...currentBook,grade:selectedGrade.code,price:parseFloat(price),marketPrice,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
-  saveDB(db);toast('✓ Added to stock');setTimeout(()=>goTo('scan-screen'),1200);
+  if(!currentBook)return;
+  if(!selectedGrade){toast('Select a condition first');return;}
+  const price=document.getElementById('price-input').value;
+  if(!price){toast('Enter a purchase price');return;}
+  const db=getDB();
+  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketPrice,language:document.getElementById('field-lang').value,source:document.getElementById('field-source').value,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
+  saveDB(db);toast('✓ Added to stock');
+  capturedPhotoBase64=null;
+  setTimeout(()=>goTo('scan-screen'),1200);
 }
 function saveToLibrary(){
   if(!currentBook)return;
-  const db=getDB();db.library.push({...currentBook,grade:selectedGrade?selectedGrade.code:null,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
-  saveDB(db);toast('📚 Added to library');setTimeout(()=>goTo('scan-screen'),1200);
+  const db=getDB();
+  db.library.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade?selectedGrade.code:null,language:document.getElementById('field-lang').value,source:document.getElementById('field-source').value,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
+  saveDB(db);toast('📚 Added to library');
+  capturedPhotoBase64=null;
+  setTimeout(()=>goTo('scan-screen'),1200);
 }
+
 function switchTab(tab){currentTab=tab;document.getElementById('tab-stock').classList.toggle('active',tab==='stock');document.getElementById('tab-library').classList.toggle('active',tab==='library');renderLibrary();}
 function renderLibrary(){
   const db=getDB(),q=(document.getElementById('lib-search').value||'').toLowerCase();
   const items=(currentTab==='stock'?db.stock:db.library).filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>b.addedAt-a.addedAt);
   const list=document.getElementById('lib-list');
   if(!items.length){list.innerHTML=`<div class="lib-empty">No items yet.</div>`;return;}
-  list.innerHTML=items.map(i=>`<div class="lib-item">${i.cover?`<img class="lib-thumb" src="${i.cover}" onerror="this.style.display='none'">`:``}<div class="lib-thumb-ph" ${i.cover?'style="display:none"':''}>♪</div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${i.author||''}${i.year?' · '+i.year:''}</div></div>${i.grade?`<div class="lib-grade">${i.grade}</div>`:''} ${currentTab==='stock'&&i.price?`<div class="lib-price">€${i.price}</div>`:''}</div>`).join('');
+  list.innerHTML=items.map(i=>{
+    const photo=i.bookPhoto||i.cover||null;
+    return`<div class="lib-item"><div>${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:''}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div></div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${[i.author,i.year,i.language,i.source].filter(Boolean).join(' · ')}</div></div>${i.grade?`<div class="lib-grade">${i.grade}</div>`:''} ${currentTab==='stock'&&i.price?`<div class="lib-price">€${i.price}</div>`:''}</div>`;
+  }).join('');
 }
+
+function exportCSV(){
+  const db=getDB();
+  if(!db.stock.length){toast('No stock to export');return;}
+  const headers=['Title','Author','Publisher','Year','ISBN','Language','Source','Condition','Purchase Price','Market Est.','Notes'];
+  const rows=db.stock.map(i=>[i.title||'',i.author||'',i.publisher||'',i.year||'',i.isbn||'',i.language||'',i.source||'',i.grade||'',i.price||'',i.marketPrice||'',i.notes||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='catalogr-stock.csv';a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported '+db.stock.length+' items');
+}
+
 function showStats(){const db=getDB(),val=db.stock.reduce((a,b)=>a+(b.price||0),0);toast('Stock: '+db.stock.length+' · Library: '+db.library.length+' · €'+val.toFixed(0));}
-function demoMode(){buildFiche({title:'This Is Your Brain on Music',author:'Daniel J. Levitin',publisher:'Dutton',year:'2006',isbn:'9780525949695',cover:'https://covers.openlibrary.org/b/isbn/9780525949695-M.jpg',pages:314,editionCount:8});}
+
 function renderCoeffBtns(){['coeff-btns','coeff-setting-btns'].forEach(id=>{const w=document.getElementById(id);if(!w)return;w.innerHTML=[2,3,4,5].map(v=>`<button class="coeff-btn ${settings.coeff===v?'active':''}" onclick="setCoeff(${v})">×${v}</button>`).join('');});}
-function toggleSettings(){const p=document.getElementById('settings-panel');p.classList.toggle('open');if(p.classList.contains('open')){document.getElementById('ig-handle').value=settings.handle;document.getElementById('api-key-input').value=getApiKey();updateApiStatus();updateCount();renderCoeffBtns();}}
+function toggleSettings(){const p=document.getElementById('settings-panel');p.classList.toggle('open');if(p.classList.contains('open')){document.getElementById('api-key-input').value=getApiKey();updateApiStatus();updateCount();renderCoeffBtns();}}
 function clearAll(){if(confirm('Clear all data?')){localStorage.removeItem('catalogr_db');updateCount();renderLibrary();toggleSettings();toast('All data cleared');}}
+
 function navTo(sid,nid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(nid).classList.add('active');if(sid==='library-screen')renderLibrary();}
 function goTo(sid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');}
 function setLoading(msg){document.getElementById('spinner').className='spinner';document.getElementById('loading-label').textContent=msg||'Loading…';goTo('loading-screen');}
 function setLoadingAI(msg){document.getElementById('spinner').className='spinner ai';document.getElementById('loading-label').textContent=msg||'Loading…';goTo('loading-screen');}
-function setStatus(msg,state){document.getElementById('status-txt').textContent=msg;document.getElementById('status-dot').className='status-dot'+(state?' '+state:'');}
 function showErr(msg){const e=document.getElementById('scan-err');e.textContent=msg;e.classList.add('show');}
 function hideErr(){document.getElementById('scan-err').classList.remove('show');}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
 loadSettings();renderCoeffBtns();updateCount();updateApiStatus();
 window.addEventListener('beforeunload',()=>{if(videoStream)videoStream.getTracks().forEach(t=>t.stop());});
 </script>
