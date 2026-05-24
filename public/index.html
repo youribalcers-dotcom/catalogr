@@ -9,7 +9,7 @@
 <title>Catalogr — Sample Books</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap');
-:root{--bg:#f8f7f4;--bg2:#fff;--bg3:#f0efe9;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#888878;--muted2:#555548;--green:#2d6a4f;--red:#c0392b;--yellow:#b8860b;--purple:#7c3aed;--blue:#1d6fa4;--radius:10px;}
+:root{--bg:#f8f7f4;--bg2:#fff;--bg3:#f0efe9;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#888878;--muted2:#555548;--green:#2d6a4f;--red:#c0392b;--yellow:#b8860b;--purple:#7c3aed;--blue:#1d6fa4;--shopify:#96bf48;--radius:10px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;}
 #app{height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden;}
@@ -42,21 +42,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-cam{background:rgba(255,255,255,.95);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:13px 16px;border-radius:10px;border:none;cursor:pointer;flex:1;}
 .btn-cam:active{transform:scale(.96);}
 .btn-cam-sm{flex:0;padding:13px 14px;}
-
 .scan-controls{padding:12px 16px;display:flex;flex-direction:column;gap:10px;background:var(--bg);border-top:1.5px solid var(--border);flex-shrink:0;}
-
-/* HINT FIELD */
 .hint-wrap{display:flex;gap:8px;align-items:center;}
 .hint-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:10px 12px;outline:none;transition:border-color .2s;}
 .hint-input:focus{border-color:var(--purple);}
 .hint-input::placeholder{color:var(--muted);font-size:12px;}
 .hint-mic{width:38px;height:38px;border-radius:8px;background:var(--purple);border:none;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s;}
-.hint-mic.listening{background:var(--red);animation:blink 0.8s infinite;}
-.hint-mic:active{transform:scale(.95);}
-
-/* SOURCE */
+.hint-mic.listening{background:var(--red);animation:blink .8s infinite;}
 .source-select{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:10px 12px;outline:none;appearance:none;cursor:pointer;}
-
 .err-box{background:#fff0ee;border:1.5px solid #f5c6c2;border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--red);font-weight:500;display:none;line-height:1.5;}
 .err-box.show{display:block;}
 .btn{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:14px 20px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
@@ -74,8 +67,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 #loading-screen{align-items:center;justify-content:center;gap:14px;background:var(--bg);}
 .spinner{width:36px;height:36px;border:2.5px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin .7s linear infinite;}
 .spinner.ai{border-top-color:var(--purple);}
-.spinner.ebay{border-top-color:#e53238;}
 @keyframes spin{to{transform:rotate(360deg);}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .loading-label{font-family:'Syne Mono',monospace;font-size:13px;color:var(--muted2);text-align:center;padding:0 30px;line-height:1.6;}
 
 /* EDITIONS */
@@ -119,18 +112,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .market-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;}
 .market-loading{padding:14px 16px;font-size:13px;color:var(--muted);font-family:'Syne Mono',monospace;animation:pulse 1s infinite;border-bottom:1px solid var(--border);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.decision-row{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
-.decision-icon{font-size:20px;}
-.decision-text{font-size:13px;font-weight:700;}
-.decision-sub{font-size:11px;color:var(--muted2);margin-top:2px;font-family:'Syne Mono',monospace;}
-.decision-row.buy{background:#e8f5e9;}
-.decision-row.pass{background:#fff0ee;}
-.coeff-row{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
-.coeff-lbl{font-size:12px;color:var(--muted2);flex:1;}
-.coeff-btns{display:flex;gap:4px;}
-.coeff-btn{font-family:'Syne Mono',monospace;font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--muted2);cursor:pointer;transition:all .15s;}
-.coeff-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+
+/* RETURN DISPLAY — no coefficient buttons */
+.return-row{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.return-icon{font-size:20px;}
+.return-text{font-size:14px;font-weight:700;}
+.return-sub{font-size:11px;color:var(--muted2);margin-top:2px;font-family:'Syne Mono',monospace;}
+.return-row.good{background:#e8f5e9;}
+.return-row.neutral{background:var(--bg3);}
 
 /* EBAY RESULTS */
 .ebay-result{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;font-family:'Syne Mono',monospace;}
@@ -167,25 +156,16 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .cat-select{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:12px 14px;outline:none;appearance:none;cursor:pointer;}
 
 /* DESCRIPTION */
-.desc-wrap{position:relative;}
 .desc-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:90px;transition:border-color .2s;line-height:1.6;}
 .desc-ta:focus{border-color:var(--text);}
 .desc-ta::placeholder{color:var(--muted);}
-.desc-gen-btn{margin-top:6px;width:100%;padding:10px;background:#f3f0ff;border:1.5px solid #ddd6fe;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;transition:all .15s;}
-.desc-gen-btn:hover{background:#ede9fe;}
+.desc-gen-btn{margin-top:6px;width:100%;padding:10px;background:#f3f0ff;border:1.5px solid #ddd6fe;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;}
 .desc-gen-btn:disabled{opacity:.5;cursor:not-allowed;}
-
 .notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:50px;}
 .notes-ta::placeholder{color:var(--muted);}
-
-/* SHOPIFY PUSH */
-.shopify-btn{width:100%;padding:14px;background:#96bf48;border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.shopify-btn:hover{background:#85ad3f;}
-.shopify-btn:disabled{opacity:.5;cursor:not-allowed;}
-
 .fiche-acts{padding:14px 16px;display:flex;gap:8px;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
 
-/* HISTORY / STOCK */
+/* STOCK / HISTORY */
 #library-screen{overflow-y:auto;background:var(--bg);}
 .lib-body{padding:16px;display:flex;flex-direction:column;gap:12px;}
 .lib-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg3);border-radius:var(--radius);padding:4px;border:1.5px solid var(--border);}
@@ -193,18 +173,32 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .lib-tab.active{background:var(--text);color:#fff;}
 .lib-search{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:11px 14px;outline:none;width:100%;}
 .lib-list{display:flex;flex-direction:column;gap:6px;}
-.lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;}
+.lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;transition:border-color .15s;}
+.lib-item:active{border-color:var(--text);}
 .lib-thumb{width:44px;height:60px;object-fit:cover;border-radius:4px;background:var(--bg3);flex-shrink:0;}
 .lib-thumb-ph{width:44px;height:60px;border-radius:4px;background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);}
 .lib-info{flex:1;min-width:0;}
 .lib-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lib-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:'Syne Mono',monospace;}
-.lib-badge{font-family:'Syne Mono',monospace;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;flex-shrink:0;}
-.lib-badge.stock{background:#e8f5e9;color:var(--green);border:1px solid #a5d6a7;}
-.lib-badge.history{background:var(--bg3);color:var(--muted2);border:1px solid var(--border);}
-.lib-badge.shopify{background:#f0f9e8;color:#6aab1f;border:1px solid #c5e8a0;}
-.lib-price{font-family:'Syne Mono',monospace;font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;}
+.lib-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.lib-price{font-family:'Syne Mono',monospace;font-size:13px;font-weight:700;color:var(--green);}
+.lib-grade{font-family:'Syne Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--bg3);color:var(--muted2);border:1px solid var(--border);}
+.lib-shopify-btn{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;background:var(--shopify);color:#fff;border:none;cursor:pointer;margin-top:2px;}
+.lib-shopify-btn.pushed{background:var(--bg3);color:var(--green);border:1px solid #a5d6a7;}
+.lib-date{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;}
 .lib-empty{text-align:center;padding:40px 20px;font-size:14px;color:var(--muted);line-height:1.7;}
+
+/* PUSH MODAL */
+#push-modal{position:absolute;inset:0;background:var(--bg);z-index:200;display:none;flex-direction:column;overflow-y:auto;}
+#push-modal.open{display:flex;}
+.push-modal-body{padding:16px;display:flex;flex-direction:column;gap:16px;flex:1;}
+.push-photo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius);background:var(--bg3);}
+.push-photo-ph{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:40px;border-radius:var(--radius);}
+.push-title{font-size:18px;font-weight:700;}
+.push-meta{font-size:12px;color:var(--muted);font-family:'Syne Mono',monospace;margin-top:4px;}
+.push-acts{padding:14px 16px;display:flex;gap:8px;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
+.shopify-push-btn{flex:2;padding:14px;background:var(--shopify);border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;}
+.shopify-push-btn:disabled{opacity:.5;}
 
 /* SETTINGS */
 #settings-panel{position:absolute;inset:0;background:var(--bg);z-index:100;display:none;flex-direction:column;}
@@ -219,7 +213,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .api-status{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;margin-top:6px;display:inline-block;}
 .api-status.set{background:#e8f5e9;color:var(--green);}
 .api-status.unset{background:#fff0ee;color:var(--red);}
-.coeff-btns-s{display:flex;gap:4px;}
 
 /* NAV */
 .nav{display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
@@ -227,7 +220,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .nav-btn.active{color:var(--text);}
 .nav-icon{font-size:20px;line-height:1;}
 .nav-lbl{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:22px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:200;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:22px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:300;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
@@ -256,12 +249,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         </div>
       </div>
       <div class="scan-controls" id="scan-controls">
-        <!-- HINT -->
         <div class="hint-wrap">
-          <input class="hint-input" id="hint-input" type="text" placeholder="Hint: e.g. Munari Xerografia 35th edition, Who tour tee 1968…">
+          <input class="hint-input" id="hint-input" type="text" placeholder="Hint: Munari Xerografia 35th ed., Who tour tee 1968…">
           <button class="hint-mic" id="hint-mic" onclick="toggleVoice()" title="Voice input">🎤</button>
         </div>
-        <!-- SOURCE -->
         <select class="source-select" id="source-select">
           <option value="">Source — where did you find it?</option>
           <option value="Évasion — Rue du Midi">Évasion — Rue du Midi</option>
@@ -270,9 +261,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <option value="Saint-Martin — Rue de Flandre">Saint-Martin — Rue de Flandre</option>
           <option value="Rue Haute">Rue Haute</option>
           <option value="Jeu de Balle — Marché">Jeu de Balle — Marché</option>
-          <option value="custom">Other (type below)…</option>
+          <option value="custom">Other…</option>
         </select>
-        <input class="hint-input" id="source-custom" type="text" placeholder="Type source name…" style="display:none">
+        <input class="hint-input" id="source-custom" type="text" placeholder="Source name…" style="display:none">
         <div class="err-box" id="scan-err"></div>
         <div class="divider-text">or enter ISBN</div>
         <div class="isbn-row">
@@ -304,15 +295,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="stock-banner" id="stock-banner"></div>
     <div class="fiche-info" id="fiche-info"></div>
     <div class="fiche-body">
-
-      <!-- CONDITION FIRST -->
       <div>
         <div class="field-lbl">Condition</div>
         <div class="grade-grid" id="grade-grid"></div>
         <div class="grade-desc" id="grade-desc">Select condition first</div>
       </div>
-
-      <!-- PURCHASE PRICE -->
       <div>
         <div class="field-lbl">Purchase price</div>
         <div class="price-input-wrap">
@@ -321,20 +308,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         </div>
         <button class="done-btn" onclick="document.getElementById('price-input').blur()">✓ Done</button>
       </div>
-
-      <!-- MARKET RESEARCH -->
       <div>
         <div class="field-lbl">Market research</div>
         <div class="market-box">
           <div id="market-content"><div class="market-loading">Estimating…</div></div>
           <div id="ebay-result-block"></div>
-          <div class="decision-row" id="decision-row">
-            <div class="decision-icon" id="d-icon">👆</div>
-            <div><div class="decision-text" id="d-text">Select condition first</div><div class="decision-sub" id="d-sub">Then enter your purchase price</div></div>
-          </div>
-          <div class="coeff-row">
-            <div class="coeff-lbl">Min. coefficient ×</div>
-            <div class="coeff-btns" id="coeff-btns"></div>
+          <div class="return-row neutral" id="return-row">
+            <div class="return-icon" id="r-icon">👆</div>
+            <div><div class="return-text" id="r-text">Select condition first</div><div class="return-sub" id="r-sub">Then enter your purchase price</div></div>
           </div>
           <div class="source-section">
             <div class="source-section-lbl">Check prices</div>
@@ -344,8 +325,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           </div>
         </div>
       </div>
-
-      <!-- CATEGORY -->
       <div>
         <div class="field-lbl">Category</div>
         <select class="cat-select" id="cat-select">
@@ -357,31 +336,23 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           <option value="objects-other">Objects — Other (design, vintage, collectibles)</option>
         </select>
       </div>
-
-      <!-- DESCRIPTION FOR SHOPIFY -->
       <div>
-        <div class="field-lbl">Description (Shopify)</div>
-        <div class="desc-wrap">
-          <textarea class="desc-ta" id="desc-ta" placeholder="Short curatorial description — edit or generate with AI…"></textarea>
-          <button class="desc-gen-btn" id="desc-gen-btn" onclick="generateDescription()">✦ Generate description (AI)</button>
-        </div>
+        <div class="field-lbl">Description (for Shopify)</div>
+        <textarea class="desc-ta" id="desc-ta" placeholder="Short curatorial description…"></textarea>
+        <button class="desc-gen-btn" id="desc-gen-btn" onclick="generateDescription()">✦ Generate with AI</button>
       </div>
-
-      <!-- INTERNAL NOTES -->
       <div>
         <div class="field-lbl">Internal notes</div>
-        <textarea class="notes-ta" id="notes-ta" placeholder="Provenance, condition details, ex-libris…"></textarea>
+        <textarea class="notes-ta" id="notes-ta" placeholder="Provenance, condition details…"></textarea>
       </div>
-
     </div>
     <div class="fiche-acts">
       <button class="btn btn-ghost" style="flex:1" onclick="goTo('scan-screen')">← Back</button>
-      <button class="btn btn-primary" style="flex:1.5" onclick="saveToStock()">+ Stock</button>
-      <button class="shopify-btn" style="flex:1.5" id="shopify-btn" onclick="pushToShopify()">⬆ Shopify</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveToStock()">+ Add to stock</button>
     </div>
   </div>
 
-  <!-- LIBRARY/HISTORY -->
+  <!-- STOCK / HISTORY -->
   <div id="library-screen" class="screen">
     <div class="lib-body">
       <div class="lib-tabs">
@@ -397,6 +368,48 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   <div class="nav">
     <button class="nav-btn active" id="nav-scan" onclick="navTo('scan-screen','nav-scan')"><div class="nav-icon">◉</div><div class="nav-lbl">Scan</div></button>
     <button class="nav-btn" id="nav-lib" onclick="navTo('library-screen','nav-lib')"><div class="nav-icon">▤</div><div class="nav-lbl">Stock</div></button>
+  </div>
+
+  <!-- PUSH TO SHOPIFY MODAL -->
+  <div id="push-modal">
+    <div class="hdr">
+      <div class="hdr-logo">Push to <span>Shopify</span></div>
+      <div class="hdr-btn" onclick="closePushModal()">✕</div>
+    </div>
+    <div class="push-modal-body">
+      <div id="push-photo-area"></div>
+      <div>
+        <div class="push-title" id="push-title"></div>
+        <div class="push-meta" id="push-meta"></div>
+      </div>
+      <div>
+        <div class="field-lbl">Selling price</div>
+        <div class="price-input-wrap">
+          <span>€</span>
+          <input type="number" class="price-input" id="push-price-input" placeholder="0" min="0" inputmode="decimal">
+        </div>
+      </div>
+      <div>
+        <div class="field-lbl">Description</div>
+        <textarea class="desc-ta" id="push-desc-ta" placeholder="Curatorial description for Shopify…"></textarea>
+        <button class="desc-gen-btn" id="push-desc-gen-btn" onclick="generatePushDescription()">✦ Generate with AI</button>
+      </div>
+      <div>
+        <div class="field-lbl">Category</div>
+        <select class="cat-select" id="push-cat-select">
+          <option value="books-music">Books — Music</option>
+          <option value="books-art">Books — Art</option>
+          <option value="books-other">Books — Other</option>
+          <option value="objects-music">Objects — Music</option>
+          <option value="objects-art">Objects — Art</option>
+          <option value="objects-other">Objects — Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="push-acts">
+      <button class="btn btn-ghost" style="flex:1" onclick="closePushModal()">← Back</button>
+      <button class="shopify-push-btn" id="shopify-push-btn" onclick="confirmPushToShopify()">⬆ Push to Shopify</button>
+    </div>
   </div>
 
   <!-- SETTINGS -->
@@ -419,19 +432,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
       <div class="settings-group">
         <div class="settings-row" style="flex-direction:column;align-items:flex-start">
-          <div><div class="settings-lbl">Shopify Store</div><div class="settings-sub">Your myshopify.com domain</div></div>
+          <div><div class="settings-lbl">Shopify Store Domain</div><div class="settings-sub">e.g. sample-books.myshopify.com</div></div>
           <input class="s-input" id="shopify-domain-input" type="text" placeholder="sample-books.myshopify.com" oninput="saveShopifySettings()">
         </div>
         <div class="settings-row" style="flex-direction:column;align-items:flex-start">
-          <div><div class="settings-lbl">Shopify Access Token</div><div class="settings-sub">From Apps → Develop apps</div></div>
+          <div><div class="settings-lbl">Shopify Access Token</div><div class="settings-sub">From Apps → Develop apps → shpat_…</div></div>
           <input class="s-input" id="shopify-token-input" type="password" placeholder="shpat_…" oninput="saveShopifySettings()">
           <div class="api-status unset" id="shopify-status">Not configured</div>
-        </div>
-      </div>
-      <div class="settings-group">
-        <div class="settings-row">
-          <div><div class="settings-lbl">Min. coefficient</div><div class="settings-sub">Buy / Pass threshold</div></div>
-          <div class="coeff-btns-s" id="coeff-setting-btns"></div>
         </div>
       </div>
       <div class="settings-group">
@@ -447,12 +454,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 
 <script>
 let currentBook=null,selectedGrade=null,videoStream=null,scanning=false;
-let settings={coeff:2};
+let settings={};
 let marketLow=null,marketHigh=null;
-let capturedPhotoBase64=null;
-let pendingISBN=null;
-let currentTab='stock';
-let recognition=null;
+let capturedPhotoBase64=null,pendingISBN=null,currentTab='stock';
+let recognition=null,pushItem=null;
 
 const GRADES=[
   {code:'G',   desc:'Poor. Heavy wear, complete.'},
@@ -465,22 +470,16 @@ const GRADES=[
 
 // STORAGE
 function getDB(){try{return JSON.parse(localStorage.getItem('sb_db')||'{"stock":[],"history":[]}')}catch(e){return{stock:[],history:[]}}}
-function saveDB(db){localStorage.setItem('sb_db',JSON.stringify(db));updateCount()}
-function loadSettings(){try{const s=JSON.parse(localStorage.getItem('sb_s')||'{}');settings={coeff:s.coeff||2};}catch(e){}}
-function setCoeff(v){settings.coeff=v;localStorage.setItem('sb_s',JSON.stringify(settings));renderCoeffBtns();recalcDecision();}
+function saveDB(db){localStorage.setItem('sb_db',JSON.stringify(db));updateCount();}
 function getApiKey(){return localStorage.getItem('sb_apikey')||'';}
 function saveApiKey(){localStorage.setItem('sb_apikey',document.getElementById('api-key-input').value.trim());updateApiStatus();}
 function getEbayId(){return localStorage.getItem('sb_ebayid')||'';}
 function saveEbayId(){localStorage.setItem('sb_ebayid',document.getElementById('ebay-id-input').value.trim());updateEbayStatus();}
 function getShopifyDomain(){return localStorage.getItem('sb_shopify_domain')||'';}
 function getShopifyToken(){return localStorage.getItem('sb_shopify_token')||'';}
-function saveShopifySettings(){
-  localStorage.setItem('sb_shopify_domain',document.getElementById('shopify-domain-input').value.trim());
-  localStorage.setItem('sb_shopify_token',document.getElementById('shopify-token-input').value.trim());
-  updateShopifyStatus();
-}
-function updateApiStatus(){const key=getApiKey(),el=document.getElementById('api-status');el.className=key&&key.startsWith('sk-ant')?'api-status set':'api-status unset';el.textContent=key&&key.startsWith('sk-ant')?'✓ Configured':'Not configured';}
-function updateEbayStatus(){const id=getEbayId(),el=document.getElementById('ebay-status');el.className=id?'api-status set':'api-status unset';el.textContent=id?'✓ Configured':'Not configured';}
+function saveShopifySettings(){localStorage.setItem('sb_shopify_domain',document.getElementById('shopify-domain-input').value.trim());localStorage.setItem('sb_shopify_token',document.getElementById('shopify-token-input').value.trim());updateShopifyStatus();}
+function updateApiStatus(){const k=getApiKey(),el=document.getElementById('api-status');el.className=k&&k.startsWith('sk-ant')?'api-status set':'api-status unset';el.textContent=k&&k.startsWith('sk-ant')?'✓ Configured':'Not configured';}
+function updateEbayStatus(){const id=getEbayId(),el=document.getElementById('ebay-status');el.className=id?'api-status set':'api-status unset';el.textContent=id?'✓ '+id.substring(0,20)+'…':'Not configured';}
 function updateShopifyStatus(){const t=getShopifyToken(),el=document.getElementById('shopify-status');el.className=t&&t.startsWith('shpat_')?'api-status set':'api-status unset';el.textContent=t&&t.startsWith('shpat_')?'✓ Configured':'Not configured';}
 function updateCount(){
   const db=getDB();
@@ -489,26 +488,18 @@ function updateCount(){
   document.getElementById('s-history').textContent=db.history.length;
   document.getElementById('s-val').textContent='€'+db.stock.reduce((a,b)=>a+(parseFloat(b.price)||0),0).toFixed(0);
 }
-function getSource(){
-  const sel=document.getElementById('source-select').value;
-  if(sel==='custom')return document.getElementById('source-custom').value;
-  return sel;
-}
-document.getElementById('source-select').addEventListener('change',function(){
-  document.getElementById('source-custom').style.display=this.value==='custom'?'block':'none';
-});
+function getSource(){const sel=document.getElementById('source-select').value;return sel==='custom'?document.getElementById('source-custom').value:sel;}
+document.getElementById('source-select').addEventListener('change',function(){document.getElementById('source-custom').style.display=this.value==='custom'?'block':'none';});
 
-// VOICE INPUT
+// VOICE
 function toggleVoice(){
-  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SpeechRecognition){toast('Voice not supported on this browser');return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('Voice not supported');return;}
   if(recognition){recognition.stop();recognition=null;document.getElementById('hint-mic').classList.remove('listening');return;}
-  recognition=new SpeechRecognition();
-  recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-US';
+  recognition=new SR();recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-US';
   recognition.onstart=()=>document.getElementById('hint-mic').classList.add('listening');
   recognition.onresult=(e)=>{document.getElementById('hint-input').value=e.results[0][0].transcript;recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
-  recognition.onerror=()=>{recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
-  recognition.onend=()=>{recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
+  recognition.onerror=recognition.onend=()=>{recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
   recognition.start();
 }
 
@@ -536,9 +527,7 @@ async function startBarcodeScan(){
   };
   requestAnimationFrame(loop);
 }
-function captureFrameSilent(v){
-  try{const canvas=document.createElement('canvas');const MAX=800;const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);canvas.width=Math.round(v.videoWidth*ratio);canvas.height=Math.round(v.videoHeight*ratio);canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);capturedPhotoBase64=canvas.toDataURL('image/jpeg',0.75);}catch(e){}
-}
+function captureFrameSilent(v){try{const c=document.createElement('canvas');const M=800;const r=Math.min(M/v.videoWidth,M/v.videoHeight,1);c.width=Math.round(v.videoWidth*r);c.height=Math.round(v.videoHeight*r);c.getContext('2d').drawImage(v,0,0,c.width,c.height);capturedPhotoBase64=c.toDataURL('image/jpeg',.75);}catch(e){}}
 function stopCamera(e){
   if(e)e.stopPropagation();
   if(videoStream){videoStream.getTracks().forEach(t=>t.stop());videoStream=null;}
@@ -548,47 +537,41 @@ function stopCamera(e){
   document.getElementById('scan-controls').style.display='flex';
 }
 function capturePhoto(e){
-  if(e)e.stopPropagation();
-  if(!videoStream)return;
+  if(e)e.stopPropagation();if(!videoStream)return;
   const v=document.getElementById('video');
-  const canvas=document.createElement('canvas');
-  const MAX=800;const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);
-  canvas.width=Math.round(v.videoWidth*ratio);canvas.height=Math.round(v.videoHeight*ratio);
-  canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);
-  const dataUrl=canvas.toDataURL('image/jpeg',0.75);
-  capturedPhotoBase64=dataUrl;
-  stopCamera();
-  identifyWithAI(dataUrl.split(',')[1],'image/jpeg');
+  const c=document.createElement('canvas');const M=800;const r=Math.min(M/v.videoWidth,M/v.videoHeight,1);
+  c.width=Math.round(v.videoWidth*r);c.height=Math.round(v.videoHeight*r);
+  c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+  capturedPhotoBase64=c.toDataURL('image/jpeg',.75);
+  stopCamera();identifyWithAI(capturedPhotoBase64.split(',')[1],'image/jpeg');
 }
 
 // ISBN
 function lookupManual(){
   const val=document.getElementById('isbn-input').value.replace(/[^0-9]/g,'');
   if(val.length<10){showErr('ISBN must be 10 or 13 digits');return;}
-  pendingISBN=val;capturedPhotoBase64=null;
-  fetchBook(val);
+  pendingISBN=val;capturedPhotoBase64=null;fetchBook(val);
 }
 async function fetchBook(isbn){
   setLoading('Searching ISBN '+isbn+'…');hideErr();
   try{
     const r1=await fetch('https://openlibrary.org/api/books?bibkeys=ISBN:'+isbn+'&format=json&jscmd=data');
-    const d1=await r1.json();
-    const key='ISBN:'+isbn;
-    if(d1[key]){addToHistory(formatOLBook(d1[key],isbn));buildFiche(formatOLBook(d1[key],isbn));return;}
+    const d1=await r1.json();const key='ISBN:'+isbn;
+    if(d1[key]){const b=formatOLBook(d1[key],isbn);addToHistory(b);buildFiche(b);return;}
     const r2=await fetch('https://openlibrary.org/search.json?isbn='+isbn+'&limit=8');
     const d2=await r2.json();
     if(d2.docs&&d2.docs.length){const books=d2.docs.map(formatOLSearch);if(books.length===1){addToHistory(books[0]);buildFiche(books[0]);}else showEditions(books);return;}
     const r3=await fetch('https://openlibrary.org/isbn/'+isbn+'.json');
-    if(r3.ok){const d3=await r3.json();const b=formatOLRaw(d3,isbn);addToHistory(b);buildFiche(b);return;}
+    if(r3.ok){const b=formatOLRaw(await r3.json(),isbn);addToHistory(b);buildFiche(b);return;}
     if(capturedPhotoBase64){setLoadingAI('ISBN not found — asking Claude…');await identifyWithAI(capturedPhotoBase64.split(',')[1],'image/jpeg',true);return;}
-    goTo('scan-screen');showErr('ISBN not found. Point camera at the cover and tap "Take photo & identify".');
+    goTo('scan-screen');showErr('ISBN not found. Use camera to identify.');
   }catch(e){goTo('scan-screen');showErr('Connection error.');}
 }
 function formatOLBook(b,isbn){return{title:b.title||'Unknown',author:(b.authors||[]).map(a=>a.name).join(', '),publisher:(b.publishers&&b.publishers[0])?b.publishers[0].name:'',year:b.publish_date?(b.publish_date.match(/\d{4}/)||[''])[0]:'',isbn,cover:b.cover?(b.cover.large||b.cover.medium||b.cover.small):null,pages:b.number_of_pages||'',editionCount:1};}
 function formatOLSearch(doc){return{title:doc.title||'Unknown',author:doc.author_name?doc.author_name[0]:'',publisher:doc.publisher?doc.publisher[0]:'',year:doc.first_publish_year||'',isbn:doc.isbn?doc.isbn[0]:'',cover:doc.cover_i?'https://covers.openlibrary.org/b/id/'+doc.cover_i+'-M.jpg':null,pages:doc.number_of_pages_median||'',editionCount:doc.edition_count||1};}
 function formatOLRaw(b,isbn){return{title:b.title||'Unknown',author:'',publisher:(b.publishers&&b.publishers[0])||'',year:(b.publish_date||'').match(/\d{4}/)?b.publish_date.match(/\d{4}/)[0]:'',isbn,cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null,pages:b.number_of_pages||'',editionCount:1};}
 
-// AI
+// AI IDENTIFY
 async function identifyWithAI(base64,mediaType,fromFallback=false){
   const apiKey=getApiKey();
   if(!apiKey){goTo('scan-screen');showErr('API key not configured. Go to Settings ⚙.');return;}
@@ -598,36 +581,41 @@ async function identifyWithAI(base64,mediaType,fromFallback=false){
     const response=await fetch('/api/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:base64,mediaType,apiKey,hint,action:'identify'})});
     const data=await response.json();
     if(data.error){goTo('scan-screen');showErr('API error: '+(data.error.message||JSON.stringify(data.error)));return;}
-    if(!data.content||!data.content.length){goTo('scan-screen');showErr('Empty response. Try again.');return;}
-    const text=data.content.map(c=>c.text||'').join('');
+    const text=data.content?.map(c=>c.text||'').join('')||'';
     const clean=text.replace(/```json|```/g,'').trim();
     let parsed;
     try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Parse error. Try a clearer photo.');return;}
-    if(!parsed.identified){goTo('scan-screen');showErr('Could not identify. Try a clearer photo of the cover.');return;}
+    if(!parsed.identified){goTo('scan-screen');showErr('Could not identify. Try a clearer photo.');return;}
     if(pendingISBN&&!parsed.isbn)parsed.isbn=pendingISBN;
-    parsed.aiIdentified=true;parsed.editionCount=1;
-    parsed.bookPhoto=capturedPhotoBase64;
-    addToHistory(parsed);
-    buildFiche(parsed);
+    parsed.aiIdentified=true;parsed.editionCount=1;parsed.bookPhoto=capturedPhotoBase64;
+    addToHistory(parsed);buildFiche(parsed);
   }catch(e){goTo('scan-screen');showErr('Identification failed: '+e.message);}
 }
 
-async function generateDescription(){
-  const apiKey=getApiKey();
-  if(!apiKey){toast('API key not configured');return;}
-  if(!currentBook){toast('No book identified');return;}
-  if(!capturedPhotoBase64){toast('No photo — take a photo first');return;}
-  const btn=document.getElementById('desc-gen-btn');
-  btn.disabled=true;btn.textContent='✦ Generating…';
-  const hint=document.getElementById('hint-input').value;
+// AI DESCRIBE
+async function callDescribeAPI(book,photo){
+  const apiKey=getApiKey();if(!apiKey)return null;
+  if(!photo)return null;
+  const hint=document.getElementById('hint-input').value||'';
   try{
-    const response=await fetch('/api/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:capturedPhotoBase64.split(',')[1],mediaType:'image/jpeg',apiKey,hint,action:'describe'})});
+    const response=await fetch('/api/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:photo.split(',')[1],mediaType:'image/jpeg',apiKey,hint,action:'describe'})});
     const data=await response.json();
-    const text=data.content?.map(c=>c.text||'').join('')||'';
-    if(text){document.getElementById('desc-ta').value=text.trim();toast('Description generated');}
-    else toast('Generation failed');
-  }catch(e){toast('Error: '+e.message);}
-  btn.disabled=false;btn.textContent='✦ Generate description (AI)';
+    return data.content?.map(c=>c.text||'').join('').trim()||null;
+  }catch(e){return null;}
+}
+async function generateDescription(){
+  if(!currentBook||!capturedPhotoBase64){toast('Take a photo first');return;}
+  const btn=document.getElementById('desc-gen-btn');btn.disabled=true;btn.textContent='Generating…';
+  const desc=await callDescribeAPI(currentBook,capturedPhotoBase64);
+  if(desc)document.getElementById('desc-ta').value=desc;else toast('Generation failed');
+  btn.disabled=false;btn.textContent='✦ Generate with AI';
+}
+async function generatePushDescription(){
+  if(!pushItem){return;}
+  const btn=document.getElementById('push-desc-gen-btn');btn.disabled=true;btn.textContent='Generating…';
+  const desc=await callDescribeAPI(pushItem,pushItem.bookPhoto);
+  if(desc)document.getElementById('push-desc-ta').value=desc;else toast('Generation failed — need a photo');
+  btn.disabled=false;btn.textContent='✦ Generate with AI';
 }
 
 // EBAY
@@ -639,15 +627,15 @@ async function fetchEbayData(book){
   try{
     const r=await fetch('/api/ebay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,appId})});
     const d=await r.json();
+    const block=document.getElementById('ebay-result-block');
     if(d.count>0){
-      const block=document.getElementById('ebay-result-block');
-      block.innerHTML=`<div class="ebay-result"><span class="ebay-found">✓ eBay: ${d.count} sold · avg €${d.avgPrice} · range €${d.minPrice}–€${d.maxPrice}</span>${d.items.length?`<div class="ebay-items">${d.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,50)}…</a><span class="ebay-item-price">€${Math.round(i.price)}</span></div>`).join('')}</div>`:''}</div>`;
-      // Update market estimate with eBay data
-      if(d.avgPrice){marketLow=d.minPrice;marketHigh=d.maxPrice;renderMarketRange(true);}
-      // Green eBay button
-      document.querySelectorAll('.source-link').forEach(l=>{if(l.textContent.includes('eBay'))l.classList.add('has-results');});
+      block.innerHTML=`<div class="ebay-result"><span class="ebay-found">✓ eBay: ${d.count} sold · avg €${d.avgPrice} · €${d.minPrice}–€${d.maxPrice}</span>${d.items.length?`<div class="ebay-items">${d.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,45)}…</a><span class="ebay-item-price">€${Math.round(i.price)}</span></div>`).join('')}</div>`:''}</div>`;
+      // Update market with real eBay data
+      marketLow=d.minPrice;marketHigh=d.maxPrice;renderMarketRange('eBay sold');
+      // Green buttons for eBay links
+      document.querySelectorAll('#price-links .source-link').forEach(l=>{if(l.textContent.includes('eBay'))l.classList.add('has-results');});
     }else{
-      document.getElementById('ebay-result-block').innerHTML=`<div class="ebay-result"><span class="ebay-notfound">eBay: no sold listings found</span></div>`;
+      block.innerHTML=`<div class="ebay-result"><span class="ebay-notfound">eBay: no sold listings found</span></div>`;
     }
   }catch(e){}
 }
@@ -655,40 +643,43 @@ async function fetchEbayData(book){
 // MARKET
 async function fetchMarketEstimate(book){
   document.getElementById('market-content').innerHTML='<div class="market-loading">Estimating…</div>';
+  document.getElementById('ebay-result-block').innerHTML='';
   marketLow=null;marketHigh=null;
-  if(book.marketLow&&book.marketHigh){marketLow=parseInt(book.marketLow);marketHigh=parseInt(book.marketHigh);renderMarketRange(false);fetchEbayData(book);return;}
+  if(book.marketLow&&book.marketHigh){marketLow=parseInt(book.marketLow);marketHigh=parseInt(book.marketHigh);renderMarketRange('Claude est.');fetchEbayData(book);return;}
   await new Promise(r=>setTimeout(r,300));
   const year=parseInt(book.year)||2000,age=new Date().getFullYear()-year,ed=book.editionCount||1;
   let low=5,high=15;
   if(age>40){low=20;high=60;}else if(age>25){low=12;high=35;}else if(age>15){low=8;high=22;}
   if(ed<=2){low=Math.round(low*1.5);high=Math.round(high*2);}
   marketLow=low;marketHigh=high;
-  renderMarketRange(false);
+  renderMarketRange('Claude est.');
   fetchEbayData(book);
 }
-function renderMarketRange(fromEbay){
-  const src=fromEbay?'eBay data':'Claude est.';
+function renderMarketRange(src){
   document.getElementById('market-content').innerHTML=`<div class="market-range"><div class="market-lbl">${src.toUpperCase()}</div><div class="market-range-vals"><span class="market-low">€${marketLow}</span><span class="market-arrow">→</span><span class="market-high">€${marketHigh}</span></div></div>`;
-  recalcDecision();
+  recalcReturn();
 }
-function recalcDecision(){
+function recalcReturn(){
   const buy=parseFloat(document.getElementById('price-input').value)||0;
-  if(!selectedGrade){setDecision('👆','Select condition first','Then enter your purchase price');return;}
-  if(!buy||!marketHigh){if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);return;}
-  const c=marketHigh/buy,n=settings.coeff;
-  const dr=document.getElementById('decision-row');
-  if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' on high est.','Target ×'+n+' · Best case €'+(marketHigh-buy).toFixed(0)+' margin');}
-  else{dr.className='decision-row pass';setDecision('✗','PASS — ×'+c.toFixed(1)+' on high est.','Need ×'+n+' to justify');}
+  const row=document.getElementById('return-row');
+  if(!selectedGrade){row.className='return-row neutral';setReturn('👆','Select condition first','Then enter your purchase price');return;}
+  if(!buy||!marketHigh){row.className='return-row neutral';if(marketHigh&&!buy)setReturn('💰','Enter your purchase price','Market est. €'+marketLow+'–€'+marketHigh);return;}
+  const coeff=marketHigh/buy;
+  const margin=marketHigh-buy;
+  row.className='return-row good';
+  setReturn('✓','×'+coeff.toFixed(1)+' return on market high','Buy €'+buy+' → sell up to €'+marketHigh+' · margin €'+margin.toFixed(0));
 }
-function setDecision(icon,text,sub){document.getElementById('d-icon').textContent=icon;document.getElementById('d-text').textContent=text;document.getElementById('d-sub').textContent=sub;}
-function onPriceChange(){recalcDecision();}
+function setReturn(icon,text,sub){document.getElementById('r-icon').textContent=icon;document.getElementById('r-text').textContent=text;document.getElementById('r-sub').textContent=sub;}
+function onPriceChange(){recalcReturn();}
 
 function buildSearchLinks(book){
   const q=encodeURIComponent([book.title,book.author].filter(Boolean).join(' '));
   const isbn=book.isbn||'';
-  const priceLinks=[
+  const links=[
     {label:'eBay US sold',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&_sacat=267`},
     {label:'eBay DE sold',url:`https://www.ebay.de/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&_sacat=267`},
+    {label:'eBay US live',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&_sacat=267`},
+    {label:'eBay.fr',url:`https://www.ebay.fr/sch/i.html?_nkw=${q}&_sacat=267`},
     {label:'Catawiki',url:`https://www.catawiki.com/en/s#q=${q}`},
     {label:'Invaluable',url:`https://www.invaluable.com/search/#query=${q}`},
     {label:'Barnebys',url:`https://www.barnebys.com/search/lots?query=${q}`},
@@ -697,18 +688,15 @@ function buildSearchLinks(book){
     {label:'ZVAB',url:`https://www.zvab.com/servlet/SearchResults?tn=${encodeURIComponent(book.title||'')}&an=${encodeURIComponent(book.author||'')}`},
     {label:'Bookfinder',url:`https://www.bookfinder.com/search/?author=${encodeURIComponent(book.author||'')}&title=${encodeURIComponent(book.title||'')}&st=xl&ac=qr`},
   ];
-  document.getElementById('price-links').innerHTML=priceLinks.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+  document.getElementById('price-links').innerHTML=links.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
   document.getElementById('verify-links').innerHTML=`<a class="source-link verify" href="${isbn?'https://www.worldcat.org/isbn/'+isbn:'https://www.worldcat.org/search?q='+q}" target="_blank" rel="noopener">WorldCat</a>`;
 }
 
-// HISTORY
 function addToHistory(book){
   const db=getDB();
-  const exists=db.history.find(i=>i.isbn&&i.isbn===book.isbn);
-  if(!exists){db.history.unshift({...book,scannedAt:Date.now(),source:getSource()});if(db.history.length>200)db.history=db.history.slice(0,200);saveDB(db);}
+  if(!db.history.find(i=>i.isbn&&i.isbn===book.isbn)){db.history.unshift({...book,scannedAt:Date.now(),source:getSource()});if(db.history.length>500)db.history=db.history.slice(0,500);saveDB(db);}
 }
 
-// FICHE
 function buildFiche(book){
   currentBook=book;selectedGrade=null;marketLow=null;marketHigh=null;pendingISBN=null;
   const db=getDB();
@@ -717,72 +705,76 @@ function buildFiche(book){
   banner.className='stock-banner';
   if(inStock){banner.className='stock-banner in-stock';banner.textContent='⚡ Already in stock · €'+(inStock.price||'?');}
   const photoSrc=book.bookPhoto||book.cover||null;
-  const photoArea=document.getElementById('fiche-photo-area');
-  if(photoSrc){photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button></div>`;}
-  else{photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo</p></div>`;}
+  const pa=document.getElementById('fiche-photo-area');
+  if(photoSrc)pa.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt=""><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button></div>`;
+  else pa.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo</p></div>`;
   const edNote=book.editionNote?`<div class="fiche-edition-note">⚑ ${book.editionNote}</div>`:'';
   document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${edNote}`;
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
-  // Auto-select category from AI
-  if(book.category){const sel=document.getElementById('cat-select');sel.value=book.category||'books-music';}
+  if(book.category)document.getElementById('cat-select').value=book.category;
   document.getElementById('price-input').value='';
   document.getElementById('notes-ta').value='';
   document.getElementById('desc-ta').value='';
   document.getElementById('grade-desc').textContent='Select condition first';
-  document.getElementById('decision-row').className='decision-row';
-  setDecision('👆','Select condition first','Then enter your purchase price');
+  document.getElementById('return-row').className='return-row neutral';
+  setReturn('👆','Select condition first','Then enter your purchase price');
   buildSearchLinks(book);
   goTo('fiche-screen');
   fetchMarketEstimate(book);
 }
-
 function retakePhoto(){capturedPhotoBase64=null;goTo('scan-screen');}
-function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;recalcDecision();}
+function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;recalcReturn();}
 
-// SAVE TO STOCK
 function saveToStock(){
   if(!currentBook)return;
   if(!selectedGrade){toast('Select a condition first');return;}
   const price=document.getElementById('price-input').value;
   if(!price){toast('Enter a purchase price');return;}
   const db=getDB();
-  const item={...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,description:document.getElementById('desc-ta').value,notes:document.getElementById('notes-ta').value,category:document.getElementById('cat-select').value,source:getSource(),addedAt:Date.now()};
-  db.stock.push(item);
+  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,description:document.getElementById('desc-ta').value,notes:document.getElementById('notes-ta').value,category:document.getElementById('cat-select').value,source:getSource(),addedAt:Date.now(),shopifyPushed:false});
   saveDB(db);toast('✓ Added to stock');
   capturedPhotoBase64=null;
   setTimeout(()=>goTo('scan-screen'),1200);
 }
 
-// PUSH TO SHOPIFY
-async function pushToShopify(){
+// PUSH MODAL
+function openPushModal(item){
+  pushItem=item;
+  const pa=document.getElementById('push-photo-area');
+  const photo=item.bookPhoto||item.cover||null;
+  if(photo)pa.innerHTML=`<img class="push-photo" src="${photo}" alt="">`;
+  else pa.innerHTML=`<div class="push-photo-ph">📖</div>`;
+  document.getElementById('push-title').textContent=item.title;
+  document.getElementById('push-meta').textContent=[item.author,item.publisher,item.year,item.grade?'Grade: '+item.grade:''].filter(Boolean).join(' · ');
+  // Suggest selling price = purchase price × 2 minimum
+  const suggestedPrice=item.marketHigh||Math.round((item.price||0)*2);
+  document.getElementById('push-price-input').value=suggestedPrice||'';
+  document.getElementById('push-desc-ta').value=item.description||'';
+  document.getElementById('push-cat-select').value=item.category||'books-music';
+  document.getElementById('push-modal').classList.add('open');
+}
+function closePushModal(){document.getElementById('push-modal').classList.remove('open');pushItem=null;}
+async function confirmPushToShopify(){
   const domain=getShopifyDomain(),token=getShopifyToken();
   if(!domain||!token){toast('Configure Shopify in Settings first');return;}
-  if(!currentBook){toast('No item to push');return;}
-  const price=document.getElementById('price-input').value;
-  if(!price){toast('Enter a selling price first');return;}
-  const btn=document.getElementById('shopify-btn');
-  btn.disabled=true;btn.textContent='Pushing…';
+  const price=document.getElementById('push-price-input').value;
+  if(!price){toast('Enter a selling price');return;}
+  const btn=document.getElementById('shopify-push-btn');btn.disabled=true;btn.textContent='Pushing…';
   try{
-    const product={
-      title:currentBook.title,
-      description:document.getElementById('desc-ta').value||currentBook.description||'',
-      price:parseFloat(price),
-      category:document.getElementById('cat-select').value,
-      imageBase64:capturedPhotoBase64||null,
-    };
+    const product={title:pushItem.title,description:document.getElementById('push-desc-ta').value||'',price:parseFloat(price),category:document.getElementById('push-cat-select').value,imageBase64:pushItem.bookPhoto||null};
     const r=await fetch('/api/shopify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({shopDomain:domain,accessToken:token,product})});
     const d=await r.json();
     if(d.product){
-      toast('✓ Pushed to Shopify as draft!');
-      // Mark in stock
-      saveToStock();
-    }else{
-      toast('Shopify error — check settings');
-      console.error(d);
-    }
+      // Mark as pushed in stock
+      const db=getDB();
+      const idx=db.stock.findIndex(i=>i.addedAt===pushItem.addedAt);
+      if(idx>=0){db.stock[idx].shopifyPushed=true;db.stock[idx].shopifyProductId=d.product.id;saveDB(db);}
+      toast('✓ Pushed to Shopify!');
+      closePushModal();renderLibrary();
+    }else{toast('Shopify error — check settings');console.error(d);}
   }catch(e){toast('Push failed: '+e.message);}
-  btn.disabled=false;btn.textContent='⬆ Shopify';
+  btn.disabled=false;btn.textContent='⬆ Push to Shopify';
 }
 
 function showEditions(docs){
@@ -797,25 +789,18 @@ function renderLibrary(){
   const items=(currentTab==='stock'?db.stock:db.history).filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>(b.addedAt||b.scannedAt||0)-(a.addedAt||a.scannedAt||0));
   const list=document.getElementById('lib-list');
   if(!items.length){list.innerHTML=`<div class="lib-empty">No items yet.</div>`;return;}
-  list.innerHTML=items.map(i=>{
-    const photo=i.bookPhoto||i.cover||null;
-    const badge=currentTab==='stock'?`<div class="lib-badge stock">€${i.price}</div>`:`<div class="lib-badge history">${new Date(i.scannedAt||i.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div>`;
-    return`<div class="lib-item">${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${[i.author,i.year,i.source].filter(Boolean).join(' · ')}</div></div>${badge}</div>`;
+  list.innerHTML=items.map((item,idx)=>{
+    const photo=item.bookPhoto||item.cover||null;
+    const isStock=currentTab==='stock';
+    const rightHtml=isStock
+      ?`<div class="lib-right"><div class="lib-price">€${item.price}</div>${item.grade?`<div class="lib-grade">${item.grade}</div>`:''}<button class="lib-shopify-btn ${item.shopifyPushed?'pushed':''}" onclick="event.stopPropagation();${item.shopifyPushed?'toast(\'Already on Shopify\')':'openPushModal('+JSON.stringify(item).replace(/'/g,"\\'")+')'}">⬆ ${item.shopifyPushed?'On Shopify':'Shopify'}</button></div>`
+      :`<div class="lib-right"><div class="lib-date">${new Date(item.scannedAt||item.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div></div>`;
+    return`<div class="lib-item">${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div><div class="lib-info"><div class="lib-title">${item.title}</div><div class="lib-meta">${[item.author,item.year,item.source].filter(Boolean).join(' · ')}</div></div>${rightHtml}</div>`;
   }).join('');
 }
 
-function renderCoeffBtns(){['coeff-btns','coeff-setting-btns'].forEach(id=>{const w=document.getElementById(id);if(!w)return;w.innerHTML=[2,3,4,5].map(v=>`<button class="coeff-btn ${settings.coeff===v?'active':''}" onclick="setCoeff(${v})">×${v}</button>`).join('');});}
-function toggleSettings(){
-  const p=document.getElementById('settings-panel');p.classList.toggle('open');
-  if(p.classList.contains('open')){
-    document.getElementById('api-key-input').value=getApiKey();
-    document.getElementById('ebay-id-input').value=getEbayId();
-    document.getElementById('shopify-domain-input').value=getShopifyDomain();
-    document.getElementById('shopify-token-input').value=getShopifyToken();
-    updateApiStatus();updateEbayStatus();updateShopifyStatus();updateCount();renderCoeffBtns();
-  }
-}
-function clearAll(){if(confirm('Clear all data?')){localStorage.removeItem('sb_db');updateCount();renderLibrary();toggleSettings();toast('All data cleared');}}
+function toggleSettings(){const p=document.getElementById('settings-panel');p.classList.toggle('open');if(p.classList.contains('open')){document.getElementById('api-key-input').value=getApiKey();document.getElementById('ebay-id-input').value=getEbayId();document.getElementById('shopify-domain-input').value=getShopifyDomain();document.getElementById('shopify-token-input').value=getShopifyToken();updateApiStatus();updateEbayStatus();updateShopifyStatus();updateCount();}}
+function clearAll(){if(confirm('Clear all data?')){localStorage.removeItem('sb_db');updateCount();renderLibrary();toggleSettings();toast('All cleared');}}
 function navTo(sid,nid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(nid).classList.add('active');if(sid==='library-screen')renderLibrary();}
 function goTo(sid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');}
 function setLoading(msg){document.getElementById('spinner').className='spinner';document.getElementById('loading-label').textContent=msg||'Loading…';goTo('loading-screen');}
@@ -824,7 +809,7 @@ function showErr(msg){const e=document.getElementById('scan-err');e.textContent=
 function hideErr(){document.getElementById('scan-err').classList.remove('show');}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-loadSettings();renderCoeffBtns();updateCount();updateApiStatus();updateEbayStatus();updateShopifyStatus();
+updateCount();updateApiStatus();updateEbayStatus();updateShopifyStatus();
 window.addEventListener('beforeunload',()=>{if(videoStream)videoStream.getTracks().forEach(t=>t.stop());});
 </script>
 </body>
