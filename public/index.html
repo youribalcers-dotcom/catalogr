@@ -131,13 +131,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .ebay-item-price{color:var(--green);font-weight:600;flex-shrink:0;margin-left:8px;}
 
 /* SOURCE LINKS */
-.source-section{padding:10px 14px 10px;}
-.source-section-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
-.source-links{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
-.source-link{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;background:var(--bg3);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s;}
+.source-section{padding:10px 14px;}
+.source-dropdown{position:relative;}
+.source-dropdown-btn{width:100%;padding:10px 14px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--muted2);cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;}
+.source-dropdown-btn:hover{border-color:var(--text);color:var(--text);}
+.source-dropdown-list{display:none;flex-direction:column;gap:4px;margin-top:6px;}
+.source-dropdown-list.open{display:flex;}
+.source-link{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:8px 12px;border-radius:6px;background:var(--bg3);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;text-decoration:none;display:flex;justify-content:space-between;align-items:center;transition:all .15s;}
 .source-link:hover{color:var(--text);border-color:var(--text);}
 .source-link.verify{background:#f3f0ff;border-color:#ddd6fe;color:var(--purple);}
 .source-link.has-results{background:#e8f5e9;border-color:#a5d6a7;color:var(--green);}
+.source-link-arrow{font-size:10px;color:var(--muted);}
 
 /* PRICE */
 .price-input-wrap{position:relative;}
@@ -318,10 +322,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
             <div><div class="return-text" id="r-text">Select condition first</div><div class="return-sub" id="r-sub">Then enter your purchase price</div></div>
           </div>
           <div class="source-section">
-            <div class="source-section-lbl">Check prices</div>
-            <div class="source-links" id="price-links"></div>
-            <div class="source-section-lbl">Verify edition</div>
-            <div class="source-links" id="verify-links"></div>
+            <div class="source-dropdown">
+              <button class="source-dropdown-btn" onclick="togglePriceLinks()">
+                <span>🔍 Search prices</span><span id="price-links-arrow">▼</span>
+              </button>
+              <div class="source-dropdown-list" id="price-links"></div>
+            </div>
+            <div style="margin-top:8px" id="verify-links"></div>
           </div>
         </div>
       </div>
@@ -632,8 +639,8 @@ async function fetchEbayData(book){
       block.innerHTML=`<div class="ebay-result"><span class="ebay-found">✓ eBay: ${d.count} sold · avg €${d.avgPrice} · €${d.minPrice}–€${d.maxPrice}</span>${d.items.length?`<div class="ebay-items">${d.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,45)}…</a><span class="ebay-item-price">€${Math.round(i.price)}</span></div>`).join('')}</div>`:''}</div>`;
       // Update market with real eBay data
       marketLow=d.minPrice;marketHigh=d.maxPrice;renderMarketRange('eBay sold');
-      // Green buttons for eBay links
-      document.querySelectorAll('#price-links .source-link').forEach(l=>{if(l.textContent.includes('eBay'))l.classList.add('has-results');});
+      // Green buttons for eBay sold links
+      ['eBay-US-sold','eBay-DE-sold'].forEach(id=>{const el=document.getElementById('sl-'+id);if(el)el.classList.add('has-results');});
     }else{
       block.innerHTML=`<div class="ebay-result"><span class="ebay-notfound">eBay: no sold listings found</span></div>`;
     }
@@ -688,8 +695,14 @@ function buildSearchLinks(book){
     {label:'ZVAB',url:`https://www.zvab.com/servlet/SearchResults?tn=${encodeURIComponent(book.title||'')}&an=${encodeURIComponent(book.author||'')}`},
     {label:'Bookfinder',url:`https://www.bookfinder.com/search/?author=${encodeURIComponent(book.author||'')}&title=${encodeURIComponent(book.title||'')}&st=xl&ac=qr`},
   ];
-  document.getElementById('price-links').innerHTML=links.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
-  document.getElementById('verify-links').innerHTML=`<a class="source-link verify" href="${isbn?'https://www.worldcat.org/isbn/'+isbn:'https://www.worldcat.org/search?q='+q}" target="_blank" rel="noopener">WorldCat</a>`;
+  document.getElementById('price-links').innerHTML=links.map(l=>`<a class="source-link" id="sl-${l.label.replace(/\s/g,'-')}" href="${l.url}" target="_blank" rel="noopener"><span>${l.label}</span><span class="source-link-arrow">→</span></a>`).join('');
+  document.getElementById('verify-links').innerHTML=`<a class="source-link verify" href="${isbn?'https://www.worldcat.org/isbn/'+isbn:'https://www.worldcat.org/search?q='+q}" target="_blank" rel="noopener"><span>📚 WorldCat — verify edition</span><span class="source-link-arrow">→</span></a>`;
+}
+function togglePriceLinks(){
+  const list=document.getElementById('price-links');
+  const arrow=document.getElementById('price-links-arrow');
+  const open=list.classList.toggle('open');
+  arrow.textContent=open?'▲':'▼';
 }
 
 function addToHistory(book){
