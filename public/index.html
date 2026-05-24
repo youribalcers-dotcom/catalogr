@@ -6,15 +6,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#ffffff">
-<title>Catalogr</title>
+<title>Catalogr — Sample Books</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap');
-:root{--bg:#f8f7f4;--bg2:#fff;--bg3:#f0efe9;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#888878;--muted2:#555548;--green:#2d6a4f;--red:#c0392b;--yellow:#b8860b;--purple:#7c3aed;--radius:10px;}
+:root{--bg:#f8f7f4;--bg2:#fff;--bg3:#f0efe9;--border:#e2e0d8;--border2:#ccc9be;--text:#1a1a18;--muted:#888878;--muted2:#555548;--green:#2d6a4f;--red:#c0392b;--yellow:#b8860b;--purple:#7c3aed;--blue:#1d6fa4;--radius:10px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;}
 #app{height:100dvh;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden;}
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 12px;border-bottom:1.5px solid var(--border);flex-shrink:0;background:var(--bg2);}
-.hdr-logo{font-size:22px;font-weight:800;letter-spacing:-.5px;}
+.hdr-logo{font-size:20px;font-weight:800;letter-spacing:-.5px;}
 .hdr-logo span{color:var(--green);}
 .hdr-right{display:flex;align-items:center;gap:8px;}
 .hdr-count{font-family:'Syne Mono',monospace;font-size:11px;color:var(--muted);background:var(--bg3);padding:4px 10px;border-radius:20px;border:1px solid var(--border);}
@@ -42,7 +42,21 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-cam{background:rgba(255,255,255,.95);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:13px 16px;border-radius:10px;border:none;cursor:pointer;flex:1;}
 .btn-cam:active{transform:scale(.96);}
 .btn-cam-sm{flex:0;padding:13px 14px;}
-.scan-controls{padding:14px 16px;display:flex;flex-direction:column;gap:10px;background:var(--bg);border-top:1.5px solid var(--border);flex-shrink:0;}
+
+.scan-controls{padding:12px 16px;display:flex;flex-direction:column;gap:10px;background:var(--bg);border-top:1.5px solid var(--border);flex-shrink:0;}
+
+/* HINT FIELD */
+.hint-wrap{display:flex;gap:8px;align-items:center;}
+.hint-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:10px 12px;outline:none;transition:border-color .2s;}
+.hint-input:focus{border-color:var(--purple);}
+.hint-input::placeholder{color:var(--muted);font-size:12px;}
+.hint-mic{width:38px;height:38px;border-radius:8px;background:var(--purple);border:none;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s;}
+.hint-mic.listening{background:var(--red);animation:blink 0.8s infinite;}
+.hint-mic:active{transform:scale(.95);}
+
+/* SOURCE */
+.source-select{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:10px 12px;outline:none;appearance:none;cursor:pointer;}
+
 .err-box{background:#fff0ee;border:1.5px solid #f5c6c2;border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--red);font-weight:500;display:none;line-height:1.5;}
 .err-box.show{display:block;}
 .btn{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;padding:14px 20px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
@@ -50,14 +64,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .btn-primary{background:var(--text);color:#fff;}
 .btn-ghost{background:var(--bg2);color:var(--text);border:1.5px solid var(--border2);}
 .isbn-row{display:flex;gap:8px;}
-.isbn-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:16px;padding:13px 14px;outline:none;transition:border-color .2s;letter-spacing:.05em;}
+.isbn-input{flex:1;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:16px;padding:12px 14px;outline:none;transition:border-color .2s;letter-spacing:.05em;}
 .isbn-input:focus{border-color:var(--text);}
-.isbn-input::placeholder{color:var(--muted);font-size:13px;letter-spacing:0;}
+.isbn-input::placeholder{color:var(--muted);font-size:12px;letter-spacing:0;}
+.divider-text{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);}
+.divider-text::before,.divider-text::after{content:'';flex:1;height:1px;background:var(--border);}
 
 /* LOADING */
 #loading-screen{align-items:center;justify-content:center;gap:14px;background:var(--bg);}
 .spinner{width:36px;height:36px;border:2.5px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin .7s linear infinite;}
 .spinner.ai{border-top-color:var(--purple);}
+.spinner.ebay{border-top-color:#e53238;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-label{font-family:'Syne Mono',monospace;font-size:13px;color:var(--muted2);text-align:center;padding:0 30px;line-height:1.6;}
 
@@ -102,6 +119,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .market-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.06em;}
 .market-loading{padding:14px 16px;font-size:13px;color:var(--muted);font-family:'Syne Mono',monospace;animation:pulse 1s infinite;border-bottom:1px solid var(--border);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .decision-row{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
 .decision-icon{font-size:20px;}
 .decision-text{font-size:13px;font-weight:700;}
@@ -114,32 +132,65 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .coeff-btn{font-family:'Syne Mono',monospace;font-size:12px;font-weight:600;padding:5px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--muted2);cursor:pointer;transition:all .15s;}
 .coeff-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
 
+/* EBAY RESULTS */
+.ebay-result{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;font-family:'Syne Mono',monospace;}
+.ebay-found{color:var(--green);font-weight:600;}
+.ebay-notfound{color:var(--muted);}
+.ebay-items{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
+.ebay-item{display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);}
+.ebay-item a{color:var(--blue);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;}
+.ebay-item-price{color:var(--green);font-weight:600;flex-shrink:0;margin-left:8px;}
+
 /* SOURCE LINKS */
-.source-section{padding:10px 14px 6px;}
+.source-section{padding:10px 14px 10px;}
 .source-section-lbl{font-size:10px;color:var(--muted);font-family:'Syne Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
 .source-links{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
 .source-link{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;background:var(--bg3);border:1.5px solid var(--border2);color:var(--muted2);cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s;}
 .source-link:hover{color:var(--text);border-color:var(--text);}
 .source-link.verify{background:#f3f0ff;border-color:#ddd6fe;color:var(--purple);}
+.source-link.has-results{background:#e8f5e9;border-color:#a5d6a7;color:var(--green);}
 
 /* PRICE */
 .price-input-wrap{position:relative;}
 .price-input-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:18px;font-weight:700;}
 .price-input{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne Mono',monospace;font-size:22px;font-weight:700;padding:12px 14px 12px 34px;outline:none;transition:border-color .2s;}
 .price-input:focus{border-color:var(--text);}
+.done-btn{margin-top:8px;width:100%;padding:10px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--muted2);cursor:pointer;}
 
 /* GRADE */
 .grade-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;}
 .grade-btn{font-family:'Syne Mono',monospace;font-size:11px;font-weight:600;padding:10px 2px;border-radius:7px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--muted2);cursor:pointer;text-align:center;transition:all .15s;}
 .grade-btn.sel{background:var(--text);color:#fff;border-color:var(--text);}
 .grade-desc{font-size:12px;color:var(--muted2);min-height:30px;line-height:1.5;font-family:'Syne Mono',monospace;margin-top:6px;}
-.notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:60px;}
+
+/* CATEGORY */
+.cat-select{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:12px 14px;outline:none;appearance:none;cursor:pointer;}
+
+/* DESCRIPTION */
+.desc-wrap{position:relative;}
+.desc-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:90px;transition:border-color .2s;line-height:1.6;}
+.desc-ta:focus{border-color:var(--text);}
+.desc-ta::placeholder{color:var(--muted);}
+.desc-gen-btn{margin-top:6px;width:100%;padding:10px;background:#f3f0ff;border:1.5px solid #ddd6fe;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--purple);cursor:pointer;transition:all .15s;}
+.desc-gen-btn:hover{background:#ede9fe;}
+.desc-gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+.notes-ta{width:100%;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;padding:12px 14px;outline:none;resize:none;min-height:50px;}
 .notes-ta::placeholder{color:var(--muted);}
+
+/* SHOPIFY PUSH */
+.shopify-btn{width:100%;padding:14px;background:#96bf48;border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.shopify-btn:hover{background:#85ad3f;}
+.shopify-btn:disabled{opacity:.5;cursor:not-allowed;}
+
 .fiche-acts{padding:14px 16px;display:flex;gap:8px;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
 
-/* LIBRARY */
+/* HISTORY / STOCK */
 #library-screen{overflow-y:auto;background:var(--bg);}
 .lib-body{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.lib-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg3);border-radius:var(--radius);padding:4px;border:1.5px solid var(--border);}
+.lib-tab{font-size:13px;font-weight:700;padding:9px;border-radius:7px;text-align:center;cursor:pointer;color:var(--muted2);transition:all .15s;}
+.lib-tab.active{background:var(--text);color:#fff;}
 .lib-search{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:11px 14px;outline:none;width:100%;}
 .lib-list{display:flex;flex-direction:column;gap:6px;}
 .lib-item{display:flex;gap:12px;align-items:center;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;}
@@ -148,7 +199,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .lib-info{flex:1;min-width:0;}
 .lib-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .lib-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:'Syne Mono',monospace;}
-.lib-grade{font-family:'Syne Mono',monospace;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:var(--bg3);color:var(--muted2);border:1px solid var(--border);flex-shrink:0;}
+.lib-badge{font-family:'Syne Mono',monospace;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;flex-shrink:0;}
+.lib-badge.stock{background:#e8f5e9;color:var(--green);border:1px solid #a5d6a7;}
+.lib-badge.history{background:var(--bg3);color:var(--muted2);border:1px solid var(--border);}
+.lib-badge.shopify{background:#f0f9e8;color:#6aab1f;border:1px solid #c5e8a0;}
 .lib-price{font-family:'Syne Mono',monospace;font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;}
 .lib-empty{text-align:center;padding:40px 20px;font-size:14px;color:var(--muted);line-height:1.7;}
 
@@ -159,13 +213,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .settings-group{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
 .settings-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--border);gap:12px;}
 .settings-row:last-child{border-bottom:none;}
-.settings-lbl{font-size:14px;font-weight:500;}
+.settings-lbl{font-size:14px;font-weight:500;flex-shrink:0;}
 .settings-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.settings-val{font-family:'Syne Mono',monospace;font-size:13px;font-weight:700;color:var(--green);}
-.api-key-input{background:var(--bg3);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Syne Mono',monospace;font-size:11px;padding:7px 10px;outline:none;width:100%;margin-top:6px;}
+.s-input{background:var(--bg3);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Syne Mono',monospace;font-size:11px;padding:7px 10px;outline:none;width:100%;margin-top:6px;}
 .api-status{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;margin-top:6px;display:inline-block;}
 .api-status.set{background:#e8f5e9;color:var(--green);}
 .api-status.unset{background:#fff0ee;color:var(--red);}
+.coeff-btns-s{display:flex;gap:4px;}
 
 /* NAV */
 .nav{display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0);}
@@ -180,7 +234,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <body>
 <div id="app">
   <div class="hdr">
-    <div class="hdr-logo">Catalog<span>r</span></div>
+    <div class="hdr-logo">Sample <span>Books</span></div>
     <div class="hdr-right">
       <div class="hdr-count" id="hdr-count">0 items</div>
       <div class="hdr-btn" onclick="toggleSettings()">⚙</div>
@@ -202,9 +256,27 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         </div>
       </div>
       <div class="scan-controls" id="scan-controls">
+        <!-- HINT -->
+        <div class="hint-wrap">
+          <input class="hint-input" id="hint-input" type="text" placeholder="Hint: e.g. Munari Xerografia 35th edition, Who tour tee 1968…">
+          <button class="hint-mic" id="hint-mic" onclick="toggleVoice()" title="Voice input">🎤</button>
+        </div>
+        <!-- SOURCE -->
+        <select class="source-select" id="source-select">
+          <option value="">Source — where did you find it?</option>
+          <option value="Évasion — Rue du Midi">Évasion — Rue du Midi</option>
+          <option value="Imaginaire — Place du Jeu de Balle">Imaginaire — Place du Jeu de Balle</option>
+          <option value="Pêle Mêle — Boulevard Anspach">Pêle Mêle — Boulevard Anspach</option>
+          <option value="Saint-Martin — Rue de Flandre">Saint-Martin — Rue de Flandre</option>
+          <option value="Rue Haute">Rue Haute</option>
+          <option value="Jeu de Balle — Marché">Jeu de Balle — Marché</option>
+          <option value="custom">Other (type below)…</option>
+        </select>
+        <input class="hint-input" id="source-custom" type="text" placeholder="Type source name…" style="display:none">
         <div class="err-box" id="scan-err"></div>
+        <div class="divider-text">or enter ISBN</div>
         <div class="isbn-row">
-          <input class="isbn-input" id="isbn-input" type="text" placeholder="Enter ISBN" maxlength="13" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+          <input class="isbn-input" id="isbn-input" type="text" placeholder="ISBN" maxlength="13" inputmode="numeric" onkeydown="if(event.key==='Enter')lookupManual()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
           <button class="btn btn-primary" style="width:54px;padding:0;flex-shrink:0" onclick="lookupManual()">→</button>
         </div>
       </div>
@@ -232,26 +304,33 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="stock-banner" id="stock-banner"></div>
     <div class="fiche-info" id="fiche-info"></div>
     <div class="fiche-body">
+
+      <!-- CONDITION FIRST -->
       <div>
         <div class="field-lbl">Condition</div>
         <div class="grade-grid" id="grade-grid"></div>
-        <div class="grade-desc" id="grade-desc">Select condition</div>
+        <div class="grade-desc" id="grade-desc">Select condition first</div>
       </div>
+
+      <!-- PURCHASE PRICE -->
       <div>
         <div class="field-lbl">Purchase price</div>
         <div class="price-input-wrap">
           <span>€</span>
           <input type="number" class="price-input" id="price-input" placeholder="0" min="0" inputmode="decimal" oninput="onPriceChange()">
         </div>
-        <button class="btn btn-ghost" style="margin-top:8px;padding:10px;font-size:13px" onclick="document.getElementById('price-input').blur()">✓ Done</button>
+        <button class="done-btn" onclick="document.getElementById('price-input').blur()">✓ Done</button>
       </div>
+
+      <!-- MARKET RESEARCH -->
       <div>
         <div class="field-lbl">Market research</div>
         <div class="market-box">
           <div id="market-content"><div class="market-loading">Estimating…</div></div>
+          <div id="ebay-result-block"></div>
           <div class="decision-row" id="decision-row">
-            <div class="decision-icon" id="d-icon">⏳</div>
-            <div><div class="decision-text" id="d-text">Select condition &amp; enter price</div><div class="decision-sub" id="d-sub">Loading estimate…</div></div>
+            <div class="decision-icon" id="d-icon">👆</div>
+            <div><div class="decision-text" id="d-text">Select condition first</div><div class="decision-sub" id="d-sub">Then enter your purchase price</div></div>
           </div>
           <div class="coeff-row">
             <div class="coeff-lbl">Min. coefficient ×</div>
@@ -265,20 +344,50 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
           </div>
         </div>
       </div>
+
+      <!-- CATEGORY -->
       <div>
-        <div class="field-lbl">Notes</div>
-        <textarea class="notes-ta" id="notes-ta" placeholder="Ex-libris, annotations, binding, provenance…"></textarea>
+        <div class="field-lbl">Category</div>
+        <select class="cat-select" id="cat-select">
+          <option value="books-music">Books — Music</option>
+          <option value="books-art">Books — Art</option>
+          <option value="books-other">Books — Other</option>
+          <option value="objects-music">Objects — Music (instruments, pedals, merch)</option>
+          <option value="objects-art">Objects — Art (posters, postcards, prints)</option>
+          <option value="objects-other">Objects — Other (design, vintage, collectibles)</option>
+        </select>
       </div>
+
+      <!-- DESCRIPTION FOR SHOPIFY -->
+      <div>
+        <div class="field-lbl">Description (Shopify)</div>
+        <div class="desc-wrap">
+          <textarea class="desc-ta" id="desc-ta" placeholder="Short curatorial description — edit or generate with AI…"></textarea>
+          <button class="desc-gen-btn" id="desc-gen-btn" onclick="generateDescription()">✦ Generate description (AI)</button>
+        </div>
+      </div>
+
+      <!-- INTERNAL NOTES -->
+      <div>
+        <div class="field-lbl">Internal notes</div>
+        <textarea class="notes-ta" id="notes-ta" placeholder="Provenance, condition details, ex-libris…"></textarea>
+      </div>
+
     </div>
     <div class="fiche-acts">
       <button class="btn btn-ghost" style="flex:1" onclick="goTo('scan-screen')">← Back</button>
-      <button class="btn btn-primary" style="flex:2" onclick="saveToStock()">+ Stock</button>
+      <button class="btn btn-primary" style="flex:1.5" onclick="saveToStock()">+ Stock</button>
+      <button class="shopify-btn" style="flex:1.5" id="shopify-btn" onclick="pushToShopify()">⬆ Shopify</button>
     </div>
   </div>
 
-  <!-- STOCK -->
+  <!-- LIBRARY/HISTORY -->
   <div id="library-screen" class="screen">
     <div class="lib-body">
+      <div class="lib-tabs">
+        <div class="lib-tab active" id="tab-stock" onclick="switchTab('stock')">Stock</div>
+        <div class="lib-tab" id="tab-history" onclick="switchTab('history')">History</div>
+      </div>
       <input class="lib-search" id="lib-search" type="search" placeholder="Search title or author…" oninput="renderLibrary()">
       <div class="lib-list" id="lib-list"></div>
     </div>
@@ -296,20 +405,39 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="settings-body">
       <div class="settings-group">
         <div class="settings-row" style="flex-direction:column;align-items:flex-start">
-          <div><div class="settings-lbl">Anthropic API Key</div><div class="settings-sub">Required for AI identification</div></div>
-          <input class="api-key-input" id="api-key-input" type="password" placeholder="sk-ant-api03-…" oninput="saveApiKey()">
+          <div><div class="settings-lbl">Anthropic API Key</div><div class="settings-sub">For AI identification & descriptions</div></div>
+          <input class="s-input" id="api-key-input" type="password" placeholder="sk-ant-api03-…" oninput="saveApiKey()">
           <div class="api-status unset" id="api-status">Not configured</div>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start">
+          <div><div class="settings-lbl">eBay App ID</div><div class="settings-sub">For real sold listings data</div></div>
+          <input class="s-input" id="ebay-id-input" type="text" placeholder="YouriBal-Catalogr-PRD-…" oninput="saveEbayId()">
+          <div class="api-status unset" id="ebay-status">Not configured</div>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start">
+          <div><div class="settings-lbl">Shopify Store</div><div class="settings-sub">Your myshopify.com domain</div></div>
+          <input class="s-input" id="shopify-domain-input" type="text" placeholder="sample-books.myshopify.com" oninput="saveShopifySettings()">
+        </div>
+        <div class="settings-row" style="flex-direction:column;align-items:flex-start">
+          <div><div class="settings-lbl">Shopify Access Token</div><div class="settings-sub">From Apps → Develop apps</div></div>
+          <input class="s-input" id="shopify-token-input" type="password" placeholder="shpat_…" oninput="saveShopifySettings()">
+          <div class="api-status unset" id="shopify-status">Not configured</div>
         </div>
       </div>
       <div class="settings-group">
         <div class="settings-row">
           <div><div class="settings-lbl">Min. coefficient</div><div class="settings-sub">Buy / Pass threshold</div></div>
-          <div class="coeff-btns" id="coeff-setting-btns"></div>
+          <div class="coeff-btns-s" id="coeff-setting-btns"></div>
         </div>
       </div>
       <div class="settings-group">
-        <div class="settings-row"><div class="settings-lbl">Stock items</div><div class="settings-val" id="s-stock">0</div></div>
-        <div class="settings-row"><div class="settings-lbl">Total purchase value</div><div class="settings-val" id="s-val">€0</div></div>
+        <div class="settings-row"><div class="settings-lbl">Stock items</div><div class="api-status set" id="s-stock" style="margin-top:0">0</div></div>
+        <div class="settings-row"><div class="settings-lbl">History items</div><div class="api-status set" id="s-history" style="margin-top:0">0</div></div>
+        <div class="settings-row"><div class="settings-lbl">Total purchase value</div><div class="api-status set" id="s-val" style="margin-top:0">€0</div></div>
       </div>
       <button class="btn btn-ghost" style="color:var(--red);border-color:#f5c6c2" onclick="clearAll()">Clear all data</button>
     </div>
@@ -322,7 +450,9 @@ let currentBook=null,selectedGrade=null,videoStream=null,scanning=false;
 let settings={coeff:2};
 let marketLow=null,marketHigh=null;
 let capturedPhotoBase64=null;
-let pendingISBN=null; // ISBN kept for AI fallback
+let pendingISBN=null;
+let currentTab='stock';
+let recognition=null;
 
 const GRADES=[
   {code:'G',   desc:'Poor. Heavy wear, complete.'},
@@ -333,22 +463,53 @@ const GRADES=[
   {code:'M',   desc:'Mint. Perfect, unread condition.'},
 ];
 
-function getDB(){try{return JSON.parse(localStorage.getItem('catalogr_db')||'{"stock":[]}')}catch(e){return{stock:[]}}}
-function saveDB(db){localStorage.setItem('catalogr_db',JSON.stringify(db));updateCount()}
-function loadSettings(){try{const s=JSON.parse(localStorage.getItem('catalogr_s')||'{}');settings={coeff:s.coeff||2};}catch(e){}}
-function setCoeff(v){settings.coeff=v;localStorage.setItem('catalogr_s',JSON.stringify(settings));renderCoeffBtns();recalcDecision();}
-function getApiKey(){return localStorage.getItem('catalogr_apikey')||'';}
-function saveApiKey(){localStorage.setItem('catalogr_apikey',document.getElementById('api-key-input').value.trim());updateApiStatus();}
-function updateApiStatus(){
-  const key=getApiKey(),el=document.getElementById('api-status');
-  if(key&&key.startsWith('sk-ant')){el.className='api-status set';el.textContent='✓ API key configured';}
-  else{el.className='api-status unset';el.textContent='Not configured';}
+// STORAGE
+function getDB(){try{return JSON.parse(localStorage.getItem('sb_db')||'{"stock":[],"history":[]}')}catch(e){return{stock:[],history:[]}}}
+function saveDB(db){localStorage.setItem('sb_db',JSON.stringify(db));updateCount()}
+function loadSettings(){try{const s=JSON.parse(localStorage.getItem('sb_s')||'{}');settings={coeff:s.coeff||2};}catch(e){}}
+function setCoeff(v){settings.coeff=v;localStorage.setItem('sb_s',JSON.stringify(settings));renderCoeffBtns();recalcDecision();}
+function getApiKey(){return localStorage.getItem('sb_apikey')||'';}
+function saveApiKey(){localStorage.setItem('sb_apikey',document.getElementById('api-key-input').value.trim());updateApiStatus();}
+function getEbayId(){return localStorage.getItem('sb_ebayid')||'';}
+function saveEbayId(){localStorage.setItem('sb_ebayid',document.getElementById('ebay-id-input').value.trim());updateEbayStatus();}
+function getShopifyDomain(){return localStorage.getItem('sb_shopify_domain')||'';}
+function getShopifyToken(){return localStorage.getItem('sb_shopify_token')||'';}
+function saveShopifySettings(){
+  localStorage.setItem('sb_shopify_domain',document.getElementById('shopify-domain-input').value.trim());
+  localStorage.setItem('sb_shopify_token',document.getElementById('shopify-token-input').value.trim());
+  updateShopifyStatus();
 }
+function updateApiStatus(){const key=getApiKey(),el=document.getElementById('api-status');el.className=key&&key.startsWith('sk-ant')?'api-status set':'api-status unset';el.textContent=key&&key.startsWith('sk-ant')?'✓ Configured':'Not configured';}
+function updateEbayStatus(){const id=getEbayId(),el=document.getElementById('ebay-status');el.className=id?'api-status set':'api-status unset';el.textContent=id?'✓ Configured':'Not configured';}
+function updateShopifyStatus(){const t=getShopifyToken(),el=document.getElementById('shopify-status');el.className=t&&t.startsWith('shpat_')?'api-status set':'api-status unset';el.textContent=t&&t.startsWith('shpat_')?'✓ Configured':'Not configured';}
 function updateCount(){
-  const db=getDB(),t=db.stock.length;
-  document.getElementById('hdr-count').textContent=t+' item'+(t!==1?'s':'');
-  document.getElementById('s-stock').textContent=t;
+  const db=getDB();
+  document.getElementById('hdr-count').textContent=db.stock.length+' item'+(db.stock.length!==1?'s':'');
+  document.getElementById('s-stock').textContent=db.stock.length;
+  document.getElementById('s-history').textContent=db.history.length;
   document.getElementById('s-val').textContent='€'+db.stock.reduce((a,b)=>a+(parseFloat(b.price)||0),0).toFixed(0);
+}
+function getSource(){
+  const sel=document.getElementById('source-select').value;
+  if(sel==='custom')return document.getElementById('source-custom').value;
+  return sel;
+}
+document.getElementById('source-select').addEventListener('change',function(){
+  document.getElementById('source-custom').style.display=this.value==='custom'?'block':'none';
+});
+
+// VOICE INPUT
+function toggleVoice(){
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){toast('Voice not supported on this browser');return;}
+  if(recognition){recognition.stop();recognition=null;document.getElementById('hint-mic').classList.remove('listening');return;}
+  recognition=new SpeechRecognition();
+  recognition.continuous=false;recognition.interimResults=false;recognition.lang='en-US';
+  recognition.onstart=()=>document.getElementById('hint-mic').classList.add('listening');
+  recognition.onresult=(e)=>{document.getElementById('hint-input').value=e.results[0][0].transcript;recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
+  recognition.onerror=()=>{recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
+  recognition.onend=()=>{recognition=null;document.getElementById('hint-mic').classList.remove('listening');};
+  recognition.start();
 }
 
 // CAMERA
@@ -370,33 +531,13 @@ async function startBarcodeScan(){
   const v=document.getElementById('video');
   const loop=async()=>{
     if(!scanning||!videoStream)return;
-    try{
-      const codes=await det.detect(v);
-      if(codes.length){
-        scanning=false;
-        const isbn=codes[0].rawValue;
-        // Capture frame simultaneously for AI fallback
-        captureFrameSilent(v);
-        stopCamera();
-        fetchBook(isbn);
-        return;
-      }
-    }catch(e){}
+    try{const codes=await det.detect(v);if(codes.length){scanning=false;captureFrameSilent(v);stopCamera();fetchBook(codes[0].rawValue);return;}}catch(e){}
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
 }
 function captureFrameSilent(v){
-  // Silently capture current frame for potential AI fallback
-  try{
-    const canvas=document.createElement('canvas');
-    const MAX=800;
-    const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);
-    canvas.width=Math.round(v.videoWidth*ratio);
-    canvas.height=Math.round(v.videoHeight*ratio);
-    canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);
-    capturedPhotoBase64=canvas.toDataURL('image/jpeg',0.75);
-  }catch(e){}
+  try{const canvas=document.createElement('canvas');const MAX=800;const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);canvas.width=Math.round(v.videoWidth*ratio);canvas.height=Math.round(v.videoHeight*ratio);canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);capturedPhotoBase64=canvas.toDataURL('image/jpeg',0.75);}catch(e){}
 }
 function stopCamera(e){
   if(e)e.stopPropagation();
@@ -411,10 +552,8 @@ function capturePhoto(e){
   if(!videoStream)return;
   const v=document.getElementById('video');
   const canvas=document.createElement('canvas');
-  const MAX=800;
-  const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);
-  canvas.width=Math.round(v.videoWidth*ratio);
-  canvas.height=Math.round(v.videoHeight*ratio);
+  const MAX=800;const ratio=Math.min(MAX/v.videoWidth,MAX/v.videoHeight,1);
+  canvas.width=Math.round(v.videoWidth*ratio);canvas.height=Math.round(v.videoHeight*ratio);
   canvas.getContext('2d').drawImage(v,0,0,canvas.width,canvas.height);
   const dataUrl=canvas.toDataURL('image/jpeg',0.75);
   capturedPhotoBase64=dataUrl;
@@ -422,84 +561,127 @@ function capturePhoto(e){
   identifyWithAI(dataUrl.split(',')[1],'image/jpeg');
 }
 
-// ISBN LOOKUP — with automatic AI fallback
+// ISBN
 function lookupManual(){
   const val=document.getElementById('isbn-input').value.replace(/[^0-9]/g,'');
   if(val.length<10){showErr('ISBN must be 10 or 13 digits');return;}
-  pendingISBN=val;
-  capturedPhotoBase64=null;
+  pendingISBN=val;capturedPhotoBase64=null;
   fetchBook(val);
 }
-
 async function fetchBook(isbn){
   setLoading('Searching ISBN '+isbn+'…');hideErr();
   try{
-    // Try Open Library Books API
     const r1=await fetch('https://openlibrary.org/api/books?bibkeys=ISBN:'+isbn+'&format=json&jscmd=data');
     const d1=await r1.json();
     const key='ISBN:'+isbn;
-    if(d1[key]){buildFiche(formatOLBook(d1[key],isbn));return;}
-
-    // Try Open Library search
+    if(d1[key]){addToHistory(formatOLBook(d1[key],isbn));buildFiche(formatOLBook(d1[key],isbn));return;}
     const r2=await fetch('https://openlibrary.org/search.json?isbn='+isbn+'&limit=8');
     const d2=await r2.json();
-    if(d2.docs&&d2.docs.length){
-      const books=d2.docs.map(formatOLSearch);
-      books.length===1?buildFiche(books[0]):showEditions(books);
-      return;
-    }
-
-    // Try Open Library ISBN direct
+    if(d2.docs&&d2.docs.length){const books=d2.docs.map(formatOLSearch);if(books.length===1){addToHistory(books[0]);buildFiche(books[0]);}else showEditions(books);return;}
     const r3=await fetch('https://openlibrary.org/isbn/'+isbn+'.json');
-    if(r3.ok){const d3=await r3.json();buildFiche(formatOLRaw(d3,isbn));return;}
-
-    // NOT FOUND — fallback to AI if we have a photo, otherwise prompt user
-    if(capturedPhotoBase64){
-      setLoadingAI('ISBN not found in database — asking Claude…');
-      const base64=capturedPhotoBase64.split(',')[1];
-      await identifyWithAI(base64,'image/jpeg',true);
-    }else{
-      goTo('scan-screen');
-      showErr('ISBN '+isbn+' not found. Point camera at the cover and tap "Take photo & identify".');
-    }
+    if(r3.ok){const d3=await r3.json();const b=formatOLRaw(d3,isbn);addToHistory(b);buildFiche(b);return;}
+    if(capturedPhotoBase64){setLoadingAI('ISBN not found — asking Claude…');await identifyWithAI(capturedPhotoBase64.split(',')[1],'image/jpeg',true);return;}
+    goTo('scan-screen');showErr('ISBN not found. Point camera at the cover and tap "Take photo & identify".');
   }catch(e){goTo('scan-screen');showErr('Connection error.');}
 }
-
 function formatOLBook(b,isbn){return{title:b.title||'Unknown',author:(b.authors||[]).map(a=>a.name).join(', '),publisher:(b.publishers&&b.publishers[0])?b.publishers[0].name:'',year:b.publish_date?(b.publish_date.match(/\d{4}/)||[''])[0]:'',isbn,cover:b.cover?(b.cover.large||b.cover.medium||b.cover.small):null,pages:b.number_of_pages||'',editionCount:1};}
 function formatOLSearch(doc){return{title:doc.title||'Unknown',author:doc.author_name?doc.author_name[0]:'',publisher:doc.publisher?doc.publisher[0]:'',year:doc.first_publish_year||'',isbn:doc.isbn?doc.isbn[0]:'',cover:doc.cover_i?'https://covers.openlibrary.org/b/id/'+doc.cover_i+'-M.jpg':null,pages:doc.number_of_pages_median||'',editionCount:doc.edition_count||1};}
 function formatOLRaw(b,isbn){return{title:b.title||'Unknown',author:'',publisher:(b.publishers&&b.publishers[0])||'',year:(b.publish_date||'').match(/\d{4}/)?b.publish_date.match(/\d{4}/)[0]:'',isbn,cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null,pages:b.number_of_pages||'',editionCount:1};}
 
-// AI IDENTIFICATION
+// AI
 async function identifyWithAI(base64,mediaType,fromFallback=false){
   const apiKey=getApiKey();
-  if(!apiKey){
-    goTo('scan-screen');
-    showErr('API key not configured. Go to Settings ⚙.');
-    return;
-  }
-  if(!fromFallback)setLoadingAI('Claude is identifying the book…');
+  if(!apiKey){goTo('scan-screen');showErr('API key not configured. Go to Settings ⚙.');return;}
+  if(!fromFallback)setLoadingAI('Claude is identifying…');
+  const hint=document.getElementById('hint-input').value;
   try{
-    const response=await fetch('/api/identify',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({image:base64,mediaType,apiKey})
-    });
+    const response=await fetch('/api/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:base64,mediaType,apiKey,hint,action:'identify'})});
     const data=await response.json();
     if(data.error){goTo('scan-screen');showErr('API error: '+(data.error.message||JSON.stringify(data.error)));return;}
     if(!data.content||!data.content.length){goTo('scan-screen');showErr('Empty response. Try again.');return;}
     const text=data.content.map(c=>c.text||'').join('');
     const clean=text.replace(/```json|```/g,'').trim();
     let parsed;
-    try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Could not parse response. Try a clearer photo.');return;}
-    if(!parsed.identified){goTo('scan-screen');showErr('Could not identify the book. Try a clearer photo of the cover.');return;}
-    // If we had a pending ISBN, attach it
+    try{parsed=JSON.parse(clean);}catch(e){goTo('scan-screen');showErr('Parse error. Try a clearer photo.');return;}
+    if(!parsed.identified){goTo('scan-screen');showErr('Could not identify. Try a clearer photo of the cover.');return;}
     if(pendingISBN&&!parsed.isbn)parsed.isbn=pendingISBN;
-    parsed.aiIdentified=true;
-    parsed.editionCount=1;
+    parsed.aiIdentified=true;parsed.editionCount=1;
     parsed.bookPhoto=capturedPhotoBase64;
+    addToHistory(parsed);
     buildFiche(parsed);
   }catch(e){goTo('scan-screen');showErr('Identification failed: '+e.message);}
 }
+
+async function generateDescription(){
+  const apiKey=getApiKey();
+  if(!apiKey){toast('API key not configured');return;}
+  if(!currentBook){toast('No book identified');return;}
+  if(!capturedPhotoBase64){toast('No photo — take a photo first');return;}
+  const btn=document.getElementById('desc-gen-btn');
+  btn.disabled=true;btn.textContent='✦ Generating…';
+  const hint=document.getElementById('hint-input').value;
+  try{
+    const response=await fetch('/api/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:capturedPhotoBase64.split(',')[1],mediaType:'image/jpeg',apiKey,hint,action:'describe'})});
+    const data=await response.json();
+    const text=data.content?.map(c=>c.text||'').join('')||'';
+    if(text){document.getElementById('desc-ta').value=text.trim();toast('Description generated');}
+    else toast('Generation failed');
+  }catch(e){toast('Error: '+e.message);}
+  btn.disabled=false;btn.textContent='✦ Generate description (AI)';
+}
+
+// EBAY
+async function fetchEbayData(book){
+  const appId=getEbayId();
+  document.getElementById('ebay-result-block').innerHTML='';
+  if(!appId)return;
+  const query=[book.title,book.author].filter(Boolean).join(' ').substring(0,100);
+  try{
+    const r=await fetch('/api/ebay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,appId})});
+    const d=await r.json();
+    if(d.count>0){
+      const block=document.getElementById('ebay-result-block');
+      block.innerHTML=`<div class="ebay-result"><span class="ebay-found">✓ eBay: ${d.count} sold · avg €${d.avgPrice} · range €${d.minPrice}–€${d.maxPrice}</span>${d.items.length?`<div class="ebay-items">${d.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,50)}…</a><span class="ebay-item-price">€${Math.round(i.price)}</span></div>`).join('')}</div>`:''}</div>`;
+      // Update market estimate with eBay data
+      if(d.avgPrice){marketLow=d.minPrice;marketHigh=d.maxPrice;renderMarketRange(true);}
+      // Green eBay button
+      document.querySelectorAll('.source-link').forEach(l=>{if(l.textContent.includes('eBay'))l.classList.add('has-results');});
+    }else{
+      document.getElementById('ebay-result-block').innerHTML=`<div class="ebay-result"><span class="ebay-notfound">eBay: no sold listings found</span></div>`;
+    }
+  }catch(e){}
+}
+
+// MARKET
+async function fetchMarketEstimate(book){
+  document.getElementById('market-content').innerHTML='<div class="market-loading">Estimating…</div>';
+  marketLow=null;marketHigh=null;
+  if(book.marketLow&&book.marketHigh){marketLow=parseInt(book.marketLow);marketHigh=parseInt(book.marketHigh);renderMarketRange(false);fetchEbayData(book);return;}
+  await new Promise(r=>setTimeout(r,300));
+  const year=parseInt(book.year)||2000,age=new Date().getFullYear()-year,ed=book.editionCount||1;
+  let low=5,high=15;
+  if(age>40){low=20;high=60;}else if(age>25){low=12;high=35;}else if(age>15){low=8;high=22;}
+  if(ed<=2){low=Math.round(low*1.5);high=Math.round(high*2);}
+  marketLow=low;marketHigh=high;
+  renderMarketRange(false);
+  fetchEbayData(book);
+}
+function renderMarketRange(fromEbay){
+  const src=fromEbay?'eBay data':'Claude est.';
+  document.getElementById('market-content').innerHTML=`<div class="market-range"><div class="market-lbl">${src.toUpperCase()}</div><div class="market-range-vals"><span class="market-low">€${marketLow}</span><span class="market-arrow">→</span><span class="market-high">€${marketHigh}</span></div></div>`;
+  recalcDecision();
+}
+function recalcDecision(){
+  const buy=parseFloat(document.getElementById('price-input').value)||0;
+  if(!selectedGrade){setDecision('👆','Select condition first','Then enter your purchase price');return;}
+  if(!buy||!marketHigh){if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);return;}
+  const c=marketHigh/buy,n=settings.coeff;
+  const dr=document.getElementById('decision-row');
+  if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' on high est.','Target ×'+n+' · Best case €'+(marketHigh-buy).toFixed(0)+' margin');}
+  else{dr.className='decision-row pass';setDecision('✗','PASS — ×'+c.toFixed(1)+' on high est.','Need ×'+n+' to justify');}
+}
+function setDecision(icon,text,sub){document.getElementById('d-icon').textContent=icon;document.getElementById('d-text').textContent=text;document.getElementById('d-sub').textContent=sub;}
+function onPriceChange(){recalcDecision();}
 
 function buildSearchLinks(book){
   const q=encodeURIComponent([book.title,book.author].filter(Boolean).join(' '));
@@ -507,118 +689,133 @@ function buildSearchLinks(book){
   const priceLinks=[
     {label:'eBay US sold',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&_sacat=267`},
     {label:'eBay DE sold',url:`https://www.ebay.de/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&_sacat=267`},
-    {label:'eBay US live',url:`https://www.ebay.com/sch/i.html?_nkw=${q}&_sacat=267`},
-    {label:'Catawiki',url:`https://www.catawiki.com/en/s#q=${q}&c=books`},
-    {label:'Invaluable',url:`https://www.invaluable.com/search/#query=${q}&cat=books`},
+    {label:'Catawiki',url:`https://www.catawiki.com/en/s#q=${q}`},
+    {label:'Invaluable',url:`https://www.invaluable.com/search/#query=${q}`},
     {label:'Barnebys',url:`https://www.barnebys.com/search/lots?query=${q}`},
+    {label:'Vinted',url:`https://www.vinted.be/catalog?search_text=${q}`},
     {label:'Eurobuch',url:isbn?`https://www.eurobuch.com/search/isbn/${isbn}`:`https://www.eurobuch.com/buch/suchen.html?q=${q}`},
     {label:'ZVAB',url:`https://www.zvab.com/servlet/SearchResults?tn=${encodeURIComponent(book.title||'')}&an=${encodeURIComponent(book.author||'')}`},
     {label:'Bookfinder',url:`https://www.bookfinder.com/search/?author=${encodeURIComponent(book.author||'')}&title=${encodeURIComponent(book.title||'')}&st=xl&ac=qr`},
   ];
-  const verifyLinks=[
-    {label:'WorldCat',url:isbn?`https://www.worldcat.org/isbn/${isbn}`:`https://www.worldcat.org/search?q=${q}`},
-  ];
   document.getElementById('price-links').innerHTML=priceLinks.map(l=>`<a class="source-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
-  document.getElementById('verify-links').innerHTML=verifyLinks.map(l=>`<a class="source-link verify" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+  document.getElementById('verify-links').innerHTML=`<a class="source-link verify" href="${isbn?'https://www.worldcat.org/isbn/'+isbn:'https://www.worldcat.org/search?q='+q}" target="_blank" rel="noopener">WorldCat</a>`;
 }
 
+// HISTORY
+function addToHistory(book){
+  const db=getDB();
+  const exists=db.history.find(i=>i.isbn&&i.isbn===book.isbn);
+  if(!exists){db.history.unshift({...book,scannedAt:Date.now(),source:getSource()});if(db.history.length>200)db.history=db.history.slice(0,200);saveDB(db);}
+}
+
+// FICHE
 function buildFiche(book){
-  currentBook=book;selectedGrade=null;marketLow=null;marketHigh=null;
-  pendingISBN=null;
+  currentBook=book;selectedGrade=null;marketLow=null;marketHigh=null;pendingISBN=null;
   const db=getDB();
   const inStock=book.isbn&&db.stock.find(i=>i.isbn===book.isbn);
   const banner=document.getElementById('stock-banner');
   banner.className='stock-banner';
   if(inStock){banner.className='stock-banner in-stock';banner.textContent='⚡ Already in stock · €'+(inStock.price||'?');}
-
   const photoSrc=book.bookPhoto||book.cover||null;
   const photoArea=document.getElementById('fiche-photo-area');
-  if(photoSrc){
-    photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button></div>`;
-  }else{
-    photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo — tap camera to add</p></div>`;
-  }
-
+  if(photoSrc){photoArea.innerHTML=`<div class="fiche-photo-wrap"><img src="${photoSrc}" alt="${book.title}"><button class="fiche-photo-retake" onclick="retakePhoto()">📷 Retake</button></div>`;}
+  else{photoArea.innerHTML=`<div class="fiche-photo-ph"><span>📖</span><p>No photo</p></div>`;}
   const edNote=book.editionNote?`<div class="fiche-edition-note">⚑ ${book.editionNote}</div>`:'';
   document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${edNote}`;
-
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
-
+  // Auto-select category from AI
+  if(book.category){const sel=document.getElementById('cat-select');sel.value=book.category||'books-music';}
   document.getElementById('price-input').value='';
   document.getElementById('notes-ta').value='';
-  document.getElementById('grade-desc').textContent='Select condition';
-  document.getElementById('market-content').innerHTML='<div class="market-loading">Estimating…</div>';
+  document.getElementById('desc-ta').value='';
+  document.getElementById('grade-desc').textContent='Select condition first';
   document.getElementById('decision-row').className='decision-row';
-  setDecision('⏳','Enter purchase price below','Loading estimate…');
-
+  setDecision('👆','Select condition first','Then enter your purchase price');
   buildSearchLinks(book);
   goTo('fiche-screen');
   fetchMarketEstimate(book);
 }
 
-async function fetchMarketEstimate(book){
-  if(book.marketLow&&book.marketHigh){
-    marketLow=parseInt(book.marketLow);
-    marketHigh=parseInt(book.marketHigh);
-    renderMarketRange();
-    return;
-  }
-  await new Promise(r=>setTimeout(r,400));
-  const year=parseInt(book.year)||2000,age=new Date().getFullYear()-year,ed=book.editionCount||1;
-  let low=5,high=15;
-  if(age>40){low=20;high=60;}else if(age>25){low=12;high=35;}else if(age>15){low=8;high=22;}
-  if(ed<=2){low=Math.round(low*1.5);high=Math.round(high*2);}
-  marketLow=low;marketHigh=high;
-  renderMarketRange();
-}
-function renderMarketRange(){
-  document.getElementById('market-content').innerHTML=`<div class="market-range"><div class="market-lbl">ESTIMATE</div><div class="market-range-vals"><span class="market-low">€${marketLow}</span><span class="market-arrow">→</span><span class="market-high">€${marketHigh}</span></div></div>`;
-  recalcDecision();
-}
-function recalcDecision(){
-  const buy=parseFloat(document.getElementById('price-input').value)||0;
-  if(!selectedGrade){setDecision('👆','Select condition first','Grade determines the value');return;}
-  if(!buy||!marketHigh){if(marketHigh&&!buy)setDecision('💰','Enter your purchase price','Est. €'+marketLow+'–€'+marketHigh);return;}
-  const c=marketHigh/buy,n=settings.coeff;
-  const dr=document.getElementById('decision-row');
-  if(c>=n){dr.className='decision-row buy';setDecision('✓','BUY — ×'+c.toFixed(1)+' on high est.','Target ×'+n+' · Best case €'+(marketHigh-buy).toFixed(0)+' margin');}
-  else{dr.className='decision-row pass';setDecision('✗','PASS — only ×'+c.toFixed(1)+' on high est.','Need ×'+n+' to justify');}
-}
-function setDecision(icon,text,sub){document.getElementById('d-icon').textContent=icon;document.getElementById('d-text').textContent=text;document.getElementById('d-sub').textContent=sub;}
-function onPriceChange(){recalcDecision();}
 function retakePhoto(){capturedPhotoBase64=null;goTo('scan-screen');}
-function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;}
+function selectGrade(g){selectedGrade=g;document.querySelectorAll('.grade-btn').forEach((b,i)=>b.classList.toggle('sel',GRADES[i].code===g.code));document.getElementById('grade-desc').textContent=g.desc;recalcDecision();}
 
+// SAVE TO STOCK
 function saveToStock(){
   if(!currentBook)return;
   if(!selectedGrade){toast('Select a condition first');return;}
   const price=document.getElementById('price-input').value;
   if(!price){toast('Enter a purchase price');return;}
   const db=getDB();
-  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,notes:document.getElementById('notes-ta').value,addedAt:Date.now()});
+  const item={...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,description:document.getElementById('desc-ta').value,notes:document.getElementById('notes-ta').value,category:document.getElementById('cat-select').value,source:getSource(),addedAt:Date.now()};
+  db.stock.push(item);
   saveDB(db);toast('✓ Added to stock');
   capturedPhotoBase64=null;
   setTimeout(()=>goTo('scan-screen'),1200);
 }
 
+// PUSH TO SHOPIFY
+async function pushToShopify(){
+  const domain=getShopifyDomain(),token=getShopifyToken();
+  if(!domain||!token){toast('Configure Shopify in Settings first');return;}
+  if(!currentBook){toast('No item to push');return;}
+  const price=document.getElementById('price-input').value;
+  if(!price){toast('Enter a selling price first');return;}
+  const btn=document.getElementById('shopify-btn');
+  btn.disabled=true;btn.textContent='Pushing…';
+  try{
+    const product={
+      title:currentBook.title,
+      description:document.getElementById('desc-ta').value||currentBook.description||'',
+      price:parseFloat(price),
+      category:document.getElementById('cat-select').value,
+      imageBase64:capturedPhotoBase64||null,
+    };
+    const r=await fetch('/api/shopify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({shopDomain:domain,accessToken:token,product})});
+    const d=await r.json();
+    if(d.product){
+      toast('✓ Pushed to Shopify as draft!');
+      // Mark in stock
+      saveToStock();
+    }else{
+      toast('Shopify error — check settings');
+      console.error(d);
+    }
+  }catch(e){toast('Push failed: '+e.message);}
+  btn.disabled=false;btn.textContent='⬆ Shopify';
+}
+
 function showEditions(docs){
   const list=document.getElementById('ed-list');list.innerHTML='';
-  docs.forEach(doc=>{const card=document.createElement('div');card.className='ed-card';card.innerHTML=`${doc.cover?`<img class="ed-thumb" src="${doc.cover}" onerror="this.style.display='none'">`:``}<div class="ed-thumb-ph" ${doc.cover?'style="display:none"':''}>♪</div><div class="ed-info"><div class="ed-title">${doc.title}</div><div class="ed-meta">${doc.author?doc.author+'<br>':''}${doc.publisher?doc.publisher+' · ':''}${doc.year||''}</div></div>`;card.onclick=()=>buildFiche(doc);list.appendChild(card);});
+  docs.forEach(doc=>{const card=document.createElement('div');card.className='ed-card';card.innerHTML=`${doc.cover?`<img class="ed-thumb" src="${doc.cover}" onerror="this.style.display='none'">`:``}<div class="ed-thumb-ph" ${doc.cover?'style="display:none"':''}>♪</div><div class="ed-info"><div class="ed-title">${doc.title}</div><div class="ed-meta">${doc.author?doc.author+'<br>':''}${doc.publisher?doc.publisher+' · ':''}${doc.year||''}</div></div>`;card.onclick=()=>{addToHistory(doc);buildFiche(doc);};list.appendChild(card);});
   goTo('editions-screen');
 }
 
+function switchTab(tab){currentTab=tab;document.getElementById('tab-stock').classList.toggle('active',tab==='stock');document.getElementById('tab-history').classList.toggle('active',tab==='history');renderLibrary();}
 function renderLibrary(){
   const db=getDB(),q=(document.getElementById('lib-search').value||'').toLowerCase();
-  const items=db.stock.filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>b.addedAt-a.addedAt);
+  const items=(currentTab==='stock'?db.stock:db.history).filter(i=>!q||(i.title||'').toLowerCase().includes(q)||(i.author||'').toLowerCase().includes(q)).sort((a,b)=>(b.addedAt||b.scannedAt||0)-(a.addedAt||a.scannedAt||0));
   const list=document.getElementById('lib-list');
-  if(!items.length){list.innerHTML=`<div class="lib-empty">No items in stock yet.</div>`;return;}
-  list.innerHTML=items.map(i=>{const photo=i.bookPhoto||i.cover||null;return`<div class="lib-item">${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${[i.author,i.year].filter(Boolean).join(' · ')}</div></div>${i.grade?`<div class="lib-grade">${i.grade}</div>`:''} ${i.price?`<div class="lib-price">€${i.price}</div>`:''}</div>`;}).join('');
+  if(!items.length){list.innerHTML=`<div class="lib-empty">No items yet.</div>`;return;}
+  list.innerHTML=items.map(i=>{
+    const photo=i.bookPhoto||i.cover||null;
+    const badge=currentTab==='stock'?`<div class="lib-badge stock">€${i.price}</div>`:`<div class="lib-badge history">${new Date(i.scannedAt||i.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div>`;
+    return`<div class="lib-item">${photo?`<img class="lib-thumb" src="${photo}" onerror="this.style.display='none'">`:``}<div class="lib-thumb-ph" ${photo?'style="display:none"':''}>♪</div><div class="lib-info"><div class="lib-title">${i.title}</div><div class="lib-meta">${[i.author,i.year,i.source].filter(Boolean).join(' · ')}</div></div>${badge}</div>`;
+  }).join('');
 }
 
 function renderCoeffBtns(){['coeff-btns','coeff-setting-btns'].forEach(id=>{const w=document.getElementById(id);if(!w)return;w.innerHTML=[2,3,4,5].map(v=>`<button class="coeff-btn ${settings.coeff===v?'active':''}" onclick="setCoeff(${v})">×${v}</button>`).join('');});}
-function toggleSettings(){const p=document.getElementById('settings-panel');p.classList.toggle('open');if(p.classList.contains('open')){document.getElementById('api-key-input').value=getApiKey();updateApiStatus();updateCount();renderCoeffBtns();}}
-function clearAll(){if(confirm('Clear all data?')){localStorage.removeItem('catalogr_db');updateCount();renderLibrary();toggleSettings();toast('All data cleared');}}
+function toggleSettings(){
+  const p=document.getElementById('settings-panel');p.classList.toggle('open');
+  if(p.classList.contains('open')){
+    document.getElementById('api-key-input').value=getApiKey();
+    document.getElementById('ebay-id-input').value=getEbayId();
+    document.getElementById('shopify-domain-input').value=getShopifyDomain();
+    document.getElementById('shopify-token-input').value=getShopifyToken();
+    updateApiStatus();updateEbayStatus();updateShopifyStatus();updateCount();renderCoeffBtns();
+  }
+}
+function clearAll(){if(confirm('Clear all data?')){localStorage.removeItem('sb_db');updateCount();renderLibrary();toggleSettings();toast('All data cleared');}}
 function navTo(sid,nid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById(nid).classList.add('active');if(sid==='library-screen')renderLibrary();}
 function goTo(sid){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(sid).classList.add('active');}
 function setLoading(msg){document.getElementById('spinner').className='spinner';document.getElementById('loading-label').textContent=msg||'Loading…';goTo('loading-screen');}
@@ -627,7 +824,7 @@ function showErr(msg){const e=document.getElementById('scan-err');e.textContent=
 function hideErr(){document.getElementById('scan-err').classList.remove('show');}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-loadSettings();renderCoeffBtns();updateCount();updateApiStatus();
+loadSettings();renderCoeffBtns();updateCount();updateApiStatus();updateEbayStatus();updateShopifyStatus();
 window.addEventListener('beforeunload',()=>{if(videoStream)videoStream.getTracks().forEach(t=>t.stop());});
 </script>
 </body>
