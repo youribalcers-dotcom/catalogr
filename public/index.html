@@ -333,24 +333,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         </div>
       </div>
       <div>
-        <div class="field-lbl">Category</div>
-        <select class="cat-select" id="cat-select">
-          <option value="books-music">Books — Music</option>
-          <option value="books-art">Books — Art</option>
-          <option value="books-other">Books — Other</option>
-          <option value="objects-music">Objects — Music (instruments, pedals, merch)</option>
-          <option value="objects-art">Objects — Art (posters, postcards, prints)</option>
-          <option value="objects-other">Objects — Other (design, vintage, collectibles)</option>
-        </select>
-      </div>
-      <div>
-        <div class="field-lbl">Description (for Shopify)</div>
-        <textarea class="desc-ta" id="desc-ta" placeholder="Short curatorial description…"></textarea>
-        <button class="desc-gen-btn" id="desc-gen-btn" onclick="generateDescription()">✦ Generate with AI</button>
-      </div>
-      <div>
         <div class="field-lbl">Internal notes</div>
-        <textarea class="notes-ta" id="notes-ta" placeholder="Provenance, condition details…"></textarea>
+        <textarea class="notes-ta" id="notes-ta" placeholder="Provenance, condition details, where to find it…"></textarea>
       </div>
     </div>
     <div class="fiche-acts">
@@ -610,13 +594,7 @@ async function callDescribeAPI(book,photo){
     return data.content?.map(c=>c.text||'').join('').trim()||null;
   }catch(e){return null;}
 }
-async function generateDescription(){
-  if(!currentBook||!capturedPhotoBase64){toast('Take a photo first');return;}
-  const btn=document.getElementById('desc-gen-btn');btn.disabled=true;btn.textContent='Generating…';
-  const desc=await callDescribeAPI(currentBook,capturedPhotoBase64);
-  if(desc)document.getElementById('desc-ta').value=desc;else toast('Generation failed');
-  btn.disabled=false;btn.textContent='✦ Generate with AI';
-}
+
 async function generatePushDescription(){
   if(!pushItem){return;}
   const btn=document.getElementById('push-desc-gen-btn');btn.disabled=true;btn.textContent='Generating…';
@@ -635,16 +613,29 @@ async function fetchEbayData(book){
     const r=await fetch('/api/ebay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,appId})});
     const d=await r.json();
     const block=document.getElementById('ebay-result-block');
-    if(d.count>0){
-      block.innerHTML=`<div class="ebay-result"><span class="ebay-found">✓ eBay: ${d.count} sold · avg €${d.avgPrice} · €${d.minPrice}–€${d.maxPrice}</span>${d.items.length?`<div class="ebay-items">${d.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,45)}…</a><span class="ebay-item-price">€${Math.round(i.price)}</span></div>`).join('')}</div>`:''}</div>`;
-      // Update market with real eBay data
-      marketLow=d.minPrice;marketHigh=d.maxPrice;renderMarketRange('eBay sold');
-      // Green buttons for eBay sold links
+    const sold=d.sold||{};const active=d.active||{};
+    let html='';
+
+    if(sold.count>0){
+      html+=`<div class="ebay-result"><span class="ebay-found">✓ Sold (${sold.count}) · avg €${sold.avgPrice} · €${sold.minPrice}–€${sold.maxPrice}</span>`;
+      if(sold.items?.length)html+=`<div class="ebay-items">${sold.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,42)}…</a><span class="ebay-item-price">€${Math.round(i.price)}</span></div>`).join('')}</div>`;
+      html+='</div>';
+      marketLow=sold.minPrice;marketHigh=sold.maxPrice;renderMarketRange('eBay sold');
       ['eBay-US-sold','eBay-DE-sold'].forEach(id=>{const el=document.getElementById('sl-'+id);if(el)el.classList.add('has-results');});
     }else{
-      block.innerHTML=`<div class="ebay-result"><span class="ebay-notfound">eBay: no sold listings found</span></div>`;
+      html+=`<div class="ebay-result"><span class="ebay-notfound">No sold listings on eBay</span></div>`;
     }
-  }catch(e){}
+
+    if(active.count>0){
+      html+=`<div class="ebay-result" style="border-top:1px solid var(--border)"><span class="ebay-found" style="color:var(--blue)">🔵 Live now (${active.count}) · €${active.minPrice}–€${active.maxPrice}</span>`;
+      if(active.items?.length)html+=`<div class="ebay-items">${active.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,42)}…</a><span class="ebay-item-price" style="color:var(--blue)">€${Math.round(i.price)}</span></div>`).join('')}</div>`;
+      html+='</div>';
+    }else{
+      html+=`<div class="ebay-result" style="border-top:1px solid var(--border)"><span class="ebay-notfound">No active listings on eBay</span></div>`;
+    }
+
+    block.innerHTML=html;
+  }catch(e){document.getElementById('ebay-result-block').innerHTML=`<div class="ebay-result"><span class="ebay-notfound">eBay lookup failed</span></div>`;}
 }
 
 // MARKET
@@ -725,10 +716,9 @@ function buildFiche(book){
   document.getElementById('fiche-info').innerHTML=`<div class="fiche-title">${book.title}</div>${book.author?`<div class="fiche-author">${book.author}</div>`:''}<div class="fiche-meta">${[book.publisher,book.year,book.pages?book.pages+'p':'',book.isbn?'ISBN '+book.isbn:''].filter(Boolean).join(' · ')}</div>${edNote}`;
   const grid=document.getElementById('grade-grid');grid.innerHTML='';
   GRADES.forEach(g=>{const btn=document.createElement('button');btn.className='grade-btn';btn.textContent=g.code;btn.onclick=()=>selectGrade(g);grid.appendChild(btn);});
-  if(book.category)document.getElementById('cat-select').value=book.category;
+
   document.getElementById('price-input').value='';
   document.getElementById('notes-ta').value='';
-  document.getElementById('desc-ta').value='';
   document.getElementById('grade-desc').textContent='Select condition first';
   document.getElementById('return-row').className='return-row neutral';
   setReturn('👆','Select condition first','Then enter your purchase price');
@@ -745,7 +735,7 @@ function saveToStock(){
   const price=document.getElementById('price-input').value;
   if(!price){toast('Enter a purchase price');return;}
   const db=getDB();
-  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,description:document.getElementById('desc-ta').value,notes:document.getElementById('notes-ta').value,category:document.getElementById('cat-select').value,source:getSource(),addedAt:Date.now(),shopifyPushed:false});
+  db.stock.push({...currentBook,bookPhoto:capturedPhotoBase64,grade:selectedGrade.code,price:parseFloat(price),marketLow,marketHigh,notes:document.getElementById('notes-ta').value,source:getSource(),addedAt:Date.now(),shopifyPushed:false});
   saveDB(db);toast('✓ Added to stock');
   capturedPhotoBase64=null;
   setTimeout(()=>goTo('scan-screen'),1200);
