@@ -468,6 +468,7 @@ function getDB(){try{return JSON.parse(localStorage.getItem('sb_db')||'{"stock":
 function saveDB(db){localStorage.setItem('sb_db',JSON.stringify(db));updateCount();}
 function getApiKey(){return localStorage.getItem('sb_apikey')||'';}
 function saveApiKey(){localStorage.setItem('sb_apikey',document.getElementById('api-key-input').value.trim());updateApiStatus();}
+function updateApiStatus(){const k=getApiKey(),el=document.getElementById('api-status');if(!el)return;el.className=k&&k.startsWith('sk-ant')?'api-status set':'api-status unset';el.textContent=k&&k.startsWith('sk-ant')?'✓ Configured':'Not configured';}
 function getEbayId(){return localStorage.getItem('sb_ebayid')||'';}
 function saveEbayId(){localStorage.setItem('sb_ebayid',document.getElementById('ebay-id-input').value.trim());updateEbayStatus();}
 function getShopifyDomain(){return localStorage.getItem('sb_shopify_domain')||'';}
