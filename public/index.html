@@ -471,6 +471,7 @@ function saveApiKey(){localStorage.setItem('sb_apikey',document.getElementById('
 function updateApiStatus(){const k=getApiKey(),el=document.getElementById('api-status');if(!el)return;el.className=k&&k.startsWith('sk-ant')?'api-status set':'api-status unset';el.textContent=k&&k.startsWith('sk-ant')?'✓ Configured':'Not configured';}
 function getEbayId(){return localStorage.getItem('sb_ebayid')||'';}
 function saveEbayId(){localStorage.setItem('sb_ebayid',document.getElementById('ebay-id-input').value.trim());updateEbayStatus();}
+function updateEbayStatus(){const id=getEbayId(),el=document.getElementById('ebay-status');if(!el)return;el.className=id?'api-status set':'api-status unset';el.textContent=id?'✓ '+id.substring(0,20)+'…':'Not configured';}
 function getShopifyDomain(){return localStorage.getItem('sb_shopify_domain')||'';}
 function getShopifyClientId(){return localStorage.getItem('sb_shopify_clientid')||'';}
 function getShopifySecret(){return localStorage.getItem('sb_shopify_secret')||'';}
