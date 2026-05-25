@@ -374,10 +374,10 @@ select.field-input{appearance:none;cursor:pointer;}
         <select class="cat-select" id="push-cat">
           <option value="books-music">Books — Music</option>
           <option value="books-art">Books — Art</option>
-          <option value="books-goodies">Books — Goodies</option>
+          <option value="books-other">Books — Other</option>
           <option value="objects-music">Objects — Music</option>
           <option value="objects-art">Objects — Art</option>
-          <option value="objects-goodies">Objects — Goodies</option>
+          <option value="objects-other">Objects — Other</option>
         </select>
       </div>
     </div>
@@ -843,6 +843,11 @@ function hideErr(){ document.getElementById('scan-err').classList.remove('show')
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
+// Migrate old localStorage keys
+(function migrate(){
+  const map = {'sb_apikey':'sb_ant','sb_ebayid':'sb_ebay','sb_shopify_domain':'sb_s_domain','sb_shopify_clientid':'sb_s_id','sb_shopify_secret':'sb_s_secret'};
+  Object.entries(map).forEach(([old,nw])=>{ const v=localStorage.getItem(old); if(v&&!localStorage.getItem(nw)){ localStorage.setItem(nw,v); } });
+})();
 updateSettingsUI();
 syncFromServer();
 window.addEventListener('beforeunload',()=>{ if(stream) stream.getTracks().forEach(t=>t.stop()); });
