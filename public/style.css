@@ -185,7 +185,7 @@ select.field-input { appearance:none; cursor:pointer; width:100%; }
 #settings-panel { position:absolute; inset:0; background:var(--bg); z-index:100; display:none; flex-direction:column; }
 #settings-panel.open { display:flex; }
 .settings-body { padding:16px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; flex:1; }
-.settings-group { background:var(--bg2); border:1.5px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.settings-group { background:var(--bg2); border:1.5px solid var(--border); border-radius:var(--radius); overflow:visible; }
 .settings-row { padding:13px 14px; border-bottom:1px solid var(--border); }
 .settings-row:last-child { border-bottom:none; }
 .settings-lbl { font-size:14px; font-weight:600; }
