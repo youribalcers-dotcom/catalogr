@@ -39,7 +39,8 @@ const S = {
   get ant()    { return localStorage.getItem('sb_ant')      || ''; },
   get ebay()   { return localStorage.getItem('sb_ebay')     || ''; },
   get sDomain(){ return localStorage.getItem('sb_s_domain') || ''; },
-  get sToken() { return localStorage.getItem('sb_s_token')  || ''; },
+  get sId()    { return localStorage.getItem('sb_s_id')     || ''; },
+  get sSecret(){ return localStorage.getItem('sb_s_secret') || ''; },
   get syncKey(){ return localStorage.getItem('sb_sync_key') || ''; },
 };
 
@@ -47,13 +48,14 @@ function saveSettings() {
   localStorage.setItem('sb_ant',      el('s-anthropic').value.trim());
   localStorage.setItem('sb_ebay',     el('s-ebay').value.trim());
   localStorage.setItem('sb_s_domain', el('s-shopify-domain').value.trim());
-  localStorage.setItem('sb_s_token',  el('s-shopify-token').value.trim());
+  localStorage.setItem('sb_s_id',     el('s-shopify-id').value.trim());
+  localStorage.setItem('sb_s_secret', el('s-shopify-secret').value.trim());
   localStorage.setItem('sb_sync_key', el('s-sync-key').value.trim());
   updateSettingsUI();
 }
 
 function updateSettingsUI() {
-  const a = S.ant, sh = S.sToken, sk = S.syncKey;
+  const a = S.ant, sh = S.sId, sk = S.syncKey;
   setStatus('s-anthropic-status', a && a.startsWith('sk-ant'));
   setStatus('s-shopify-status',   !!sh);
   setStatus('s-sync-status',      !!sk, sk ? `Key: ${sk.substring(0,8)}…` : 'Not set');
@@ -69,7 +71,8 @@ function openSettings() {
   el('s-anthropic').value     = S.ant;
   el('s-ebay').value          = S.ebay;
   el('s-shopify-domain').value = S.sDomain;
-  el('s-shopify-token').value  = S.sToken;
+  el('s-shopify-id').value     = S.sId;
+  el('s-shopify-secret').value  = S.sSecret;
   el('s-sync-key').value       = S.syncKey;
   updateSettingsUI();
   updateStats();
@@ -496,7 +499,7 @@ function openPush(item) {
 function closePush() { el('push-modal').classList.remove('open'); pushItem=null; }
 
 async function confirmPush() {
-  if (!S.sDomain || !S.sToken) { toast('Configure Shopify in Settings first'); return; }
+  if (!S.sDomain || !S.sId || !S.sSecret) { toast('Configure Shopify in Settings first'); return; }
   const price = el('push-price').value;
   if (!price) { toast('Enter a selling price'); return; }
   const btn = el('push-confirm-btn'); btn.disabled=true; btn.textContent='Pushing…';
@@ -509,8 +512,9 @@ async function confirmPush() {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          shopDomain: S.sDomain,
-          accessToken: S.sToken,
+          shopDomain:   S.sDomain,
+          clientId:     S.sId,
+          clientSecret: S.sSecret,
           product: {
             title:       pushItem.title,
             description: el('push-desc').value||'',
