@@ -662,7 +662,9 @@ async function fetchEbay(b){
       html += '</div>';
     }
     document.getElementById('ebay-block').innerHTML = html;
-  }catch(e){}
+  }catch(e){
+    document.getElementById('ebay-block').innerHTML='<div class="ebay-block"><span class="ebay-none">eBay error: '+e.message+'</span></div>';
+  }
 }
 
 // ─── MARKET ───────────────────────────────────────────────────────────────────
