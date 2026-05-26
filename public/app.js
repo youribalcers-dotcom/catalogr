@@ -413,6 +413,8 @@ async function saveToStock() {
   // FIX: price can be 0 (free item) — check for empty string, not falsy
   const priceVal = el('price').value.trim();
   if (priceVal === '') { toast('Enter a purchase price (0 for free)'); return; }
+  // Fetch latest data from server before writing to avoid overwriting other devices
+  await syncFromServer();
   db.stock.push({
     ...book,
     bookPhoto: photo,
