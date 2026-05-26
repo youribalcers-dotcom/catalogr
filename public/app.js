@@ -186,10 +186,10 @@ async function startBarcode() {
 function captureFrame(v) {
   try {
     const c = document.createElement('canvas');
-    const M = 800, r = Math.min(M/v.videoWidth, M/v.videoHeight, 1);
+    const M = 400, r = Math.min(M/v.videoWidth, M/v.videoHeight, 1);
     c.width = Math.round(v.videoWidth*r); c.height = Math.round(v.videoHeight*r);
     c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
-    photo = c.toDataURL('image/jpeg', .75);
+    photo = c.toDataURL('image/jpeg', .5);
   } catch(e) {}
 }
 
@@ -207,10 +207,10 @@ function capturePhoto(e) {
   if (!stream) return;
   const v = el('video');
   const c = document.createElement('canvas');
-  const M = 800, r = Math.min(M/v.videoWidth, M/v.videoHeight, 1);
+  const M = 400, r = Math.min(M/v.videoWidth, M/v.videoHeight, 1);
   c.width = Math.round(v.videoWidth*r); c.height = Math.round(v.videoHeight*r);
   c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
-  photo = c.toDataURL('image/jpeg', .75);
+  photo = c.toDataURL('image/jpeg', .5);
   stopCam();
   identifyAI(photo.split(',')[1], 'image/jpeg');
 }
@@ -434,7 +434,15 @@ async function saveToStock() {
   } catch(e) {} // offline — use local db
   const addedAt = Date.now();
   if (photo) {
-    try { localStorage.setItem('sb_photo_' + addedAt, photo); } catch(e) {}
+    toast('Photo: ' + Math.round(photo.length/1024) + 'KB');
+    try {
+      localStorage.setItem('sb_photo_' + addedAt, photo);
+      toast('Photo saved ✓');
+    } catch(e) {
+      toast('Photo save failed: ' + e.message);
+    }
+  } else {
+    toast('No photo available');
   }
   db.stock.push({
     ...book,
