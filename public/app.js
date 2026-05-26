@@ -116,10 +116,15 @@ async function syncToServer() {
   const key = S.syncKey;
   if (!key) return;
   try {
+    // Strip base64 photos before sending — too large for KV URL encoding
+    const dbClean = {
+      stock:   db.stock.map(i => ({ ...i, bookPhoto: null })),
+      history: db.history.map(i => ({ ...i, bookPhoto: null })),
+    };
     await fetch('/api/db', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action:'set', userId: key, data: db })
+      body: JSON.stringify({ action:'set', userId: key, data: dbClean })
     });
   } catch(e) {}
   updateStats();
