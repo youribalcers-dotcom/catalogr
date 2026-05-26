@@ -11,29 +11,29 @@ export default async function handler(req) {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
   try {
-    const { shopDomain, clientId, clientSecret, product } = await req.json();
+    const { shopDomain, product } = await req.json();
 
-    if (!shopDomain || !clientId || !clientSecret || !product) {
-      return new Response(JSON.stringify({ error: 'Missing parameters' }), {
+    if (!shopDomain || !product) {
+      return new Response(JSON.stringify({ error: 'Missing shopDomain or product' }), {
         status: 400, headers: { 'Content-Type': 'application/json', ...CORS }
       });
     }
 
-    // Get access token via Client Credentials
-    const tokenRes = await fetch(`https://${shopDomain}/admin/oauth/access_token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ grant_type:'client_credentials', client_id:clientId, client_secret:clientSecret }),
-    });
+    // Fetch access token from Upstash KV
+    const kvUrl   = process.env.KV_REST_API_URL;
+    const kvToken = process.env.KV_REST_API_TOKEN;
 
-    if (!tokenRes.ok) {
-      const err = await tokenRes.text();
-      return new Response(JSON.stringify({ error: 'Token request failed: ' + err }), {
+    const kvRes = await fetch(`${kvUrl}/get/catalogr_shopify_token`, {
+      headers: { Authorization: `Bearer ${kvToken}` }
+    });
+    const kvData = await kvRes.json();
+    const access_token = kvData.result;
+
+    if (!access_token) {
+      return new Response(JSON.stringify({ error: 'NOT_CONNECTED', message: 'Shopify not connected. Go to Settings and connect.' }), {
         status: 401, headers: { 'Content-Type': 'application/json', ...CORS }
       });
     }
-
-    const { access_token } = await tokenRes.json();
 
     const categoryTags = {
       'books-music':   'Books, Music',
@@ -80,20 +80,30 @@ export default async function handler(req) {
       }
     };
 
-    const productRes = await fetch(`https://${shopDomain}/admin/api/2024-10/products.json`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': access_token },
-      body: JSON.stringify(shopifyProduct)
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000);
+    let productRes;
+    try {
+      productRes = await fetch(`https://${shopDomain}/admin/api/2024-10/products.json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': access_token },
+        body: JSON.stringify(shopifyProduct),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const data = await productRes.json();
     return new Response(JSON.stringify(data), {
       headers: { 'Content-Type': 'application/json', ...CORS }
     });
 
-  } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), {
-      status: 500, headers: { 'Content-Type': 'application/json', ...CORS }
+  } catch(e) {
+    const isTimeout = e.name === 'AbortError';
+    return new Response(JSON.stringify({ error: isTimeout ? 'Timeout — try on better connection' : e.message }), {
+      status: isTimeout ? 408 : 500,
+      headers: { 'Content-Type': 'application/json', ...CORS }
     });
   }
 }

@@ -77,8 +77,9 @@
         <div class="field-lbl">Purchase price</div>
         <div class="price-wrap">
           <span class="eur">€</span>
-          <input type="number" class="price-input" id="price" placeholder="0" min="0" inputmode="decimal" oninput="onPriceChange()">
+          <input type="number" class="price-input" id="price" placeholder="0" min="0" inputmode="decimal" oninput="onPriceChange()" onfocus="showDismiss()" onblur="hideDismiss()">
         </div>
+        <button class="dismiss-btn" id="dismiss-btn" onmousedown="dismissKeyboard()">Done ✓</button>
       </div>
       <div>
         <div class="field-lbl">Market</div>
@@ -189,18 +190,10 @@
       </div>
       <div class="settings-group">
         <div class="settings-row">
-          <div class="settings-lbl">Shopify Store Domain</div>
-          <div class="settings-sub">e.g. aezzbt-ny.myshopify.com</div>
-          <input class="s-input" id="s-shopify-domain" type="text" oninput="saveSettings()">
-        </div>
-        <div class="settings-row">
-          <div class="settings-lbl">Shopify Client ID</div>
-          <input class="s-input" id="s-shopify-id" type="text" oninput="saveSettings()">
-        </div>
-        <div class="settings-row">
-          <div class="settings-lbl">Shopify Client Secret</div>
-          <input class="s-input" id="s-shopify-secret" type="password" oninput="saveSettings()">
-          <div class="s-status no" id="s-shopify-status">Not configured</div>
+          <div class="settings-lbl">Shopify</div>
+          <div class="settings-sub">Push items directly to your store</div>
+          <div class="s-status no" id="s-shopify-status">Not connected</div>
+          <button class="btn btn-shopify" style="margin-top:10px;padding:11px" onclick="connectShopify()">Connect Shopify →</button>
         </div>
       </div>
       <div class="settings-group">

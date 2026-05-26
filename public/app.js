@@ -39,8 +39,7 @@ const S = {
   get ant()    { return localStorage.getItem('sb_ant')      || ''; },
   get ebay()   { return localStorage.getItem('sb_ebay')     || ''; },
   get sDomain(){ return localStorage.getItem('sb_s_domain') || ''; },
-  get sId()    { return localStorage.getItem('sb_s_id')     || ''; },
-  get sSecret(){ return localStorage.getItem('sb_s_secret') || ''; },
+
   get syncKey(){ return localStorage.getItem('sb_sync_key') || ''; },
 };
 
@@ -48,14 +47,13 @@ function saveSettings() {
   localStorage.setItem('sb_ant',      el('s-anthropic').value.trim());
   localStorage.setItem('sb_ebay',     el('s-ebay').value.trim());
   localStorage.setItem('sb_s_domain', el('s-shopify-domain').value.trim());
-  localStorage.setItem('sb_s_id',     el('s-shopify-id').value.trim());
-  localStorage.setItem('sb_s_secret', el('s-shopify-secret').value.trim());
+
   localStorage.setItem('sb_sync_key', el('s-sync-key').value.trim());
   updateSettingsUI();
 }
 
 function updateSettingsUI() {
-  const a = S.ant, sh = S.sId, sk = S.syncKey;
+  const a = S.ant, sh = localStorage.getItem('sb_shopify_connected'), sk = S.syncKey;
   setStatus('s-anthropic-status', a && a.startsWith('sk-ant'));
   setStatus('s-shopify-status',   !!sh);
   setStatus('s-sync-status',      !!sk, sk ? `Key: ${sk.substring(0,8)}…` : 'Not set');
@@ -71,8 +69,7 @@ function openSettings() {
   el('s-anthropic').value     = S.ant;
   el('s-ebay').value          = S.ebay;
   el('s-shopify-domain').value = S.sDomain;
-  el('s-shopify-id').value     = S.sId;
-  el('s-shopify-secret').value  = S.sSecret;
+
   el('s-sync-key').value       = S.syncKey;
   updateSettingsUI();
   updateStats();
@@ -309,6 +306,8 @@ async function fetchEbay(b) {
       html += `<div class="ebay-block" style="border-top:1px solid var(--border)"><span class="ebay-live">🔵 Live (${active.count}) · €${active.minPrice}–€${active.maxPrice}</span>`;
       if (active.items?.length) html += `<div class="ebay-items">${active.items.map(i=>`<div class="ebay-item"><a href="${i.url}" target="_blank">${i.title.substring(0,42)}…</a><span class="ebay-price live">€${Math.round(i.price)}</span></div>`).join('')}</div>`;
       html += '</div>';
+    } else {
+      html += `<div class="ebay-block" style="border-top:1px solid var(--border)"><span class="ebay-none">Not currently for sale on eBay</span></div>`;
     }
     el('ebay-block').innerHTML = html;
   } catch(e) {
@@ -499,7 +498,7 @@ function openPush(item) {
 function closePush() { el('push-modal').classList.remove('open'); pushItem=null; }
 
 async function confirmPush() {
-  if (!S.sDomain || !S.sId || !S.sSecret) { toast('Configure Shopify in Settings first'); return; }
+  if (!S.sDomain || !localStorage.getItem('sb_shopify_connected')) { toast('Connect Shopify in Settings first'); return; }
   const price = el('push-price').value;
   if (!price) { toast('Enter a selling price'); return; }
   const btn = el('push-confirm-btn'); btn.disabled=true; btn.textContent='Pushing…';
@@ -512,9 +511,7 @@ async function confirmPush() {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          shopDomain:   S.sDomain,
-          clientId:     S.sId,
-          clientSecret: S.sSecret,
+          shopDomain: S.sDomain,
           product: {
             title:       pushItem.title,
             description: el('push-desc').value||'',
@@ -578,6 +575,37 @@ function toast(msg) {
 
 // ─── HELPER ───────────────────────────────────────────────────────────────────
 function el(id) { return document.getElementById(id); }
+
+// ─── SHOPIFY CONNECT ──────────────────────────────────────────────────────────
+function connectShopify() {
+  window.location.href = '/api/auth';
+}
+
+// Check if returning from Shopify OAuth
+(function checkShopifyReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('shopify') === 'connected') {
+    localStorage.setItem('sb_shopify_connected', '1');
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname);
+    setTimeout(() => toast('✓ Shopify connected!'), 500);
+  }
+})();
+
+// ─── KEYBOARD DISMISS ────────────────────────────────────────────────────────
+function showDismiss() {
+  const btn = el('dismiss-btn');
+  if (btn) btn.style.display = 'block';
+}
+function hideDismiss() {
+  // small delay so onmousedown fires first
+  setTimeout(() => { const btn = el('dismiss-btn'); if (btn) btn.style.display = 'none'; }, 200);
+}
+function dismissKeyboard() {
+  el('price').blur();
+  // scroll to Add to stock button
+  el('fiche-acts').scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 // Populate source selector
