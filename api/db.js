@@ -21,24 +21,32 @@ export default async function handler(req) {
         headers: { Authorization: `Bearer ${KV_TOKEN}` }
       });
       const json = await res.json();
-      const parsed = json.result ? JSON.parse(json.result) : { stock: [], history: [] };
+      let parsed = { stock: [], history: [] };
+      if (json.result) {
+        try { parsed = JSON.parse(json.result); } catch(e) {}
+      }
+      parsed.stock   = parsed.stock   || [];
+      parsed.history = parsed.history || [];
       return new Response(JSON.stringify({ data: parsed }), {
         headers: { 'Content-Type': 'application/json', ...CORS }
       });
     }
 
     if (action === 'set') {
-      // Send value in request body to avoid URL length limits
-      const res = await fetch(`${KV_URL}/set/${encodeURIComponent(key)}`, {
+      // Use pipeline to send value in body, not in URL
+      const res = await fetch(`${KV_URL}/pipeline`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${KV_TOKEN}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify([JSON.stringify(data)]),
+        body: JSON.stringify([
+          ['SET', key, JSON.stringify(data)]
+        ]),
       });
       const json = await res.json();
-      return new Response(JSON.stringify({ ok: json.result === 'OK' }), {
+      const ok = Array.isArray(json) && json[0]?.result === 'OK';
+      return new Response(JSON.stringify({ ok }), {
         headers: { 'Content-Type': 'application/json', ...CORS }
       });
     }
