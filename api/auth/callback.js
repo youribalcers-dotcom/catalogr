@@ -19,23 +19,28 @@ export default async function handler(req) {
     body: JSON.stringify({ client_id: clientId, client_secret: clientSecret, code }),
   });
 
-  if (!tokenRes.ok) {
-    const err = await tokenRes.text();
-    return new Response('Token exchange failed: ' + err, { status: 500 });
+  const tokenData = await tokenRes.json();
+
+  if (!tokenRes.ok || !tokenData.access_token) {
+    return new Response('Token exchange failed: ' + JSON.stringify(tokenData), { status: 500 });
   }
 
-  const { access_token } = await tokenRes.json();
+  const access_token = tokenData.access_token;
 
-  // Store token in Upstash KV
+  // Store token in Upstash KV — correct REST format: /set/key/value
   const kvUrl   = process.env.KV_REST_API_URL;
   const kvToken = process.env.KV_REST_API_TOKEN;
 
-  await fetch(`${kvUrl}/set/catalogr_shopify_token`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${kvToken}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ value: access_token }),
+  const kvRes = await fetch(`${kvUrl}/set/catalogr_shopify_token/${encodeURIComponent(access_token)}`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${kvToken}` },
   });
 
-  // Redirect back to Catalogr with success
+  const kvData = await kvRes.json();
+
+  if (kvData.result !== 'OK') {
+    return new Response('KV write failed: ' + JSON.stringify(kvData), { status: 500 });
+  }
+
   return Response.redirect('https://catalogr-three.vercel.app?shopify=connected', 302);
 }
