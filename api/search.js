@@ -12,19 +12,20 @@ const API = 'https://www.googleapis.com/customsearch/v1';
 // Extract a price from a snippet string
 function extractPrice(text) {
   if (!text) return null;
-  // Match patterns like €12.50, $45, 12,50 €, EUR 30, 12.50€
+  // Match patterns like €12.50, $45, US$ 32.87, 12,50 €, EUR 30, £9.99
   const patterns = [
-    /(?:€|EUR\s*)\s*(\d+(?:[.,]\d{1,2})?)/i,
-    /(\d+(?:[.,]\d{1,2})?)\s*(?:€|EUR)/i,
-    /(?:\$|USD\s*)\s*(\d+(?:[.,]\d{1,2})?)/i,
-    /(\d+(?:[.,]\d{1,2})?)\s*(?:\$|USD)/i,
-    /(?:£|GBP\s*)\s*(\d+(?:[.,]\d{1,2})?)/i,
+    /(?:US\$|USD|\$)\s*(\d+(?:[.,]\d{1,2})?)/i,   // US$ 32.87, $22.00, USD 16
+    /(\d+(?:[.,]\d{1,2})?)\s*(?:USD|\$)/i,           // 22.00$
+    /(?:€|EUR)\s*(\d+(?:[.,]\d{1,2})?)/i,             // €12.50, EUR 30
+    /(\d+(?:[.,]\d{1,2})?)\s*(?:€|EUR)/i,             // 12,50€
+    /(?:£|GBP)\s*(\d+(?:[.,]\d{1,2})?)/i,             // £9.99
+    /(\d+(?:[.,]\d{1,2})?)\s*(?:£|GBP)/i,             // 9.99£
   ];
   for (const p of patterns) {
     const m = text.match(p);
     if (m) {
       const val = parseFloat(m[1].replace(',', '.'));
-      if (val > 0.5 && val < 50000) return val; // sanity range
+      if (val > 0.5 && val < 50000) return val;
     }
   }
   return null;
