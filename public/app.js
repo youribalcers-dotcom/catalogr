@@ -46,7 +46,6 @@ const S = {
 function saveSettings() {
   localStorage.setItem('sb_ant',      el('s-anthropic').value.trim());
   localStorage.setItem('sb_ebay',     el('s-ebay').value.trim());
-  localStorage.setItem('sb_s_domain', el('s-shopify-domain').value.trim());
 
   localStorage.setItem('sb_sync_key', el('s-sync-key').value.trim());
   updateSettingsUI();
@@ -68,7 +67,6 @@ function setStatus(id, ok, label) {
 function openSettings() {
   el('s-anthropic').value     = S.ant;
   el('s-ebay').value          = S.ebay;
-  el('s-shopify-domain').value = S.sDomain;
 
   el('s-sync-key').value       = S.syncKey;
   updateSettingsUI();
@@ -511,7 +509,7 @@ async function confirmPush() {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          shopDomain: S.sDomain,
+          shopDomain: 'aezzbt-ny.myshopify.com',
           product: {
             title:       pushItem.title,
             description: el('push-desc').value||'',
