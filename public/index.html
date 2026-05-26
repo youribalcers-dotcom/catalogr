@@ -35,7 +35,6 @@
     <div class="scan-controls" id="scan-controls">
       <div class="hint-row">
         <input class="field-input" id="hint" type="text" placeholder="Hint (e.g. Munari 35th ed.)">
-        <button class="mic-btn" id="mic-btn" onclick="toggleVoice()">🎤</button>
       </div>
       <select class="field-input" id="source-sel"></select>
       <div class="err" id="scan-err"></div>
@@ -100,11 +99,14 @@
         </div>
       </div>
       <div>
-        <div class="field-lbl">Notes</div>
+        <div class="field-lbl">
+          Notes
+          <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="Voice input">🎤</button>
+        </div>
         <textarea class="notes-ta" id="notes" rows="2"></textarea>
       </div>
     </div>
-    <div class="fiche-acts">
+    <div class="fiche-acts" id="fiche-acts">
       <button class="btn btn-light" style="flex:1" onclick="goTo('scan-screen')">← Back</button>
       <button class="btn btn-dark" style="flex:2" onclick="saveToStock()">+ Add to stock</button>
     </div>
@@ -153,14 +155,7 @@
       </div>
       <div>
         <div class="field-lbl">Category</div>
-        <select class="cat-select" id="push-cat">
-          <option value="books-music">Books — Music</option>
-          <option value="books-art">Books — Art</option>
-          <option value="books-other">Books — Other</option>
-          <option value="objects-music">Objects — Music</option>
-          <option value="objects-art">Objects — Art</option>
-          <option value="objects-other">Objects — Other</option>
-        </select>
+        <select class="cat-select" id="push-cat"></select>
       </div>
     </div>
     <div class="push-acts">
@@ -179,6 +174,14 @@
           <div class="settings-sub">For AI identification &amp; descriptions</div>
           <input class="s-input" id="s-anthropic" type="password">
           <div class="s-status no" id="s-anthropic-status">Not configured</div>
+        </div>
+      </div>
+      <div class="settings-group">
+        <div class="settings-row">
+          <div class="settings-lbl">Google Search API Key</div>
+          <div class="settings-sub">For real price estimation (Custom Search)</div>
+          <input class="s-input" id="s-gkey" type="password">
+          <div class="s-status no" id="s-gkey-status">Not configured</div>
         </div>
       </div>
       <div class="settings-group">
