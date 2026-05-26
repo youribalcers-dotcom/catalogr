@@ -177,7 +177,7 @@
         <div class="settings-row">
           <div class="settings-lbl">Anthropic API Key</div>
           <div class="settings-sub">For AI identification &amp; descriptions</div>
-          <input class="s-input" id="s-anthropic" type="password" oninput="saveSettings()">
+          <input class="s-input" id="s-anthropic" type="password">
           <div class="s-status no" id="s-anthropic-status">Not configured</div>
         </div>
       </div>
@@ -185,7 +185,7 @@
         <div class="settings-row">
           <div class="settings-lbl">eBay App ID</div>
           <div class="settings-sub">For real market data</div>
-          <input class="s-input" id="s-ebay" type="text" oninput="saveSettings()">
+          <input class="s-input" id="s-ebay" type="text">
         </div>
       </div>
       <div class="settings-group">
@@ -200,7 +200,7 @@
         <div class="settings-row">
           <div class="settings-lbl">Sync Key</div>
           <div class="settings-sub">Same key on all your devices to share stock</div>
-          <input class="s-input" id="s-sync-key" type="text" placeholder="e.g. samplebooks-youri" oninput="saveSettings()">
+          <input class="s-input" id="s-sync-key" type="text" placeholder="e.g. samplebooks-youri">
           <div class="s-status no" id="s-sync-status">Not set</div>
         </div>
       </div>
@@ -209,6 +209,7 @@
         <div class="settings-stat"><span class="settings-lbl">History items</span><span class="stat-val" id="s-hist-count">0</span></div>
         <div class="settings-stat"><span class="settings-lbl">Total invested</span><span class="stat-val" id="s-total">€0</span></div>
       </div>
+      <button class="btn btn-dark" onclick="saveSettings()">Save settings</button>
       <button class="btn btn-light" style="color:var(--red);border-color:#f5c6c2" onclick="clearAll()">Clear all data</button>
     </div>
   </div>
