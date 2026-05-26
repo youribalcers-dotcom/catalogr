@@ -433,17 +433,7 @@ async function saveToStock() {
     }
   } catch(e) {} // offline — use local db
   const addedAt = Date.now();
-  if (photo) {
-    toast('Photo: ' + Math.round(photo.length/1024) + 'KB');
-    try {
-      localStorage.setItem('sb_photo_' + addedAt, photo);
-      toast('Photo saved ✓');
-    } catch(e) {
-      toast('Photo save failed: ' + e.message);
-    }
-  } else {
-    toast('No photo available');
-  }
+  if (photo) await savePhoto(addedAt, photo);
   db.stock.push({
     ...book,
     bookPhoto: null, // not synced to KV — stored locally by addedAt
@@ -466,7 +456,7 @@ async function saveToStock() {
 async function deleteFromStock(addedAt) {
   if (!confirm('Remove this item from stock?')) return;
   db.stock = db.stock.filter(i => i.addedAt !== addedAt);
-  try { localStorage.removeItem('sb_photo_' + addedAt); } catch(e) {}
+  await deletePhoto(addedAt);
   await syncToServer();
   renderLib();
   toast('Removed from stock');
@@ -502,7 +492,7 @@ function renderLib() {
 
   window._items = items;
   list.innerHTML = items.map((item,idx) => {
-    const localPhoto = item.addedAt ? localStorage.getItem('sb_photo_' + item.addedAt) : null;
+    const localPhoto = null; // loaded async below
     const p = localPhoto||item.bookPhoto||item.cover||null;
     const isStock = currentTab==='stock';
     const right = isStock
@@ -510,6 +500,27 @@ function renderLib() {
       : `<div class="lib-right"><div class="lib-date">${new Date(item.scannedAt||item.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div></div>`;
     return `<div class="lib-card"><div class="lib-ph"${p?` style="display:none"`:''}>♪</div>${p?`<img class="lib-thumb" src="${p}" onerror="this.style.display='none'">`:''}<div class="lib-info"><div class="lib-title">${item.title}</div><div class="lib-meta">${[item.author,item.year,item.source].filter(Boolean).join(' · ')}</div></div>${right}</div>`;
   }).join('');
+
+  // Load photos async and inject into rendered cards
+  items.forEach((item, idx) => {
+    if (item.addedAt) {
+      loadPhoto(item.addedAt).then(p => {
+        if (!p) return;
+        const card = list.children[idx];
+        if (!card) return;
+        const ph = card.querySelector('.lib-ph');
+        const img = card.querySelector('.lib-thumb');
+        if (ph) ph.style.display = 'none';
+        if (img) { img.src = p; img.style.display = ''; }
+        else {
+          const newImg = document.createElement('img');
+          newImg.className = 'lib-thumb';
+          newImg.src = p;
+          if (ph) ph.parentNode.insertBefore(newImg, ph);
+        }
+      });
+    }
+  });
 
   list.querySelectorAll('.push-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -529,9 +540,9 @@ function renderLib() {
 }
 
 // ─── PUSH SHOPIFY ─────────────────────────────────────────────────────────────
-function openPush(item) {
+async function openPush(item) {
   pushItem = item;
-  const localPhoto = item.addedAt ? localStorage.getItem('sb_photo_' + item.addedAt) : null;
+  const localPhoto = item.addedAt ? await loadPhoto(item.addedAt) : null;
   pushItem.bookPhoto = localPhoto || item.bookPhoto || null;
   const p = pushItem.bookPhoto||item.cover||null;
   el('push-photo').innerHTML = p ? `<img class="push-photo" src="${p}" alt="">` : `<div class="push-ph">📖</div>`;
@@ -624,6 +635,50 @@ function toast(msg) {
 
 // ─── HELPER ───────────────────────────────────────────────────────────────────
 function el(id) { return document.getElementById(id); }
+
+// ─── PHOTO STORAGE (IndexedDB) ───────────────────────────────────────────────
+let _photoDB = null;
+
+function openPhotoDB() {
+  if (_photoDB) return Promise.resolve(_photoDB);
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('catalogr_photos', 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore('photos');
+    req.onsuccess = e => { _photoDB = e.target.result; resolve(_photoDB); };
+    req.onerror = reject;
+  });
+}
+
+async function savePhoto(addedAt, dataUrl) {
+  try {
+    const db = await openPhotoDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('photos', 'readwrite');
+      tx.objectStore('photos').put(dataUrl, addedAt);
+      tx.oncomplete = resolve;
+      tx.onerror = reject;
+    });
+  } catch(e) {}
+}
+
+async function loadPhoto(addedAt) {
+  try {
+    const db = await openPhotoDB();
+    return new Promise((resolve) => {
+      const req = db.transaction('photos').objectStore('photos').get(addedAt);
+      req.onsuccess = e => resolve(e.target.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch(e) { return null; }
+}
+
+async function deletePhoto(addedAt) {
+  try {
+    const db = await openPhotoDB();
+    const tx = db.transaction('photos', 'readwrite');
+    tx.objectStore('photos').delete(addedAt);
+  } catch(e) {}
+}
 
 // ─── SHOPIFY CONNECT ──────────────────────────────────────────────────────────
 function connectShopify() {
