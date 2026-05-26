@@ -500,6 +500,38 @@ async function saveToStock() {
   if (!book) return;
   const priceVal = el('price').value.trim();
   if (priceVal === '') { toast('Enter a purchase price (0 for free)'); return; }
+
+  // ── Apply voice note corrections before saving ────────────────────────────
+  const notesText = el('notes').value.trim();
+  if (notesText && S.ant) {
+    try {
+      const cr = await fetch('/api/identify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'correct',
+          apiKey: S.ant,
+          notes: notesText,
+          currentData: {
+            title:     book.title,
+            author:    book.author,
+            publisher: book.publisher,
+            year:      book.year,
+            category:  book.category,
+          }
+        })
+      });
+      const corrections = await cr.json();
+      if (corrections && Object.keys(corrections).length > 0) {
+        // Merge corrections into book — notes field stays as-is (goes to Shopify)
+        Object.assign(book, corrections);
+        // If category was corrected, show it
+        if (corrections.category) toast('✓ Category updated: ' + corrections.category);
+        if (corrections.title)    toast('✓ Title updated: ' + corrections.title);
+      }
+    } catch(e) {} // correction failure is non-blocking
+  }
+
   try {
     const r = await fetch('/api/db', {
       method:'POST',
@@ -521,7 +553,7 @@ async function saveToStock() {
     price:       parseFloat(priceVal),
     marketLow:   mktLow,
     marketHigh:  mktHigh,
-    notes:       el('notes').value,
+    notes:       notesText,
     source:      el('source-sel').value,
     addedAt,
     shopifyPushed: false
