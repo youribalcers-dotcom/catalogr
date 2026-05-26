@@ -432,22 +432,36 @@ async function saveToStock() {
       db.history = d.data.history || db.history;
     }
   } catch(e) {} // offline — use local db
+  const addedAt = Date.now();
+  if (photo) {
+    try { localStorage.setItem('sb_photo_' + addedAt, photo); } catch(e) {}
+  }
   db.stock.push({
     ...book,
-    bookPhoto: photo,
+    bookPhoto: null, // not synced to KV — stored locally by addedAt
     grade: grade?.c || null,
     price: parseFloat(priceVal),
     marketLow: mktLow,
     marketHigh: mktHigh,
     notes: el('notes').value,
     source: el('source-sel').value,
-    addedAt: Date.now(),
+    addedAt,
     shopifyPushed: false
   });
   await syncToServer();
   toast('✓ Added to stock');
   photo=null;
   setTimeout(()=>goTo('scan-screen'), 1200);
+}
+
+// ─── DELETE ───────────────────────────────────────────────────────────────────
+async function deleteFromStock(addedAt) {
+  if (!confirm('Remove this item from stock?')) return;
+  db.stock = db.stock.filter(i => i.addedAt !== addedAt);
+  try { localStorage.removeItem('sb_photo_' + addedAt); } catch(e) {}
+  await syncToServer();
+  renderLib();
+  toast('Removed from stock');
 }
 
 // ─── EDITIONS ─────────────────────────────────────────────────────────────────
@@ -480,10 +494,11 @@ function renderLib() {
 
   window._items = items;
   list.innerHTML = items.map((item,idx) => {
-    const p = item.bookPhoto||item.cover||null;
+    const localPhoto = item.addedAt ? localStorage.getItem('sb_photo_' + item.addedAt) : null;
+    const p = localPhoto||item.bookPhoto||item.cover||null;
     const isStock = currentTab==='stock';
     const right = isStock
-      ? `<div class="lib-right"><div class="lib-price">€${item.price}</div>${item.grade?`<div class="lib-grade">${item.grade}</div>`:''}<button class="push-btn" data-idx="${idx}">${item.shopifyPushed?'✓ Live':'⬆ Shopify'}</button></div>`
+      ? `<div class="lib-right"><div class="lib-price">€${item.price}</div>${item.grade?`<div class="lib-grade">${item.grade}</div>`:''}<button class="push-btn" data-idx="${idx}">${item.shopifyPushed?'✓ Live':'⬆ Shopify'}</button><button class="del-btn" data-at="${item.addedAt}">✕</button></div>`
       : `<div class="lib-right"><div class="lib-date">${new Date(item.scannedAt||item.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div></div>`;
     return `<div class="lib-card"><div class="lib-ph"${p?` style="display:none"`:''}>♪</div>${p?`<img class="lib-thumb" src="${p}" onerror="this.style.display='none'">`:''}<div class="lib-info"><div class="lib-title">${item.title}</div><div class="lib-meta">${[item.author,item.year,item.source].filter(Boolean).join(' · ')}</div></div>${right}</div>`;
   }).join('');
@@ -496,12 +511,21 @@ function renderLib() {
       else openPush(item);
     });
   });
+
+  list.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      deleteFromStock(parseInt(btn.dataset.at));
+    });
+  });
 }
 
 // ─── PUSH SHOPIFY ─────────────────────────────────────────────────────────────
 function openPush(item) {
   pushItem = item;
-  const p = item.bookPhoto||item.cover||null;
+  const localPhoto = item.addedAt ? localStorage.getItem('sb_photo_' + item.addedAt) : null;
+  pushItem.bookPhoto = localPhoto || item.bookPhoto || null;
+  const p = pushItem.bookPhoto||item.cover||null;
   el('push-photo').innerHTML = p ? `<img class="push-photo" src="${p}" alt="">` : `<div class="push-ph">📖</div>`;
   el('push-title').textContent = item.title;
   el('push-meta').textContent  = [item.author, item.publisher, item.year, item.grade?'Grade: '+item.grade:''].filter(Boolean).join(' · ');
