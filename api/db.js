@@ -1,46 +1,55 @@
 export const config = { runtime: 'edge' };
 
-const KV_URL = process.env.KV_REST_API_URL;
+const KV_URL   = process.env.KV_REST_API_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN;
 
-async function kv(method, ...args) {
-  const res = await fetch(`${KV_URL}/${method}/${args.map(encodeURIComponent).join('/')}`, {
-    headers: { Authorization: `Bearer ${KV_TOKEN}` }
-  });
-  const data = await res.json();
-  return data.result;
-}
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 
 export default async function handler(req) {
-  const cors = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-  if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+  if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
   try {
     const { action, userId, data } = await req.json();
+    const key = `user:${userId}`;
 
     if (action === 'get') {
-      const raw = await kv('get', `user:${userId}`);
-      return new Response(JSON.stringify({ data: raw ? JSON.parse(raw) : { stock: [], history: [] } }), {
-        headers: { 'Content-Type': 'application/json', ...cors }
+      const res = await fetch(`${KV_URL}/get/${encodeURIComponent(key)}`, {
+        headers: { Authorization: `Bearer ${KV_TOKEN}` }
+      });
+      const json = await res.json();
+      const parsed = json.result ? JSON.parse(json.result) : { stock: [], history: [] };
+      return new Response(JSON.stringify({ data: parsed }), {
+        headers: { 'Content-Type': 'application/json', ...CORS }
       });
     }
 
     if (action === 'set') {
-      await kv('set', `user:${userId}`, JSON.stringify(data));
-      return new Response(JSON.stringify({ ok: true }), {
-        headers: { 'Content-Type': 'application/json', ...cors }
+      // Send value in request body to avoid URL length limits
+      const res = await fetch(`${KV_URL}/set/${encodeURIComponent(key)}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${KV_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([JSON.stringify(data)]),
+      });
+      const json = await res.json();
+      return new Response(JSON.stringify({ ok: json.result === 'OK' }), {
+        headers: { 'Content-Type': 'application/json', ...CORS }
       });
     }
 
-    return new Response(JSON.stringify({ error: 'Unknown action' }), { status: 400, headers: cors });
-  } catch (e) {
+    return new Response(JSON.stringify({ error: 'Unknown action' }), {
+      status: 400, headers: { 'Content-Type': 'application/json', ...CORS }
+    });
+
+  } catch(e) {
     return new Response(JSON.stringify({ error: e.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json', ...cors }
+      status: 500, headers: { 'Content-Type': 'application/json', ...CORS }
     });
   }
 }
