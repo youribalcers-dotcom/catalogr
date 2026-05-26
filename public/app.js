@@ -96,8 +96,8 @@ function clearAll() {
 async function syncFromServer() {
   const key = S.syncKey;
   const bar = el('sync-bar');
-  if (!key) { bar.textContent = '⚠ Set a sync key in Settings to sync between devices'; return; }
-  bar.textContent = '⟳ Syncing…';
+  if (!key) { if(bar) bar.textContent = '⚠ Set a sync key in Settings to sync between devices'; return; }
+  if(bar) bar.textContent = '⟳ Syncing…';
   try {
     const r = await fetch('/api/db', {
       method:'POST',
@@ -105,10 +105,10 @@ async function syncFromServer() {
       body: JSON.stringify({ action:'get', userId: key })
     });
     const d = await r.json();
-    if (d.data) { db = d.data; updateStats(); renderLib(); }
-    bar.textContent = '';
+    if (d.data) { db = { stock: d.data.stock || [], history: d.data.history || [] }; updateStats(); renderLib(); }
+    if(bar) bar.textContent = '';
   } catch(e) {
-    bar.textContent = '⚠ Offline — local data only';
+    if(bar) bar.textContent = '⚠ Offline — local data only';
   }
 }
 
@@ -418,8 +418,20 @@ async function saveToStock() {
   // FIX: price can be 0 (free item) — check for empty string, not falsy
   const priceVal = el('price').value.trim();
   if (priceVal === '') { toast('Enter a purchase price (0 for free)'); return; }
-  // Fetch latest data from server before writing to avoid overwriting other devices
-  await syncFromServer();
+  // Fetch latest server data silently and merge before saving
+  try {
+    const r = await fetch('/api/db', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'get', userId: S.syncKey })
+    });
+    const d = await r.json();
+    if (d.data) {
+      // Merge: keep server stock + add new item, don't overwrite history
+      db.stock   = d.data.stock   || db.stock;
+      db.history = d.data.history || db.history;
+    }
+  } catch(e) {} // offline — use local db
   db.stock.push({
     ...book,
     bookPhoto: photo,
