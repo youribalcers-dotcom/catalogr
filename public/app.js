@@ -547,7 +547,7 @@ function openPush(item) {
 function closePush() { el('push-modal').classList.remove('open'); pushItem=null; }
 
 async function confirmPush() {
-  if (!S.sDomain || !localStorage.getItem('sb_shopify_connected')) { toast('Connect Shopify in Settings first'); return; }
+  // Token check happens server-side via KV
   const price = el('push-price').value;
   if (!price) { toast('Enter a selling price'); return; }
   const btn = el('push-confirm-btn'); btn.disabled=true; btn.textContent='Pushing…';
