@@ -28,6 +28,15 @@ const SOURCES = [
   { label:'Autre / Autre ville', value:'Autre' },
 ];
 
+const CATEGORIES = [
+  { label:'Books / Music',   value:'Books/Music'   },
+  { label:'Books / Art',     value:'Books/Art'     },
+  { label:'Books / Other',   value:'Books/Other'   },
+  { label:'Objects / Music', value:'Objects/Music' },
+  { label:'Objects / Art',   value:'Objects/Art'   },
+  { label:'Objects / Other', value:'Objects/Other' },
+];
+
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let book = null, grade = null, stream = null, scanning = false;
 let mktLow = null, mktHigh = null, photo = null, pendingISBN = null;
@@ -39,22 +48,23 @@ const S = {
   get ant()    { return localStorage.getItem('sb_ant')      || ''; },
   get ebay()   { return localStorage.getItem('sb_ebay')     || ''; },
   get sDomain(){ return localStorage.getItem('sb_s_domain') || ''; },
-
+  get gkey()   { return localStorage.getItem('sb_gkey')     || ''; },
   get syncKey(){ return localStorage.getItem('sb_sync_key') || ''; },
 };
 
 function saveSettings() {
   localStorage.setItem('sb_ant',      el('s-anthropic').value.trim());
   localStorage.setItem('sb_ebay',     el('s-ebay').value.trim());
-
+  localStorage.setItem('sb_gkey',     el('s-gkey').value.trim());
   localStorage.setItem('sb_sync_key', el('s-sync-key').value.trim());
   updateSettingsUI();
 }
 
 function updateSettingsUI() {
-  const a = S.ant, sh = localStorage.getItem('sb_shopify_connected'), sk = S.syncKey;
+  const a = S.ant, sh = localStorage.getItem('sb_shopify_connected'), sk = S.syncKey, gk = S.gkey;
   setStatus('s-anthropic-status', a && a.startsWith('sk-ant'));
   setStatus('s-shopify-status',   !!sh);
+  setStatus('s-gkey-status',      !!gk, gk ? '✓ Configured' : 'Not configured');
   setStatus('s-sync-status',      !!sk, sk ? `Key: ${sk.substring(0,8)}…` : 'Not set');
 }
 
@@ -65,10 +75,10 @@ function setStatus(id, ok, label) {
 }
 
 function openSettings() {
-  el('s-anthropic').value     = S.ant;
-  el('s-ebay').value          = S.ebay;
-
-  el('s-sync-key').value       = S.syncKey;
+  el('s-anthropic').value = S.ant;
+  el('s-ebay').value      = S.ebay;
+  el('s-gkey').value      = S.gkey;
+  el('s-sync-key').value  = S.syncKey;
   updateSettingsUI();
   updateStats();
   el('settings-panel').classList.add('open');
@@ -116,7 +126,6 @@ async function syncToServer() {
   const key = S.syncKey;
   if (!key) return;
   try {
-    // Strip base64 photos before sending — too large for KV URL encoding
     const dbClean = {
       stock:   db.stock.map(i => ({ ...i, bookPhoto: null })),
       history: db.history.map(i => ({ ...i, bookPhoto: null })),
@@ -130,16 +139,29 @@ async function syncToServer() {
   updateStats();
 }
 
-// ─── VOICE ────────────────────────────────────────────────────────────────────
+// ─── VOICE (Notes field) ──────────────────────────────────────────────────────
 function toggleVoice() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { toast('Voice not supported'); return; }
-  if (recognition) { recognition.stop(); recognition = null; el('mic-btn').classList.remove('on'); return; }
+  if (!SR) { toast('Voice not supported on this browser'); return; }
+  if (recognition) {
+    recognition.stop(); recognition = null;
+    el('mic-btn').classList.remove('on');
+    return;
+  }
   recognition = new SR();
-  recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'fr-BE';
+  recognition.continuous = true;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US'; // notes are typically in English
   recognition.onstart = () => el('mic-btn').classList.add('on');
-  recognition.onresult = e => { el('hint').value = e.results[0][0].transcript; };
-  recognition.onend = recognition.onerror = () => { recognition = null; el('mic-btn').classList.remove('on'); };
+  recognition.onresult = e => {
+    const transcript = e.results[e.results.length - 1][0].transcript.trim();
+    const notes = el('notes');
+    notes.value = notes.value ? notes.value + ' ' + transcript : transcript;
+  };
+  recognition.onend = recognition.onerror = () => {
+    recognition = null;
+    el('mic-btn').classList.remove('on');
+  };
   recognition.start();
 }
 
@@ -245,29 +267,42 @@ function fmtOL(b,isbn) { return { title:b.title||'', author:(b.authors||[]).map(
 function fmtSearch(d)  { return { title:d.title||'', author:d.author_name?.[0]||'', publisher:d.publisher?.[0]||'', year:d.first_publish_year||'', isbn:d.isbn?.[0]||'', cover:d.cover_i?'https://covers.openlibrary.org/b/id/'+d.cover_i+'-M.jpg':null, pages:d.number_of_pages_median||'', editionCount:d.edition_count||1 }; }
 function fmtRaw(b,isbn){ return { title:b.title||'', author:'', publisher:b.publishers?.[0]||'', year:(b.publish_date||'').match(/\d{4}/)?.[0]||'', isbn, cover:b.covers?'https://covers.openlibrary.org/b/id/'+b.covers[0]+'-M.jpg':null, pages:b.number_of_pages||'', editionCount:1 }; }
 
-// ─── AI ───────────────────────────────────────────────────────────────────────
+// ─── AI IDENTIFY ──────────────────────────────────────────────────────────────
 async function identifyAI(base64, mediaType, fromFallback=false) {
   if (!S.ant) { goTo('scan-screen'); showErr('API key not configured. Go to Settings ⚙.'); return; }
   if (!fromFallback) setLoad('Claude is identifying…', true);
-  const hint = el('hint').value;
   try {
     const r = await fetch('/api/identify', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ image:base64, mediaType, apiKey:S.ant, hint, action:'identify' })
+      body: JSON.stringify({ image:base64, mediaType, apiKey:S.ant })
     });
     const d = await r.json();
-    if (d.error) { goTo('scan-screen'); showErr('API error: '+(d.error.message||'')); return; }
-    const txt = d.content?.map(c=>c.text||'').join('')||'';
-    let parsed;
-    try { parsed = JSON.parse(txt.replace(/```json|```/g,'').trim()); } catch(e) { goTo('scan-screen'); showErr('Parse error. Try a clearer photo.'); return; }
-    if (!parsed.identified) { goTo('scan-screen'); showErr('Could not identify. Try a clearer photo.'); return; }
-    if (pendingISBN && !parsed.isbn) parsed.isbn = pendingISBN;
-    parsed.aiIdentified = true; parsed.bookPhoto = photo;
-    addHistory(parsed); buildFiche(parsed);
+    if (d.error) { goTo('scan-screen'); showErr('API error: '+d.error); return; }
+
+    // New identify.js returns parsed JSON directly (not d.content[].text)
+    if (!d.title && !d.description) { goTo('scan-screen'); showErr('Could not identify. Try a clearer photo.'); return; }
+
+    const parsed = {
+      title:       d.title       || '',
+      author:      d.author      || '',
+      publisher:   d.publisher   || '',
+      year:        d.year        || '',
+      isbn:        d.isbn        || (pendingISBN || ''),
+      language:    d.language    || '',
+      description: d.description || '',
+      category:    d.category    || 'Books/Other',
+      confidence:  d.confidence  || 'medium',
+      aiIdentified: true,
+      bookPhoto:   photo,
+    };
+
+    addHistory(parsed);
+    buildFiche(parsed);
   } catch(e) { goTo('scan-screen'); showErr('Error: '+e.message); }
 }
 
+// ─── AI DESCRIBE (for Shopify push) ──────────────────────────────────────────
 async function genDesc() {
   if (!pushItem?.bookPhoto) { toast('No photo available'); return; }
   const btn = el('gen-btn'); btn.disabled=true; btn.textContent='Generating…';
@@ -275,13 +310,33 @@ async function genDesc() {
     const r = await fetch('/api/identify', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ image:pushItem.bookPhoto.split(',')[1], mediaType:'image/jpeg', apiKey:S.ant, hint:pushItem.title+' '+pushItem.author, action:'describe' })
+      body: JSON.stringify({
+        image: pushItem.bookPhoto.split(',')[1],
+        mediaType: 'image/jpeg',
+        apiKey: S.ant,
+        action: 'describe'
+      })
     });
     const d = await r.json();
-    const txt = d.content?.map(c=>c.text||'').join('').trim()||'';
+    // describe action still returns raw text in description field
+    const txt = d.description || d.content?.map(c=>c.text||'').join('').trim() || '';
     if (txt) el('push-desc').value = txt; else toast('Generation failed');
   } catch(e) { toast('Error: '+e.message); }
   btn.disabled=false; btn.textContent='✦ Generate with AI';
+}
+
+// ─── GOOGLE SEARCH PRICING ───────────────────────────────────────────────────
+async function fetchSearchPrice(b) {
+  if (!S.gkey) return null;
+  try {
+    const r = await fetch('/api/search', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ item: b, apiKey: S.gkey })
+    });
+    const d = await r.json();
+    return d.priceRange || null; // { low, high, median, count }
+  } catch(e) { return null; }
 }
 
 // ─── EBAY ─────────────────────────────────────────────────────────────────────
@@ -318,19 +373,38 @@ async function fetchEbay(b) {
   }
 }
 
-// ─── MARKET ───────────────────────────────────────────────────────────────────
+// ─── MARKET (Google Search first, heuristic fallback) ─────────────────────────
 async function fetchMarket(b) {
   el('market-top').innerHTML = '<div class="market-loading">Estimating…</div>';
   el('ebay-block').innerHTML = '';
   mktLow=null; mktHigh=null;
-  if (b.marketLow && b.marketHigh) { mktLow=parseInt(b.marketLow); mktHigh=parseInt(b.marketHigh); renderMarket('Claude est.'); fetchEbay(b); return; }
+
+  // 1. Use cached market data if already on item
+  if (b.marketLow && b.marketHigh) {
+    mktLow=parseInt(b.marketLow); mktHigh=parseInt(b.marketHigh);
+    renderMarket('Saved est.');
+    fetchEbay(b);
+    return;
+  }
+
+  // 2. Try Google Custom Search for real price data
+  const priceRange = await fetchSearchPrice(b);
+  if (priceRange && priceRange.low && priceRange.high) {
+    mktLow  = priceRange.low;
+    mktHigh = priceRange.high;
+    renderMarket(`Web (${priceRange.count} prices)`);
+    fetchEbay(b);
+    return;
+  }
+
+  // 3. Heuristic fallback
   await new Promise(r=>setTimeout(r,300));
   const age = new Date().getFullYear() - (parseInt(b.year)||2000);
   let lo=5, hi=15;
   if (age>40){lo=20;hi=60;}else if(age>25){lo=12;hi=35;}else if(age>15){lo=8;hi=22;}
   if ((b.editionCount||1)<=2){lo=Math.round(lo*1.5);hi=Math.round(hi*2);}
   mktLow=lo; mktHigh=hi;
-  renderMarket('Claude est.');
+  renderMarket('Est.');
   fetchEbay(b);
 }
 
@@ -340,7 +414,6 @@ function renderMarket(src) {
 }
 
 function recalc() {
-  // FIX: check for empty string, not falsy (allows price = 0)
   const priceVal = el('price').value;
   const buy = priceVal.trim() === '' ? null : parseFloat(priceVal);
   const row = el('return-row');
@@ -388,7 +461,17 @@ function buildFiche(b) {
   if (src) iw.innerHTML=`<img class="fiche-img" src="${src}" alt=""><button class="retake-btn" onclick="photo=null;goTo('scan-screen')">📷 Retake</button>`;
   else      iw.innerHTML=`<div class="fiche-img-ph"><span>📖</span><p>No photo</p></div>`;
 
-  el('fiche-hd').innerHTML = `<div class="fiche-title">${b.title}</div>${b.author?`<div class="fiche-author">${b.author}</div>`:''}<div class="fiche-meta">${[b.publisher,b.year,b.pages?b.pages+'p':'',b.isbn?'ISBN '+b.isbn:''].filter(Boolean).join(' · ')}</div>`;
+  // Category badge + confidence
+  const catBadge = b.category
+    ? `<div class="fiche-cat">${b.category}${b.confidence==='low'?' <span class="conf-low">⚠ low confidence</span>':''}</div>`
+    : '';
+
+  el('fiche-hd').innerHTML = `
+    ${catBadge}
+    <div class="fiche-title">${b.title||'—'}</div>
+    ${b.author?`<div class="fiche-author">${b.author}</div>`:''}
+    <div class="fiche-meta">${[b.publisher,b.year,b.pages?b.pages+'p':'',b.isbn?'ISBN '+b.isbn:''].filter(Boolean).join(' · ')}</div>
+  `;
 
   const grid = el('grade-grid'); grid.innerHTML='';
   GRADES.forEach(g => {
@@ -415,10 +498,8 @@ function selectGrade(g) {
 
 async function saveToStock() {
   if (!book) return;
-  // FIX: price can be 0 (free item) — check for empty string, not falsy
   const priceVal = el('price').value.trim();
   if (priceVal === '') { toast('Enter a purchase price (0 for free)'); return; }
-  // Fetch latest server data silently and merge before saving
   try {
     const r = await fetch('/api/db', {
       method:'POST',
@@ -427,22 +508,21 @@ async function saveToStock() {
     });
     const d = await r.json();
     if (d.data) {
-      // Merge: keep server stock + add new item, don't overwrite history
       db.stock   = d.data.stock   || db.stock;
       db.history = d.data.history || db.history;
     }
-  } catch(e) {} // offline — use local db
+  } catch(e) {}
   const addedAt = Date.now();
   if (photo) await savePhoto(addedAt, photo);
   db.stock.push({
     ...book,
-    bookPhoto: null, // not synced to KV — stored locally by addedAt
-    grade: grade?.c || null,
-    price: parseFloat(priceVal),
-    marketLow: mktLow,
-    marketHigh: mktHigh,
-    notes: el('notes').value,
-    source: el('source-sel').value,
+    bookPhoto: null,
+    grade:       grade?.c || null,
+    price:       parseFloat(priceVal),
+    marketLow:   mktLow,
+    marketHigh:  mktHigh,
+    notes:       el('notes').value,
+    source:      el('source-sel').value,
     addedAt,
     shopifyPushed: false
   });
@@ -460,6 +540,17 @@ async function deleteFromStock(addedAt) {
   await syncToServer();
   renderLib();
   toast('Removed from stock');
+}
+
+// ─── EDIT FROM HISTORY ────────────────────────────────────────────────────────
+function editFromHistory(idx) {
+  const item = db.history[idx];
+  if (!item) return;
+  // Restore photo state if available
+  photo = item.bookPhoto || null;
+  // Re-open the fiche with this item's data — user can adjust and save to stock
+  buildFiche({ ...item });
+  toast('Editing — adjust and add to stock');
 }
 
 // ─── EDITIONS ─────────────────────────────────────────────────────────────────
@@ -491,17 +582,34 @@ function renderLib() {
   if (!items.length) { list.innerHTML='<div class="lib-empty">No items yet.</div>'; return; }
 
   window._items = items;
+  const isStock = currentTab==='stock';
+
   list.innerHTML = items.map((item,idx) => {
-    const localPhoto = null; // loaded async below
-    const p = localPhoto||item.bookPhoto||item.cover||null;
-    const isStock = currentTab==='stock';
+    const p = item.bookPhoto||item.cover||null;
     const right = isStock
-      ? `<div class="lib-right"><div class="lib-price">€${item.price}</div>${item.grade?`<div class="lib-grade">${item.grade}</div>`:''}<button class="push-btn" data-idx="${idx}">${item.shopifyPushed?'✓ Live':'⬆ Shopify'}</button><button class="del-btn" data-at="${item.addedAt}">✕</button></div>`
-      : `<div class="lib-right"><div class="lib-date">${new Date(item.scannedAt||item.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div></div>`;
-    return `<div class="lib-card"><div class="lib-ph"${p?` style="display:none"`:''}>♪</div>${p?`<img class="lib-thumb" src="${p}" onerror="this.style.display='none'">`:''}<div class="lib-info"><div class="lib-title">${item.title}</div><div class="lib-meta">${[item.author,item.year,item.source].filter(Boolean).join(' · ')}</div></div>${right}</div>`;
+      ? `<div class="lib-right">
+           <div class="lib-price">€${item.price}</div>
+           ${item.grade?`<div class="lib-grade">${item.grade}</div>`:''}
+           <button class="push-btn" data-idx="${idx}">${item.shopifyPushed?'✓ Live':'⬆ Shopify'}</button>
+           <button class="del-btn" data-at="${item.addedAt}">✕</button>
+         </div>`
+      : `<div class="lib-right">
+           <div class="lib-date">${new Date(item.scannedAt||item.addedAt).toLocaleDateString('fr-BE',{day:'2-digit',month:'2-digit'})}</div>
+           <button class="edit-btn" data-idx="${idx}">✎ Edit</button>
+         </div>`;
+    return `<div class="lib-card">
+      <div class="lib-ph"${p?` style="display:none"`:''}>♪</div>
+      ${p?`<img class="lib-thumb" src="${p}" onerror="this.style.display='none'">` : ''}
+      <div class="lib-info">
+        <div class="lib-title">${item.title}</div>
+        <div class="lib-meta">${[item.author,item.year,item.source].filter(Boolean).join(' · ')}</div>
+        ${item.category?`<div class="lib-cat">${item.category}</div>`:''}
+      </div>
+      ${right}
+    </div>`;
   }).join('');
 
-  // Load photos async and inject into rendered cards
+  // Async photo injection
   items.forEach((item, idx) => {
     if (item.addedAt) {
       loadPhoto(item.addedAt).then(p => {
@@ -514,14 +622,14 @@ function renderLib() {
         if (img) { img.src = p; img.style.display = ''; }
         else {
           const newImg = document.createElement('img');
-          newImg.className = 'lib-thumb';
-          newImg.src = p;
+          newImg.className = 'lib-thumb'; newImg.src = p;
           if (ph) ph.parentNode.insertBefore(newImg, ph);
         }
       });
     }
   });
 
+  // Stock buttons
   list.querySelectorAll('.push-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -530,11 +638,18 @@ function renderLib() {
       else openPush(item);
     });
   });
-
   list.querySelectorAll('.del-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       deleteFromStock(parseInt(btn.dataset.at));
+    });
+  });
+
+  // History edit buttons
+  list.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      editFromHistory(parseInt(btn.dataset.idx));
     });
   });
 }
@@ -551,14 +666,14 @@ async function openPush(item) {
   el('push-price').value   = item.marketHigh || Math.round((item.price||0)*2) || '';
   el('push-weight').value  = '400';
   el('push-desc').value    = item.description||'';
-  el('push-cat').value     = item.category||'books-other';
+  // Pre-select category from identified data
+  el('push-cat').value     = item.category || 'Books/Other';
   el('push-modal').classList.add('open');
 }
 
 function closePush() { el('push-modal').classList.remove('open'); pushItem=null; }
 
 async function confirmPush() {
-  // Token check happens server-side via KV
   const price = el('push-price').value;
   if (!price) { toast('Enter a selling price'); return; }
   const btn = el('push-confirm-btn'); btn.disabled=true; btn.textContent='Pushing…';
@@ -578,11 +693,13 @@ async function confirmPush() {
             price:       parseFloat(price),
             weight:      parseInt(el('push-weight').value)||400,
             category:    el('push-cat').value,
+            tags:        [el('push-cat').value],   // ← Shopify tags for our taxonomy
             author:      pushItem.author||'',
             publisher:   pushItem.publisher||'',
             year:        pushItem.year||'',
             grade:       pushItem.grade||'',
             isbn:        pushItem.isbn||'',
+            notes:       pushItem.notes||'',
             imageBase64: pushItem.bookPhoto||null,
           }
         }),
@@ -685,42 +802,35 @@ function connectShopify() {
   window.location.href = '/api/auth';
 }
 
-// Check if returning from Shopify OAuth
 (function checkShopifyReturn() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('shopify') === 'connected') {
     localStorage.setItem('sb_shopify_connected', '1');
-    // Clean URL
     window.history.replaceState({}, '', window.location.pathname);
     setTimeout(() => toast('✓ Shopify connected!'), 500);
   }
 })();
 
 // ─── KEYBOARD DISMISS ────────────────────────────────────────────────────────
-function showDismiss() {
-  const btn = el('dismiss-btn');
-  if (btn) btn.style.display = 'block';
-}
-function hideDismiss() {
-  // small delay so onmousedown fires first
-  setTimeout(() => { const btn = el('dismiss-btn'); if (btn) btn.style.display = 'none'; }, 200);
-}
-function dismissKeyboard() {
-  el('price').blur();
-  // scroll to Add to stock button
-  el('fiche-acts').scrollIntoView({ behavior: 'smooth', block: 'end' });
-}
+function showDismiss() { const btn=el('dismiss-btn'); if(btn) btn.style.display='block'; }
+function hideDismiss()  { setTimeout(()=>{ const btn=el('dismiss-btn'); if(btn) btn.style.display='none'; },200); }
+function dismissKeyboard() { el('price').blur(); el('fiche-acts').scrollIntoView({behavior:'smooth',block:'end'}); }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 // Populate source selector
 const sel = el('source-sel');
 SOURCES.forEach(s => { const o=document.createElement('option'); o.value=s.value; o.textContent=s.label; sel.appendChild(o); });
 
-// Migrate old localStorage keys
+// Populate push category selector with our 6 fixed categories
+const catSel = el('push-cat');
+if (catSel) {
+  catSel.innerHTML = '';
+  CATEGORIES.forEach(c => { const o=document.createElement('option'); o.value=c.value; o.textContent=c.label; catSel.appendChild(o); });
+}
+
 (function migrate() {
   const map = { 'sb_apikey':'sb_ant', 'sb_ebayid':'sb_ebay', 'sb_shopify_domain':'sb_s_domain', 'sb_s_id':'sb_s_token', 'sb_s_secret':'sb_s_token_old' };
   Object.entries(map).forEach(([old,nw]) => { const v=localStorage.getItem(old); if(v&&!localStorage.getItem(nw)) localStorage.setItem(nw,v); });
-  // Also handle old clientId/clientSecret — not migrated, user must enter token
 })();
 
 updateSettingsUI();
